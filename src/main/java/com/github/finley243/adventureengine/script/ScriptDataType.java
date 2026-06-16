@@ -13,7 +13,7 @@ public class ScriptDataType extends Script {
     ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression valueExpression = context.getLocalVariables().get("value").getExpression();
         if (valueExpression == null) {
-            return new ScriptReturnData(Expression.constant("null"), null, null);
+            return new ScriptReturnData(Expression.string("null"), null, null);
         }
         String dataTypeName = switch (valueExpression.getDataType()) {
             case BOOLEAN -> "boolean";
@@ -26,7 +26,7 @@ public class ScriptDataType extends Script {
             case INVENTORY -> "inventory";
             case STAT_HOLDER -> "statHolder";
         };
-        return new ScriptReturnData(Expression.constant(dataTypeName), FlowStatementType.RETURN, null);
+        return new ScriptReturnData(Expression.string(dataTypeName), FlowStatementType.RETURN, null);
     }
 
 }

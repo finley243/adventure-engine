@@ -38,7 +38,7 @@ public class ActionObjectUseEnd extends Action {
 	@Override
 	public Context getContext(Actor subject) {
 		Context context = Context.builder().subject(subject).parentObject(component.getObject()).parentAction(this).build();
-		context.setLocalVariable("slot", Expression.constant(slotID));
+		context.setLocalVariable("slot", Expression.string(slotID));
 		return context;
 	}
 	

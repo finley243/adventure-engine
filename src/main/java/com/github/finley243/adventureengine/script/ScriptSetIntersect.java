@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Function;
 
 public class ScriptSetIntersect extends Script {
 
@@ -26,7 +27,7 @@ public class ScriptSetIntersect extends Script {
                 setIntersect.add(expression);
             }
         }
-        return new ScriptReturnData(Expression.constant(setIntersect), FlowStatementType.RETURN, null);
+        return new ScriptReturnData(Expression.set(setIntersect, Function.identity()), FlowStatementType.RETURN, null);
     }
 
 }

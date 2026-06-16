@@ -14,12 +14,12 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.List;
 
-public class BehaviorGuard extends Behavior {
+public class GuardBehavior extends Behavior {
 
     private String guardTargetID;
     private WorldObject guardTargetObject;
 
-    public BehaviorGuard(Condition condition, Script startScript, Script eachRoundScript, int duration, List<Idle> idles, String guardTargetID) {
+    public GuardBehavior(Condition condition, Script startScript, Script eachRoundScript, int duration, List<Idle> idles, String guardTargetID) {
         super(condition, startScript, eachRoundScript, duration, idles);
         this.guardTargetID = guardTargetID;
     }

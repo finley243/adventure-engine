@@ -28,10 +28,10 @@ public class ScriptOr extends Script {
             } else if (result.value().getDataType() != Expression.DataType.BOOLEAN) {
                 return new ScriptReturnData(null, null, new ScriptErrorData("Expression expected a boolean value", getTraceData()));
             } else if (result.value().getValueBoolean()) {
-                return new ScriptReturnData(Expression.constant(true), null, null);
+                return new ScriptReturnData(Expression.bool(true), null, null);
             }
         }
-        return new ScriptReturnData(Expression.constant(false), null, null);
+        return new ScriptReturnData(Expression.bool(false), null, null);
     }
 
 }

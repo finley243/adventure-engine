@@ -24,7 +24,7 @@ public class ScriptNot extends Script {
         } else if (scriptResult.value().getDataType() != Expression.DataType.BOOLEAN) {
             return new ScriptReturnData(null, null, new ScriptErrorData("Expression expected a boolean value", getTraceData()));
         }
-        return new ScriptReturnData(Expression.constant(!scriptResult.value().getValueBoolean()), null, null);
+        return new ScriptReturnData(Expression.bool(!scriptResult.value().getValueBoolean()), null, null);
     }
 
 }

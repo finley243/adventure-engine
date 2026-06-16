@@ -50,12 +50,12 @@ public class ScriptPower extends Script {
         if (firstExpression.getDataType() == Expression.DataType.INTEGER && secondExpression.getDataType() == Expression.DataType.INTEGER) {
             int value1 = firstExpression.getValueInteger();
             int value2 = secondExpression.getValueInteger();
-            return Expression.constant((int) Math.pow(value1, value2));
+            return Expression.integer((int) Math.pow(value1, value2));
         } else if ((firstExpression.getDataType() == Expression.DataType.INTEGER || firstExpression.getDataType() == Expression.DataType.FLOAT)
                 && (secondExpression.getDataType() == Expression.DataType.INTEGER || secondExpression.getDataType() == Expression.DataType.FLOAT)) {
             float value1 = firstExpression.getDataType() == Expression.DataType.INTEGER ? firstExpression.getValueInteger() : firstExpression.getValueFloat();
             float value2 = secondExpression.getDataType() == Expression.DataType.INTEGER ? secondExpression.getValueInteger() : secondExpression.getValueFloat();
-            return Expression.constant((float) Math.pow(value1, value2));
+            return Expression.decimal((float) Math.pow(value1, value2));
         }
         return null;
     }

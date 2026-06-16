@@ -135,9 +135,9 @@ public class WorldObject extends GameInstanced implements Noun, Physical, Script
 
 	@Override
 	public ComputedDamage applyEffectsAndComputeDamage(Damage damage, ScriptRuntime scriptRuntime, Context context) {
-		int amount = damage.getAmount();
-		amount -= Math.round(getTemplate().getDamageResistance(damage.getType()) * damage.getArmorMult());
-		amount -= Math.round(amount * getTemplate().getDamageMult(damage.getType()));
+		int amount = damage.amount();
+		amount -= Math.round(getTemplate().getDamageResistance(damage.type()) * damage.armorMult());
+		amount -= Math.round(amount * getTemplate().getDamageMult(damage.type()));
 		boolean isKillingBlow = HP - amount <= 0;
 		return new ComputedDamage(amount, null, isKillingBlow);
 	}
@@ -275,17 +275,17 @@ public class WorldObject extends GameInstanced implements Noun, Physical, Script
 			if (componentValue != null) return componentValue;
 		}
 		return switch (name) {
-			case "inventory" -> (hasComponentOfType(InventoryObjectComponent.class) ? new ExpressionConstantInventory(getComponentOfType(InventoryObjectComponent.class).getInventory()) : null);
-			case "noun" -> new ExpressionConstantNoun(this);
-			case "enabled" -> new ExpressionConstantBoolean(isEnabled);
-			case "hidden" -> new ExpressionConstantBoolean(isHidden);
-			case "guarded" -> new ExpressionConstantBoolean(isGuarded());
-			case "broken" -> new ExpressionConstantBoolean(isBroken());
-			case "id" -> new ExpressionConstantString(getID());
-			case "name" -> new ExpressionConstantString(getName());
-			case "template_id" -> new ExpressionConstantString(template.getID());
-			case "area" -> new ExpressionConstantString(getArea().getID());
-			case "room" -> new ExpressionConstantString(getArea().getRoom() != null ? getArea().getRoom().getID() : null);
+			case "inventory" -> (hasComponentOfType(InventoryObjectComponent.class) ? new InventoryExpression(getComponentOfType(InventoryObjectComponent.class).getInventory()) : null);
+			case "noun" -> new NounExpression(this);
+			case "enabled" -> new BooleanExpression(isEnabled);
+			case "hidden" -> new BooleanExpression(isHidden);
+			case "guarded" -> new BooleanExpression(isGuarded());
+			case "broken" -> new BooleanExpression(isBroken());
+			case "id" -> new StringExpression(getID());
+			case "name" -> new StringExpression(getName());
+			case "template_id" -> new StringExpression(template.getID());
+			case "area" -> new StringExpression(getArea().getID());
+			case "room" -> new StringExpression(getArea().getRoom() != null ? getArea().getRoom().getID() : null);
 			default -> getLocalVariable(name);
 		};
 	}

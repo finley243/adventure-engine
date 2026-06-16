@@ -26,8 +26,8 @@ public class Quest extends GameInstanced implements ScriptValueHolder {
     @Override
     public Expression getScriptValue(String name, Context context) {
         return switch (name) {
-            case "id" -> Expression.constant(getID());
-            case "name" -> Expression.constant(name);
+            case "id" -> Expression.string(getID());
+            case "name" -> Expression.string(name);
             default -> null;
         };
     }

@@ -56,9 +56,9 @@ public abstract class NetworkNode extends GameInstanced implements ScriptValueHo
     @Override
     public Expression getScriptValue(String name, Context context) {
         return switch (name) {
-            case "id" -> Expression.constant(getID());
-            case "name" -> Expression.constant(name);
-            case "isBreached" -> Expression.constant(isBreached);
+            case "id" -> Expression.string(getID());
+            case "name" -> Expression.string(name);
+            case "isBreached" -> Expression.bool(isBreached);
             default -> null;
         };
     }

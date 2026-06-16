@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class ScriptBuildList extends Script {
 
@@ -30,7 +31,7 @@ public class ScriptBuildList extends Script {
                 computedValues.add(scriptResult.value());
             }
         }
-        return new ScriptReturnData(Expression.constant(computedValues), null, null);
+        return new ScriptReturnData(Expression.list(computedValues, Function.identity()), null, null);
     }
 
 }

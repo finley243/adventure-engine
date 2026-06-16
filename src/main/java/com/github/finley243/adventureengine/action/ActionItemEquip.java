@@ -38,7 +38,7 @@ public class ActionItemEquip extends Action {
     @Override
     public Context getContext(Actor subject) {
         Context context = Context.builder().subject(subject).parentItem(item).build();
-        context.setLocalVariable("equipSlots", Expression.constant(slotsData.slots()));
+        context.setLocalVariable("equipSlots", Expression.set(slotsData.slots(), Expression::string));
         return context;
     }
 

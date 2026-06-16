@@ -4,7 +4,7 @@ import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.actor.*;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.combat.DamageType;
-import com.github.finley243.adventureengine.combat.WeaponAttackType;
+import com.github.finley243.adventureengine.combat.AttackType;
 import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
@@ -134,8 +134,8 @@ public class GameDataLoader {
         CombatTypeLoader combatTypeLoader = new CombatTypeLoader(scriptParser);
         Map<String, DamageType> damageTypeMap = loadMapFromFileName(dir, NAME_DAMAGE_TYPE, builder, combatTypeLoader::loadDamageTypes);
         Registry<DamageType> damageTypeRegistry = new Registry<>(damageTypeMap);
-        Map<String, WeaponAttackType> attackTypeMap = loadMapFromFileName(dir, NAME_ATTACK_TYPE, builder, e -> combatTypeLoader.loadAttackTypes(e, pathfinder, damageTypeRegistry, effectRegistry));
-        Registry<WeaponAttackType> attackTypeRegistry = new Registry<>(attackTypeMap);
+        Map<String, AttackType> attackTypeMap = loadMapFromFileName(dir, NAME_ATTACK_TYPE, builder, e -> combatTypeLoader.loadAttackTypes(e, pathfinder, damageTypeRegistry, effectRegistry));
+        Registry<AttackType> attackTypeRegistry = new Registry<>(attackTypeMap);
         Map<String, WeaponClass> weaponClassMap = loadMapFromFileName(dir, NAME_WEAPON_CLASS, builder, e -> combatTypeLoader.loadWeaponClasses(e, attackTypeRegistry, skillRegistry));
         Registry<WeaponClass> weaponClassRegistry = new Registry<>(weaponClassMap);
 

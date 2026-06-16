@@ -2,7 +2,7 @@ package com.github.finley243.adventureengine.item.component;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.combat.DamageType;
-import com.github.finley243.adventureengine.combat.WeaponAttackType;
+import com.github.finley243.adventureengine.combat.AttackType;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.item.Item;
@@ -12,11 +12,11 @@ import com.github.finley243.adventureengine.script.ScriptRuntime;
 public class ItemComponentFactory {
 
     private final ScriptRuntime scriptRuntime;
-    private final Registry<WeaponAttackType> attackTypeRegistry;
+    private final Registry<AttackType> attackTypeRegistry;
     private final Registry<Effect> effectRegistry;
     private final Registry<DamageType> damageTypeRegistry;
 
-    public ItemComponentFactory(ScriptRuntime scriptRuntime, Registry<WeaponAttackType> attackTypeRegistry, Registry<Effect> effectRegistry, Registry<DamageType> damageTypeRegistry) {
+    public ItemComponentFactory(ScriptRuntime scriptRuntime, Registry<AttackType> attackTypeRegistry, Registry<Effect> effectRegistry, Registry<DamageType> damageTypeRegistry) {
         this.scriptRuntime = scriptRuntime;
         this.attackTypeRegistry = attackTypeRegistry;
         this.effectRegistry = effectRegistry;

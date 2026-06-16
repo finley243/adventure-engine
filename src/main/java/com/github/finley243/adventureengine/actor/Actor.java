@@ -8,7 +8,7 @@ import com.github.finley243.adventureengine.actor.ai.behavior.Behavior;
 import com.github.finley243.adventureengine.actor.component.*;
 import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.combat.DamageType;
-import com.github.finley243.adventureengine.combat.WeaponAttackType;
+import com.github.finley243.adventureengine.combat.AttackType;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.effect.EffectComponent;
 import com.github.finley243.adventureengine.effect.Effectable;
@@ -418,32 +418,32 @@ public class Actor extends GameInstanced implements Noun, Physical, ScriptValueH
 
 	@Override
 	public ComputedDamage applyEffectsAndComputeDamage(Damage damage, ScriptRuntime scriptRuntime, Context context) {
-		for (Effect effect : damage.getTargetEffects()) {
+		for (Effect effect : damage.targetEffects()) {
 			getEffectComponent().addEffect(effect);
 		}
-		int amount = damage.getAmount();
+		int amount = damage.amount();
 		int equipmentResistance;
 		float equipmentMult;
-		if (damage.getLimb() != null) {
-			equipmentResistance = getEquipmentComponent().getDamageResistanceLimb(damage.getLimb().getID(), damage.getType().ID());
-			equipmentMult = getEquipmentComponent().getDamageMultLimb(damage.getLimb().getID(), damage.getType().ID());
+		if (damage.limb() != null) {
+			equipmentResistance = getEquipmentComponent().getDamageResistanceLimb(damage.limb().getID(), damage.type().ID());
+			equipmentMult = getEquipmentComponent().getDamageMultLimb(damage.limb().getID(), damage.type().ID());
 		} else {
-			equipmentResistance = getEquipmentComponent().getDamageResistanceMain(damage.getType().ID());
-			equipmentMult = getEquipmentComponent().getDamageMultMain(damage.getType().ID());
+			equipmentResistance = getEquipmentComponent().getDamageResistanceMain(damage.type().ID());
+			equipmentMult = getEquipmentComponent().getDamageMultMain(damage.type().ID());
 		}
-		int actorResistance = getDamageResistance(damage.getType().ID(), context);
-		float actorMult = getDamageMult(damage.getType().ID(), context);
+		int actorResistance = getDamageResistance(damage.type().ID(), context);
+		float actorMult = getDamageMult(damage.type().ID(), context);
 		// TODO - Add additional armor mult for damage mults (part of the Damage object, affected by weapons/attacks/etc.)
-		amount -= Math.round(equipmentResistance * damage.getArmorMult());
+		amount -= Math.round(equipmentResistance * damage.armorMult());
 		amount -= Math.round(amount * equipmentMult);
-		amount -= Math.round(actorResistance * damage.getArmorMult());
+		amount -= Math.round(actorResistance * damage.armorMult());
 		amount -= Math.round(amount * actorMult);
-		if (damage.getLimb() != null) {
-			amount = Math.round(amount * damage.getLimb().getDamageMult());
+		if (damage.limb() != null) {
+			amount = Math.round(amount * damage.limb().getDamageMult());
 		}
 		if (amount < 0) amount = 0;
 		boolean isKillingBlow = HP - amount <= 0;
-		return new ComputedDamage(amount, damage.getLimb(), isKillingBlow);
+		return new ComputedDamage(amount, damage.limb(), isKillingBlow);
 	}
 
 	@Override
@@ -462,8 +462,8 @@ public class Actor extends GameInstanced implements Noun, Physical, ScriptValueH
 			kill(killContext);
 		} else if (amount < 0) {
 			Context modifierContext = Context.from(defaultContext).target(context.getSubject()).build();
-			modifierContext.setLocalVariable("amount", Expression.constant(String.valueOf(-amount)));
-			modifierContext.setLocalVariable("condition", Expression.constant(getConditionDescription()));
+			modifierContext.setLocalVariable("amount", Expression.integer(-amount));
+			modifierContext.setLocalVariable("condition", Expression.string(getConditionDescription()));
 			triggerScript("on_damaged", modifierContext);
 			if (SHOW_HP_CHANGES) {
 				sensoryEventDispatcher.dispatch(new SensoryEvent(getArea(), "$actor lose$s $amount HP.", modifierContext, true, null, null));
@@ -655,7 +655,7 @@ public class Actor extends GameInstanced implements Noun, Physical, ScriptValueH
 			actions.addAll(item.inventoryActions(this, scriptRuntime));
 		}
 		actions.addAll(equipmentComponent.getEquippedActions(scriptRuntime));
-		for (WeaponAttackType unarmedAttackType : getTemplate().getUnarmedAttackTypes()) {
+		for (AttackType unarmedAttackType : getTemplate().getUnarmedAttackTypes()) {
 			actions.addAll(unarmedAttackType.generateActions(this, null, scriptRuntime));
 		}
 		if (isSneaking()) {
@@ -791,41 +791,41 @@ public class Actor extends GameInstanced implements Noun, Physical, ScriptValueH
 	@Override
 	public Expression getScriptValue(String name, Context context) {
 		if (name.startsWith("damage_resist_")) {
-			return resolveExpressionPrefix(name, "damage_resist_", damageResistance, "damage type", Expression.constant(0), key -> Expression.constant(getDamageResistance(key, context)));
+			return resolveExpressionPrefix(name, "damage_resist_", damageResistance, "damage type", Expression.integer(0), key -> Expression.integer(getDamageResistance(key, context)));
 		} else if (name.startsWith("attribute_")) {
-			return resolveExpressionPrefix(name, "attribute_", attributes, "attribute", Expression.constant(0), key -> Expression.constant(getAttribute(key, context)));
+			return resolveExpressionPrefix(name, "attribute_", attributes, "attribute", Expression.integer(0), key -> Expression.integer(getAttribute(key, context)));
 		} else if (name.startsWith("skill_")) {
-			return resolveExpressionPrefix(name, "skill_", skills, "skill", Expression.constant(0), key -> Expression.constant(getSkill(key, context)));
+			return resolveExpressionPrefix(name, "skill_", skills, "skill", Expression.integer(0), key -> Expression.integer(getSkill(key, context)));
 		} else if (name.startsWith("damage_mult_")) {
-			return resolveExpressionPrefix(name, "damage_mult_", damageMult, "damage type", Expression.constant(0.0f), key -> Expression.constant(getDamageMult(key, context)));
+			return resolveExpressionPrefix(name, "damage_mult_", damageMult, "damage type", Expression.decimal(0.0f), key -> Expression.decimal(getDamageMult(key, context)));
 		} else if (name.startsWith("has_equipped_")) {
-			return resolveExpressionPrefix(name, "has_equipped_", getTemplate().getEquipSlots(), "equip slot", Expression.constant(false), key -> Expression.constant(getEquipmentComponent().getEquippedItemInSlot(key) != null));
+			return resolveExpressionPrefix(name, "has_equipped_", getTemplate().getEquipSlots(), "equip slot", Expression.bool(false), key -> Expression.bool(getEquipmentComponent().getEquippedItemInSlot(key) != null));
 		}
 		return switch (name) {
-			case "inventory" -> (getInventory() == null ? null : Expression.constant(getInventory()));
-			case "noun" -> Expression.constantNoun(this);
-			case "level" -> Expression.constant(level);
-			case "xp" -> Expression.constant(XP);
-			case "max_hp" -> Expression.constant(getMaxHP());
-			case "hp" -> Expression.constant(HP);
-			case "action_points" -> Expression.constant(getActionPoints());
-			case "move_points" -> Expression.constant(getMovePoints());
-			case "enabled" -> Expression.constant(isEnabled);
-			case "sleeping" -> Expression.constant(isSleeping);
-			case "in_combat" -> Expression.constant(isInCombat());
-			case "using_object" -> Expression.constant(isUsingObject());
-			case "in_cover" -> Expression.constant(isInCover());
-			case "dead" -> Expression.constant(isDead);
-			case "active" -> Expression.constant(isActive());
-			case "can_perform_actions" -> Expression.constant(canPerformActions(context));
-			case "can_move" -> Expression.constant(canMove(context));
-			case "can_dodge" -> Expression.constant(canDodge(context));
-			case "id" -> Expression.constant(getID());
-			case "template_id" -> Expression.constant(template.getID());
-			case "area" -> Expression.constant(getArea().getID());
-			case "room" -> Expression.constant(getArea().getRoom() != null ? getArea().getRoom().getID() : null);
-			case "equipment_effects" -> Expression.constant(equipmentEffects.value(new HashSet<>(), context));
-			case "sense_types" -> Expression.constant(getSenseTypes());
+			case "inventory" -> (getInventory() == null ? null : Expression.inventory(getInventory()));
+			case "noun" -> Expression.noun(this);
+			case "level" -> Expression.integer(level);
+			case "xp" -> Expression.integer(XP);
+			case "max_hp" -> Expression.integer(getMaxHP());
+			case "hp" -> Expression.integer(HP);
+			case "action_points" -> Expression.integer(getActionPoints());
+			case "move_points" -> Expression.integer(getMovePoints());
+			case "enabled" -> Expression.bool(isEnabled);
+			case "sleeping" -> Expression.bool(isSleeping);
+			case "in_combat" -> Expression.bool(isInCombat());
+			case "using_object" -> Expression.bool(isUsingObject());
+			case "in_cover" -> Expression.bool(isInCover());
+			case "dead" -> Expression.bool(isDead);
+			case "active" -> Expression.bool(isActive());
+			case "can_perform_actions" -> Expression.bool(canPerformActions(context));
+			case "can_move" -> Expression.bool(canMove(context));
+			case "can_dodge" -> Expression.bool(canDodge(context));
+			case "id" -> Expression.string(getID());
+			case "template_id" -> Expression.string(template.getID());
+			case "area" -> Expression.string(getArea().getID());
+			case "room" -> Expression.string(getArea().getRoom() != null ? getArea().getRoom().getID() : null);
+			case "equipment_effects" -> Expression.set(equipmentEffects.value(new HashSet<>(), context), Expression::string);
+			case "sense_types" -> Expression.set(getSenseTypes(), e -> Expression.string(e.ID()));
 			default -> null;
 		};
 	}
@@ -943,7 +943,7 @@ public class Actor extends GameInstanced implements Noun, Physical, ScriptValueH
 	}
 
 	private void evaluateXPChange() {
-		Context levelUpThresholdContext = Context.from(defaultContext).addVariable("level", Expression.constant(level)).build();
+		Context levelUpThresholdContext = Context.from(defaultContext).addVariable("level", Expression.integer(level)).build();
 		Expression thresholdReturnValue = getTemplate().getLevelUpThresholdExpression().run(scriptRuntime, levelUpThresholdContext);
 		int levelUpXP = thresholdReturnValue.getValueInteger();
 		if (XP >= levelUpXP) {

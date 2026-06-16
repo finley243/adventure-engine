@@ -13,14 +13,14 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.List;
 
-public class BehaviorAction extends Behavior {
+public class ActionBehavior extends Behavior {
 
     private final String actionID;
     private final Condition actionCondition;
 
     private boolean hasPerformedAction;
 
-    public BehaviorAction(Condition condition, Script startScript, Script eachRoundScript, int duration, List<Idle> idles, String actionID, Condition actionCondition) {
+    public ActionBehavior(Condition condition, Script startScript, Script eachRoundScript, int duration, List<Idle> idles, String actionID, Condition actionCondition) {
         super(condition, startScript, eachRoundScript, duration, idles);
         this.actionID = actionID;
         this.actionCondition = actionCondition;

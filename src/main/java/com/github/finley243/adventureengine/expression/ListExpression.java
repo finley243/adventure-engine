@@ -1,33 +1,34 @@
 package com.github.finley243.adventureengine.expression;
 
+import java.util.List;
 import java.util.Objects;
 
-public class ExpressionConstantString extends Expression {
+public class ListExpression extends Expression {
 
-    private final String value;
+    private final List<Expression> value;
 
-    public ExpressionConstantString(String value) {
+    ListExpression(List<Expression> value) {
         this.value = value;
     }
 
     @Override
     public DataType getDataType() {
-        return DataType.STRING;
+        return DataType.LIST;
     }
 
     @Override
-    public String getValueString() {
+    public List<Expression> getValueList() {
         return value;
     }
 
     @Override
     public String toString() {
-        return value;
+        return value.toString();
     }
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof ExpressionConstantString expression)) {
+        if (!(o instanceof ListExpression expression)) {
             return false;
         } else {
             return Objects.equals(expression.value, this.value);

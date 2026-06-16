@@ -11,12 +11,12 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.List;
 
-public class BehaviorMove extends Behavior {
+public class MoveBehavior extends Behavior {
 
     private String areaID;
     private Area area;
 
-    public BehaviorMove(Condition condition, Script startScript, Script eachRoundScript, int duration, List<Idle> idles, String areaID) {
+    public MoveBehavior(Condition condition, Script startScript, Script eachRoundScript, int duration, List<Idle> idles, String areaID) {
         super(condition, startScript, eachRoundScript, duration, idles);
         this.areaID = areaID;
     }

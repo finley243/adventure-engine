@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Function;
 
 public class ScriptSetDifference extends Script {
 
@@ -26,7 +27,7 @@ public class ScriptSetDifference extends Script {
                 setDifference.add(expression);
             }
         }
-        return new ScriptReturnData(Expression.constant(setDifference), FlowStatementType.RETURN, null);
+        return new ScriptReturnData(Expression.set(setDifference, Function.identity()), FlowStatementType.RETURN, null);
     }
 
 }

@@ -33,10 +33,10 @@ public class GroupNetworkNode extends NetworkNode {
     @Override
     public Expression getScriptValue(String name, Context context) {
         return switch (name) {
-            case "childNodes" -> Expression.constant(getAllChildNodes());
-            case "directChildNodes" -> Expression.constant(childNodes);
-            case "childObjects" -> Expression.constant(getAllChildObjects());
-            case "directChildObjects" -> Expression.constant(getDirectChildObjects());
+            case "childNodes" -> Expression.set(getAllChildNodes(), Expression::valueHolder);
+            case "directChildNodes" -> Expression.set(childNodes, Expression::valueHolder);
+            case "childObjects" -> Expression.set(getAllChildObjects(), Expression::valueHolder);
+            case "directChildObjects" -> Expression.set(getDirectChildObjects(), Expression::valueHolder);
             default -> super.getScriptValue(name, context);
         };
     }

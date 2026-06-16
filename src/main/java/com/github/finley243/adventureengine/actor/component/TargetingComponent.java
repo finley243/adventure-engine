@@ -186,7 +186,7 @@ public class TargetingComponent {
                     detectedActors.put(target, new DetectedActor(DetectionState.DETECTING, target.getArea()));
                 }
                 int eventsUntilDetected = getStateTriggerValue(DetectionState.DETECTING) - detectedActors.get(target).stateCounter;
-                context.setLocalVariable("detectionRemaining", Expression.constant(eventsUntilDetected));
+                context.setLocalVariable("detectionRemaining", Expression.integer(eventsUntilDetected));
                 if (eventsUntilDetected <= DEDICATED_DETECTION_BARKS) {
                     for (int i = 1; i <= DEDICATED_DETECTION_BARKS; i++) {
                         actor.triggerBark("on_update_detection_" + i, context);

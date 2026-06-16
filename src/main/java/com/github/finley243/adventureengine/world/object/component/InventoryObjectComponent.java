@@ -8,7 +8,7 @@ import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.item.Inventory;
 import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.expression.ExpressionConstantInventory;
+import com.github.finley243.adventureengine.expression.InventoryExpression;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.action.MenuDataObjectInventory;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
@@ -66,7 +66,7 @@ public class InventoryObjectComponent extends ObjectComponent {
     @Override
     public Expression getScriptValue(String name, Context context) {
         return switch (name) {
-            case "inventory" -> (inventory == null ? null : new ExpressionConstantInventory(inventory));
+            case "inventory" -> (inventory == null ? null : new InventoryExpression(inventory));
             default -> super.getScriptValue(name, context);
         };
     }

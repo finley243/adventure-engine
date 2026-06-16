@@ -97,30 +97,30 @@ public class ActorLoader {
         switch (type) {
             case "move" -> {
                 String areaTarget = LoadUtils.attribute(behaviorElement, "area", null);
-                return new BehaviorMove(condition, startScript, eachRoundScript, duration, idles, areaTarget);
+                return new MoveBehavior(condition, startScript, eachRoundScript, duration, idles, areaTarget);
             }
             case "use" -> {
                 String objectTarget = LoadUtils.attribute(behaviorElement, "object", null);
                 String slotTarget = LoadUtils.attribute(behaviorElement, "slot", null);
-                return new BehaviorUse(condition, startScript, eachRoundScript, duration, idles, objectTarget, slotTarget);
+                return new UseBehavior(condition, startScript, eachRoundScript, duration, idles, objectTarget, slotTarget);
             }
             case "guard" -> {
                 String guardTarget = LoadUtils.attribute(behaviorElement, "object", null);
-                return new BehaviorGuard(condition, startScript, eachRoundScript, duration, idles, guardTarget);
+                return new GuardBehavior(condition, startScript, eachRoundScript, duration, idles, guardTarget);
             }
             case "follow" -> {
                 String actorTarget = LoadUtils.attribute(behaviorElement, "actor", null);
-                return new BehaviorFollow(condition, startScript, eachRoundScript, duration, idles, actorTarget);
+                return new FollowBehavior(condition, startScript, eachRoundScript, duration, idles, actorTarget);
             }
             case "action" -> {
                 String actionID = LoadUtils.attribute(behaviorElement, "action", null);
                 Condition actionCondition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(behaviorElement, "actionCondition"), scriptParser, "Behavior(" + actorID + ") - action condition");
-                return new BehaviorAction(condition, startScript, eachRoundScript, duration, idles, actionID, actionCondition);
+                return new ActionBehavior(condition, startScript, eachRoundScript, duration, idles, actionID, actionCondition);
             }
             case "procedure" -> {
                 List<Behavior> procedureBehaviors = parseBehaviors(behaviorElement, actorID);
                 boolean isCycle = LoadUtils.attributeBool(behaviorElement, "isCycle", false);
-                return new BehaviorProcedure(condition, startScript, eachRoundScript, isCycle, procedureBehaviors);
+                return new ProcedureBehavior(condition, startScript, eachRoundScript, isCycle, procedureBehaviors);
             }
             default -> throw new GameDataException("Behavior has invalid or missing type");
         }

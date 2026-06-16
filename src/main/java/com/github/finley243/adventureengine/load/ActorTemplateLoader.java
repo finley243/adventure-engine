@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.load;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.actor.*;
-import com.github.finley243.adventureengine.combat.WeaponAttackType;
+import com.github.finley243.adventureengine.combat.AttackType;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.item.LootTable;
@@ -24,11 +24,11 @@ public class ActorTemplateLoader {
     private final Registry<ActionTemplate> actionRegistry;
     private final Registry<Effect> effectRegistry;
     private final Registry<Faction> factionRegistry;
-    private final Registry<WeaponAttackType> attackTypeRegistry;
+    private final Registry<AttackType> attackTypeRegistry;
     private final Registry<Scene> sceneRegistry;
     private final Registry<LootTable> lootTableRegistry;
 
-    public ActorTemplateLoader(ScriptParser scriptParser, LootTableLoader lootTableLoader, Registry<SenseType> senseTypeRegistry, Registry<ActionTemplate> actionRegistry, Registry<Effect> effectRegistry, Registry<Faction> factionRegistry, Registry<WeaponAttackType> attackTypeRegistry, Registry<Scene> sceneRegistry, Registry<LootTable> lootTableRegistry) {
+    public ActorTemplateLoader(ScriptParser scriptParser, LootTableLoader lootTableLoader, Registry<SenseType> senseTypeRegistry, Registry<ActionTemplate> actionRegistry, Registry<Effect> effectRegistry, Registry<Faction> factionRegistry, Registry<AttackType> attackTypeRegistry, Registry<Scene> sceneRegistry, Registry<LootTable> lootTableRegistry) {
         this.scriptParser = scriptParser;
         this.lootTableLoader = lootTableLoader;
         this.senseTypeRegistry = senseTypeRegistry;
@@ -129,9 +129,9 @@ public class ActorTemplateLoader {
             senseTypes.add(senseType);
         }
         List<String> unarmedAttackTypeIDs = LoadUtils.listOfTags(element, "attackType");
-        List<WeaponAttackType> unarmedAttackTypes = new ArrayList<>();
+        List<AttackType> unarmedAttackTypes = new ArrayList<>();
         for (String unarmedAttackTypeID : unarmedAttackTypeIDs) {
-            WeaponAttackType unarmedAttackType = attackTypeRegistry.getFromID(unarmedAttackTypeID);
+            AttackType unarmedAttackType = attackTypeRegistry.getFromID(unarmedAttackTypeID);
             if (unarmedAttackType == null) throw new GameDataException("ActorTemplate has invalid unarmed attack type");
             unarmedAttackTypes.add(unarmedAttackType);
         }

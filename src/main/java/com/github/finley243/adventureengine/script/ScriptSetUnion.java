@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Function;
 
 public class ScriptSetUnion extends Script {
 
@@ -23,7 +24,7 @@ public class ScriptSetUnion extends Script {
         Set<Expression> setUnion = new HashSet<>();
         setUnion.addAll(setOne);
         setUnion.addAll(setTwo);
-        return new ScriptReturnData(Expression.constant(setUnion), FlowStatementType.RETURN, null);
+        return new ScriptReturnData(Expression.set(setUnion, Function.identity()), FlowStatementType.RETURN, null);
     }
 
 }

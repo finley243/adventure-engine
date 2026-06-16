@@ -9,7 +9,7 @@ import com.github.finley243.adventureengine.actor.component.TargetingComponent;
 import com.github.finley243.adventureengine.combat.CombatHelper;
 import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.combat.DamageType;
-import com.github.finley243.adventureengine.combat.WeaponAttackType;
+import com.github.finley243.adventureengine.combat.AttackType;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
@@ -17,6 +17,7 @@ import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
+import com.github.finley243.adventureengine.script.ScriptValueHolder;
 import com.github.finley243.adventureengine.textgen.MultiNoun;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -33,7 +34,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     public static final boolean BLOCK_ALL_ATTACKS_BEYOND_RATE_LIMIT = true;
     public static final boolean REPEATS_USE_NO_ACTION_POINTS = true;
 
-    private final WeaponAttackType attackType;
+    private final AttackType attackType;
     private final Set<AttackTarget> targets;
     private final Item weapon;
     private final Limb limb;
@@ -45,7 +46,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final String attackOverallPhraseAudible;
     private final int ammoConsumed;
     private final int actionPoints;
-    private final WeaponAttackType.WeaponConsumeType weaponConsumeType;
+    private final AttackType.WeaponConsumeType weaponConsumeType;
     private final Set<AreaLink.DistanceCategory> ranges;
     private final int rate;
     private final Script damage;
@@ -58,7 +59,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final boolean isLoud;
     private final AreaLink.DistanceCategory targetDistance;
 
-    public ActionAttack(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, WeaponAttackType attackType, Item weapon, Set<AttackTarget> targets, Limb limb, Area area, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, Script damage, DamageType damageType, float armorMult, List<Effect> targetEffects, Script hitChanceExpression, Script hitChanceOverallExpression, float hitChanceMult, boolean isLoud, AreaLink.DistanceCategory targetDistance) {
+    public ActionAttack(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, AttackType attackType, Item weapon, Set<AttackTarget> targets, Limb limb, Area area, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, AttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, Script damage, DamageType damageType, float armorMult, List<Effect> targetEffects, Script hitChanceExpression, Script hitChanceOverallExpression, float hitChanceMult, boolean isLoud, AreaLink.DistanceCategory targetDistance) {
         super(scriptRuntime, sensoryEventDispatcher, targets);
         this.attackType = attackType;
         this.weapon = weapon;
@@ -94,7 +95,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     @Override
     public Context getContext(Actor subject) {
         Context context = Context.builder().subject(subject).attackTarget(targets.size() == 1 ? targets.iterator().next() : null).parentItem(getWeapon()).parentArea(getArea()).build();
-        context.setLocalVariable("targets", Expression.constant(targets));
+        context.setLocalVariable("targets", Expression.set(targets, e -> Expression.valueHolder((ScriptValueHolder) e)));
         return context;
     }
 
@@ -148,7 +149,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         return ranges;
     }
 
-    public WeaponAttackType.WeaponConsumeType getWeaponConsumeType() {
+    public AttackType.WeaponConsumeType getWeaponConsumeType() {
         return weaponConsumeType;
     }
 
@@ -200,15 +201,15 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     public void onSuccess(Actor subject, AttackTarget target, int repeatActionCount) {
         Context context = Context.builder().subject(subject).attackTarget(target).parentItem(getWeapon()).parentArea(getArea()).build();
         int damage = computeDamage(scriptRuntime, context);
-        context.setLocalVariable("limb", Expression.constant(getLimb() == null ? "null" : getLimb().getName()));
-        context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
-        context.setLocalVariable("repeats", Expression.constant(repeatActionCount));
-        context.setLocalVariable("success", Expression.constant(true));
-        context.setLocalVariable("damage", Expression.constant(damage));
+        context.setLocalVariable("limb", Expression.string(getLimb() == null ? "null" : getLimb().getName()));
+        context.setLocalVariable("relativeTo", Expression.string(getArea() == null ? "null" : getArea().getRelativeName()));
+        context.setLocalVariable("repeats", Expression.integer(repeatActionCount));
+        context.setLocalVariable("success", Expression.bool(true));
+        context.setLocalVariable("damage", Expression.integer(damage));
         Damage damageData = new Damage(damageType, damage, getLimb(), armorMult, targetEffects);
         AttackTarget.ComputedDamage computedDamage = target.applyEffectsAndComputeDamage(damageData, scriptRuntime, context);
-        context.setLocalVariable("finalDamage", Expression.constant(computedDamage.amount()));
-        context.setLocalVariable("isKillingBlow", Expression.constant(computedDamage.isKillingBlow()));
+        context.setLocalVariable("finalDamage", Expression.integer(computedDamage.amount()));
+        context.setLocalVariable("isKillingBlow", Expression.bool(computedDamage.isKillingBlow()));
         sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get(attackPhrase), Phrases.get(attackPhraseAudible), context, true, isLoud, null, null));
         target.applyDamage(computedDamage, scriptRuntime, context);
         subject.triggerScript("on_attack_success", context);
@@ -217,10 +218,10 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     @Override
     public void onFail(Actor subject, AttackTarget target, int repeatActionCount) {
         Context context = Context.builder().subject(subject).attackTarget(target).parentItem(getWeapon()).parentArea(getArea()).build();
-        context.setLocalVariable("limb", Expression.constant(getLimb() == null ? "null" : getLimb().getName()));
-        context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
-        context.setLocalVariable("repeats", Expression.constant(repeatActionCount));
-        context.setLocalVariable("success", Expression.constant(false));
+        context.setLocalVariable("limb", Expression.string(getLimb() == null ? "null" : getLimb().getName()));
+        context.setLocalVariable("relativeTo", Expression.string(getArea() == null ? "null" : getArea().getRelativeName()));
+        context.setLocalVariable("repeats", Expression.integer(repeatActionCount));
+        context.setLocalVariable("success", Expression.bool(false));
         sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get(attackPhrase), Phrases.get(attackPhraseAudible), context, true, isLoud, null, null));
         subject.triggerScript("on_attack_failure", context);
     }
@@ -228,24 +229,24 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     @Override
     public void onSuccessOverall(Actor subject, int repeatActionCount, List<AttackTarget> targetsSuccess, List<AttackTarget> targetsFail) {
         Context context = Context.builder().subject(subject).parentItem(getWeapon()).parentArea(getArea()).parentAction(this).build();
-        context.setLocalVariable("limb", Expression.constant(getLimb() == null ? "null" : getLimb().getName()));
-        context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
-        context.setLocalVariable("repeats", Expression.constant(repeatActionCount));
-        context.setLocalVariable("success", Expression.constant(true));
+        context.setLocalVariable("limb", Expression.string(getLimb() == null ? "null" : getLimb().getName()));
+        context.setLocalVariable("relativeTo", Expression.string(getArea() == null ? "null" : getArea().getRelativeName()));
+        context.setLocalVariable("repeats", Expression.integer(repeatActionCount));
+        context.setLocalVariable("success", Expression.bool(true));
         List<Noun> targetsSuccessNouns = targetsSuccess.stream().map(target -> (Noun) target).toList();
         List<Noun> targetsFailNouns = targetsFail.stream().map(target -> (Noun) target).toList();
-        context.setLocalVariable("targetsSuccess", targetsSuccessNouns.isEmpty() ? null : Expression.constantNoun(new MultiNoun(targetsSuccessNouns)));
-        context.setLocalVariable("targetsFail", targetsFailNouns.isEmpty() ? null : Expression.constantNoun(new MultiNoun(targetsFailNouns)));
+        context.setLocalVariable("targetsSuccess", targetsSuccessNouns.isEmpty() ? null : Expression.noun(new MultiNoun(targetsSuccessNouns)));
+        context.setLocalVariable("targetsFail", targetsFailNouns.isEmpty() ? null : Expression.noun(new MultiNoun(targetsFailNouns)));
         sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get(attackOverallPhrase), Phrases.get(attackOverallPhraseAudible), context, true, isLoud, this, null));
     }
 
     @Override
     public void onFailOverall(Actor subject, int repeatActionCount) {
         Context context = Context.builder().subject(subject).parentItem(getWeapon()).parentArea(getArea()).parentAction(this).build();
-        context.setLocalVariable("limb", Expression.constant(getLimb() == null ? "null" : getLimb().getName()));
-        context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
-        context.setLocalVariable("repeats", Expression.constant(repeatActionCount));
-        context.setLocalVariable("success", Expression.constant(false));
+        context.setLocalVariable("limb", Expression.string(getLimb() == null ? "null" : getLimb().getName()));
+        context.setLocalVariable("relativeTo", Expression.string(getArea() == null ? "null" : getArea().getRelativeName()));
+        context.setLocalVariable("repeats", Expression.integer(repeatActionCount));
+        context.setLocalVariable("success", Expression.bool(false));
         sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get(attackOverallPhrase), Phrases.get(attackOverallPhraseAudible), context, true, isLoud, this, null));
     }
 

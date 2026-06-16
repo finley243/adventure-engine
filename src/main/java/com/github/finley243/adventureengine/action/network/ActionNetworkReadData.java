@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataNetwork;
 import com.github.finley243.adventureengine.network.DataNetworkNode;
@@ -14,11 +15,13 @@ public class ActionNetworkReadData extends NetworkAction {
 
     private final DataNetworkNode node;
     private final WorldObject object;
+    private final MenuManager menuManager;
 
-    public ActionNetworkReadData(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, DataNetworkNode node, WorldObject object) {
+    public ActionNetworkReadData(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, DataNetworkNode node, WorldObject object, MenuManager menuManager) {
         super(scriptRuntime, sensoryEventDispatcher);
         this.node = node;
         this.object = object;
+        this.menuManager = menuManager;
     }
 
     @Override
@@ -29,13 +32,13 @@ public class ActionNetworkReadData extends NetworkAction {
     @Override
     public Context getContext(Actor subject) {
         Context context = Context.builder().subject(subject).parentObject(object).parentAction(this).build();
-        context.setLocalVariable("node", Expression.constant(node));
+        context.setLocalVariable("node", Expression.valueHolder(node));
         return context;
     }
 
     @Override
     public void choose(Actor subject, int repeatActionCount) {
-        game.menuManager().sceneMenu(game, game.data().getScene(node.getSceneID()), getContext(subject), false);
+        menuManager.sceneMenu(node.getScene(), getContext(subject), false);
     }
 
     @Override

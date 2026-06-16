@@ -5,7 +5,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.expression.ExpressionConstantString;
+import com.github.finley243.adventureengine.expression.StringExpression;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.component.AmmoItemComponent;
 import com.github.finley243.adventureengine.item.component.MagazineItemComponent;
@@ -37,7 +37,7 @@ public class ActionWeaponReload extends Action {
 	@Override
 	public Context getContext(Actor subject) {
 		Context context = Context.builder().subject(subject).parentItem(weapon).build();
-		context.setLocalVariable("ammo", Expression.constant(ammoType));
+		context.setLocalVariable("ammo", Expression.valueHolder(ammoType));
 		return context;
 	}
 	
@@ -80,7 +80,7 @@ public class ActionWeaponReload extends Action {
 
 	@Override
 	public int actionPoints(Actor subject) {
-		Context context = Context.builder().subject(subject).target(subject).parentItem(weapon).parentAction(this).addVariable("ammo_type", new ExpressionConstantString(ammoType.getTemplateID())).build();
+		Context context = Context.builder().subject(subject).target(subject).parentItem(weapon).parentAction(this).addVariable("ammo_type", new StringExpression(ammoType.getTemplateID())).build();
 		return weapon.getComponentOfType(MagazineItemComponent.class).getReloadActionPoints(context);
 	}
 

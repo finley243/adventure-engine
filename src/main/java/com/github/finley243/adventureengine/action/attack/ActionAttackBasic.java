@@ -2,7 +2,7 @@ package com.github.finley243.adventureengine.action.attack;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.combat.DamageType;
-import com.github.finley243.adventureengine.combat.WeaponAttackType;
+import com.github.finley243.adventureengine.combat.AttackType;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.item.Item;
@@ -23,7 +23,7 @@ public class ActionAttackBasic extends ActionAttack {
 	private final AttackTarget target;
 	private final Item weapon;
 
-	public ActionAttackBasic(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, WeaponAttackType attackType, Item weapon, AttackTarget target, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, Script damage, DamageType damageType, float armorMult, List<Effect> targetEffects, Script hitChanceExpression, Script hitChanceOverallExpression, float hitChanceMult, boolean isLoud, AreaLink.DistanceCategory targetDistance) {
+	public ActionAttackBasic(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, AttackType attackType, Item weapon, AttackTarget target, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, AttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, Script damage, DamageType damageType, float armorMult, List<Effect> targetEffects, Script hitChanceExpression, Script hitChanceOverallExpression, float hitChanceMult, boolean isLoud, AreaLink.DistanceCategory targetDistance) {
 		super(scriptRuntime, sensoryEventDispatcher, attackType, weapon, Set.of(target), null, null, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffects, hitChanceExpression, hitChanceOverallExpression, hitChanceMult, isLoud, targetDistance);
 		this.target = target;
 		this.weapon = weapon;

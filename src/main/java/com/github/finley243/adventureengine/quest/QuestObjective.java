@@ -135,13 +135,13 @@ public class QuestObjective extends GameInstanced implements ScriptValueHolder {
     @Override
     public Expression getScriptValue(String name, Context context) {
         return switch (name) {
-            case "id" -> Expression.constant(getID());
-            case "name" -> Expression.constant(name);
-            case "description" -> Expression.constant(description);
-            case "isActive" -> Expression.constant(isActive);
-            case "state" -> Expression.constant(state.toString());
-            case "isCompleted" -> Expression.constant(isCompleted());
-            case "isFailed" -> Expression.constant(isFailed());
+            case "id" -> Expression.string(getID());
+            case "name" -> Expression.string(name);
+            case "description" -> Expression.string(description);
+            case "isActive" -> Expression.bool(isActive);
+            case "state" -> Expression.string(state.toString());
+            case "isCompleted" -> Expression.bool(isCompleted());
+            case "isFailed" -> Expression.bool(isFailed());
             default -> null;
         };
     }

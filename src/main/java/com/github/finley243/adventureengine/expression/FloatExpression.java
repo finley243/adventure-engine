@@ -1,31 +1,31 @@
 package com.github.finley243.adventureengine.expression;
 
-public class ExpressionConstantInteger extends Expression {
+public class FloatExpression extends Expression {
 
-    private final int value;
+    private final float value;
 
-    public ExpressionConstantInteger(int value) {
+    FloatExpression(float value) {
         this.value = value;
     }
 
     @Override
     public DataType getDataType() {
-        return DataType.INTEGER;
+        return DataType.FLOAT;
     }
 
     @Override
-    public int getValueInteger() {
+    public float getValueFloat() {
         return value;
     }
 
     @Override
     public String toString() {
-        return Integer.toString(value);
+        return Float.toString(value);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof ExpressionConstantInteger expression)) {
+        if (!(o instanceof FloatExpression expression)) {
             return false;
         } else {
             return expression.value == this.value;
@@ -34,7 +34,7 @@ public class ExpressionConstantInteger extends Expression {
 
     @Override
     public int hashCode() {
-        return Integer.hashCode(value);
+        return Float.hashCode(value);
     }
 
 }

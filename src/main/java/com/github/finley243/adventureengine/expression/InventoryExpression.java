@@ -1,22 +1,22 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.script.ScriptValueHolder;
+import com.github.finley243.adventureengine.item.Inventory;
 
-public class ExpressionConstantStatHolder extends Expression {
+public class InventoryExpression extends Expression {
 
-    private final ScriptValueHolder value;
+    private final Inventory value;
 
-    public ExpressionConstantStatHolder(ScriptValueHolder value) {
+    InventoryExpression(Inventory value) {
         this.value = value;
     }
 
     @Override
     public DataType getDataType() {
-        return DataType.STAT_HOLDER;
+        return DataType.INVENTORY;
     }
 
     @Override
-    public ScriptValueHolder getValueStatHolder() {
+    public Inventory getValueInventory() {
         return value;
     }
 
@@ -27,7 +27,7 @@ public class ExpressionConstantStatHolder extends Expression {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof ExpressionConstantStatHolder expression)) {
+        if (!(o instanceof InventoryExpression expression)) {
             return false;
         } else {
             return expression.value == this.value;

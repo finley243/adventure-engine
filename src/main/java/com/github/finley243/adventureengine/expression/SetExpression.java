@@ -3,11 +3,11 @@ package com.github.finley243.adventureengine.expression;
 import java.util.Objects;
 import java.util.Set;
 
-public class ExpressionConstantSet extends Expression {
+public class SetExpression extends Expression {
 
     private final Set<Expression> value;
 
-    public ExpressionConstantSet(Set<Expression> value) {
+    SetExpression(Set<Expression> value) {
         this.value = value;
     }
 
@@ -28,7 +28,7 @@ public class ExpressionConstantSet extends Expression {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof ExpressionConstantSet expression)) {
+        if (!(o instanceof SetExpression expression)) {
             return false;
         } else {
             return Objects.equals(expression.value, this.value);

@@ -40,7 +40,7 @@ public class ActionInventoryStore extends Action {
     @Override
     public Context getContext(Actor subject) {
         Context context = Context.builder().subject(subject).parentItem(item).build();
-        context.setLocalVariable("inventory", Expression.constantNoun(owner));
+        context.setLocalVariable("inventory", Expression.noun(owner));
         return context;
     }
 

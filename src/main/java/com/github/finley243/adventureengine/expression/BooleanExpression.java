@@ -1,10 +1,10 @@
 package com.github.finley243.adventureengine.expression;
 
-public class ExpressionConstantBoolean extends Expression {
+public class BooleanExpression extends Expression {
 
     private final boolean value;
 
-    public ExpressionConstantBoolean(boolean value) {
+    BooleanExpression(boolean value) {
         this.value = value;
     }
 
@@ -25,7 +25,7 @@ public class ExpressionConstantBoolean extends Expression {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof ExpressionConstantBoolean expression)) {
+        if (!(o instanceof BooleanExpression expression)) {
             return false;
         } else {
             return expression.value == this.value;

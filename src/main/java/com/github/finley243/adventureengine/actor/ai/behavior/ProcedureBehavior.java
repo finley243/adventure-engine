@@ -13,19 +13,19 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.List;
 
-public class BehaviorProcedure extends Behavior {
+public class ProcedureBehavior extends Behavior {
 
     private final boolean isCycle;
     private final List<Behavior> stages;
     private int currentStage;
     private Context currentStageContext;
 
-    public BehaviorProcedure(Condition condition, Script startScript, Script eachRoundScript, boolean isCycle, List<Behavior> stages) {
+    public ProcedureBehavior(Condition condition, Script startScript, Script eachRoundScript, boolean isCycle, List<Behavior> stages) {
         super(condition, eachRoundScript, startScript, 0, null);
         if (stages.isEmpty()) throw new IllegalArgumentException("BehaviorCycle stages cannot be empty");
         if (stages.size() == 1) throw new IllegalArgumentException("BehaviorCycle cannot have 1 stage");
         for (Behavior behavior : stages) {
-            if (behavior instanceof BehaviorProcedure) throw new IllegalArgumentException("BehaviorProcedure cannot contain another BehaviorProcedure");
+            if (behavior instanceof ProcedureBehavior) throw new IllegalArgumentException("BehaviorProcedure cannot contain another BehaviorProcedure");
         }
         this.isCycle = isCycle;
         this.stages = stages;

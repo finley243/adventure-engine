@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class ScriptListConcat extends Script {
 
@@ -22,7 +23,7 @@ public class ScriptListConcat extends Script {
         List<Expression> listTwo = listTwoExpression.getValueList();
         List<Expression> listCombined = new ArrayList<>(listOne);
         listCombined.addAll(listTwo);
-        return new ScriptReturnData(Expression.constant(listCombined), FlowStatementType.RETURN, null);
+        return new ScriptReturnData(Expression.list(listCombined, Function.identity()), FlowStatementType.RETURN, null);
     }
 
 }

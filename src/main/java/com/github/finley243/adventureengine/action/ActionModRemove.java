@@ -29,7 +29,7 @@ public class ActionModRemove extends Action {
     @Override
     public Context getContext(Actor subject) {
         Context context = Context.builder().subject(subject).parentItem(target).build();
-        context.setLocalVariable("mod", Expression.constant(mod));
+        context.setLocalVariable("mod", Expression.valueHolder(mod));
         return context;
     }
 

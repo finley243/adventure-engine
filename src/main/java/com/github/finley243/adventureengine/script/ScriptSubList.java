@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.List;
+import java.util.function.Function;
 
 public class ScriptSubList extends Script {
 
@@ -21,7 +22,7 @@ public class ScriptSubList extends Script {
         if (indexEndExpression.getDataType() != Expression.DataType.INTEGER) return new ScriptReturnData(null, null, new ScriptErrorData("Index end parameter is not an integer", getTraceData()));
         List<Expression> list = listExpression.getValueList();
         List<Expression> subList = list.subList(indexStartExpression.getValueInteger(), indexEndExpression.getValueInteger());
-        return new ScriptReturnData(Expression.constant(subList), FlowStatementType.RETURN, null);
+        return new ScriptReturnData(Expression.list(subList, Function.identity()), FlowStatementType.RETURN, null);
     }
 
 }

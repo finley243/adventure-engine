@@ -19,7 +19,7 @@ public class ScriptSubString extends Script {
         if (indexEndExpression.getDataType() != Expression.DataType.INTEGER) return new ScriptReturnData(null, null, new ScriptErrorData("Index end parameter is not an integer", getTraceData()));
         String stringValue = stringExpression.getValueString();
         String subString = stringValue.substring(indexStartExpression.getValueInteger(), indexEndExpression.getValueInteger());
-        return new ScriptReturnData(Expression.constant(subString), FlowStatementType.RETURN, null);
+        return new ScriptReturnData(Expression.string(subString), FlowStatementType.RETURN, null);
     }
 
 }

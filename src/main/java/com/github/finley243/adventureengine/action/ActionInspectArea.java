@@ -6,9 +6,8 @@ import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.event.ui.RenderGeneratedTextEvent;
-import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
-import com.github.finley243.adventureengine.event.ui.UIEvent;
 import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataArea;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
@@ -27,11 +26,17 @@ public class ActionInspectArea extends Action {
 
     private final Area area;
     private final UIEventBus eventBus;
+    private final TextGen textGen;
+    private final MenuManager menuManager;
+    private final Pathfinder pathfinder;
 
-    public ActionInspectArea(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Area area, UIEventBus eventBus, TextGen textGen) {
+    public ActionInspectArea(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Area area, UIEventBus eventBus, TextGen textGen, MenuManager menuManager, Pathfinder pathfinder) {
         super(scriptRuntime, sensoryEventDispatcher);
         this.area = area;
         this.eventBus = eventBus;
+        this.textGen = textGen;
+        this.menuManager = menuManager;
+        this.pathfinder = pathfinder;
     }
 
     @Override
@@ -47,10 +52,10 @@ public class ActionInspectArea extends Action {
     @Override
     public void choose(Actor subject, int repeatActionCount) {
         Context context = getContext(subject);
-        Map<Area, Pathfinder.VisibleAreaData> visibleAreas = Pathfinder.getVisibleAreas(game, area, subject);
+        Map<Area, Pathfinder.VisibleAreaData> visibleAreas = pathfinder.getVisibleAreas(area, subject);
         List<Area> orderedAreaList = new ArrayList<>(visibleAreas.keySet());
         orderedAreaList.sort(Comparator.comparingInt(a -> visibleAreas.get(a).path().size()));
-        TextGen.clearContext();
+        textGen.clearContext();
         for (Area currentArea : orderedAreaList) {
             Pathfinder.VisibleAreaData areaData = visibleAreas.get(currentArea);
             String directionName = areaData.direction() != null ? areaData.direction().name : null;
@@ -58,10 +63,10 @@ public class ActionInspectArea extends Action {
             if (areaData.path().size() > 2) {
                 leadingArea = areaData.path().get(areaData.path().size() - 2);
             }
-            context.setLocalVariable("relativeName", Expression.constant(currentArea.getRelativeName()));
-            context.setLocalVariable("area", Expression.constantNoun(currentArea));
-            context.setLocalVariable("dir", Expression.constant(directionName));
-            context.setLocalVariable("leadingArea", Expression.constantNoun(leadingArea));
+            context.setLocalVariable("relativeName", Expression.string(currentArea.getRelativeName()));
+            context.setLocalVariable("area", Expression.noun(currentArea));
+            context.setLocalVariable("dir", Expression.string(directionName));
+            context.setLocalVariable("leadingArea", Expression.noun(leadingArea));
             String phrase;
             if (currentArea.equals(area)) {
                 phrase = "$actor $is $relativeName $area.";
@@ -91,7 +96,7 @@ public class ActionInspectArea extends Action {
             areaContents.addAll(visibleActors);
             areaContents.addAll(visibleItems);
             if (!areaContents.isEmpty()) {
-                context.setLocalVariable("areaContents", Expression.constantNoun(new MultiNoun(areaContents)));
+                context.setLocalVariable("areaContents", Expression.noun(new MultiNoun(areaContents)));
                 String areaContentsPhrase = "$relativeName $area, there $is $areaContents.";
                 eventBus.post(new RenderGeneratedTextEvent(areaContentsPhrase, context, context.generateTextContext()));
             }

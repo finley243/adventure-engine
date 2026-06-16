@@ -7,7 +7,7 @@ import com.github.finley243.adventureengine.actor.*;
 import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.actor.ai.behavior.*;
 import com.github.finley243.adventureengine.combat.DamageType;
-import com.github.finley243.adventureengine.combat.WeaponAttackType;
+import com.github.finley243.adventureengine.combat.AttackType;
 import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.effect.*;
@@ -94,7 +94,7 @@ public class DataLoader {
                                     game.data().addWeaponClass(weaponClass.ID(), weaponClass);
                                 }
                                 case "attackType" -> {
-                                    WeaponAttackType attackType = loadWeaponAttackType(currentElement);
+                                    AttackType attackType = loadWeaponAttackType(currentElement);
                                     game.data().addAttackType(attackType.getID(), attackType);
                                 }
                                 case "room" -> {
@@ -897,30 +897,30 @@ public class DataLoader {
         switch (type) {
             case "move" -> {
                 String areaTarget = LoadUtils.attribute(behaviorElement, "area", null);
-                return new BehaviorMove(condition, startScript, eachRoundScript, duration, idles, areaTarget);
+                return new MoveBehavior(condition, startScript, eachRoundScript, duration, idles, areaTarget);
             }
             case "use" -> {
                 String objectTarget = LoadUtils.attribute(behaviorElement, "object", null);
                 String slotTarget = LoadUtils.attribute(behaviorElement, "slot", null);
-                return new BehaviorUse(condition, startScript, eachRoundScript, duration, idles, objectTarget, slotTarget);
+                return new UseBehavior(condition, startScript, eachRoundScript, duration, idles, objectTarget, slotTarget);
             }
             case "guard" -> {
                 String guardTarget = LoadUtils.attribute(behaviorElement, "object", null);
-                return new BehaviorGuard(condition, startScript, eachRoundScript, duration, idles, guardTarget);
+                return new GuardBehavior(condition, startScript, eachRoundScript, duration, idles, guardTarget);
             }
             case "follow" -> {
                 String actorTarget = LoadUtils.attribute(behaviorElement, "actor", null);
-                return new BehaviorFollow(condition, startScript, eachRoundScript, duration, idles, actorTarget);
+                return new FollowBehavior(condition, startScript, eachRoundScript, duration, idles, actorTarget);
             }
             case "action" -> {
                 String actionID = LoadUtils.attribute(behaviorElement, "action", null);
                 Condition actionCondition = loadCondition(LoadUtils.singleChildWithName(behaviorElement, "actionCondition"), "Behavior(" + actorID + ") - action condition");
-                return new BehaviorAction(condition, startScript, eachRoundScript, duration, idles, actionID, actionCondition);
+                return new ActionBehavior(condition, startScript, eachRoundScript, duration, idles, actionID, actionCondition);
             }
             case "procedure" -> {
                 List<Behavior> procedureBehaviors = loadBehaviors(behaviorElement, actorID);
                 boolean isCycle = LoadUtils.attributeBool(behaviorElement, "isCycle", false);
-                return new BehaviorProcedure(condition, startScript, eachRoundScript, isCycle, procedureBehaviors);
+                return new ProcedureBehavior(condition, startScript, eachRoundScript, isCycle, procedureBehaviors);
             }
             default -> throw new IllegalArgumentException("Behavior type is not valid: " + type);
         }
@@ -943,9 +943,9 @@ public class DataLoader {
         return new WeaponClass(ID, name, isRanged, isLoud, skill, primaryRanges, attackTypes);
     }
 
-    private static WeaponAttackType loadWeaponAttackType(Element attackTypeElement) throws GameDataException {
+    private static AttackType loadWeaponAttackType(Element attackTypeElement) throws GameDataException {
         String ID = LoadUtils.attribute(attackTypeElement, "id", null);
-        WeaponAttackType.AttackCategory category = LoadUtils.attributeEnum(attackTypeElement, "category", WeaponAttackType.AttackCategory.class, WeaponAttackType.AttackCategory.SINGLE);
+        AttackType.AttackCategory category = LoadUtils.attributeEnum(attackTypeElement, "category", AttackType.AttackCategory.class, AttackType.AttackCategory.SINGLE);
         String prompt = LoadUtils.singleTag(attackTypeElement, "prompt", null);
         String attackPhrase = LoadUtils.singleTag(attackTypeElement, "attackPhrase", null);
         String attackOverallPhrase = LoadUtils.singleTag(attackTypeElement, "attackOverallPhrase", null);
@@ -953,7 +953,7 @@ public class DataLoader {
         String attackOverallPhraseAudible = LoadUtils.singleTag(attackTypeElement, "attackOverallPhraseAudible", null);
         int ammoConsumed = LoadUtils.attributeInt(attackTypeElement, "ammoConsumed", 1);
         int actionPoints = LoadUtils.attributeInt(attackTypeElement, "actionPoints", 1);
-        WeaponAttackType.WeaponConsumeType weaponConsumeType = LoadUtils.attributeEnum(attackTypeElement, "weaponConsumeType", WeaponAttackType.WeaponConsumeType.class, WeaponAttackType.WeaponConsumeType.NONE);
+        AttackType.WeaponConsumeType weaponConsumeType = LoadUtils.attributeEnum(attackTypeElement, "weaponConsumeType", AttackType.WeaponConsumeType.class, AttackType.WeaponConsumeType.NONE);
         boolean useNonIdealRange = LoadUtils.attributeBool(attackTypeElement, "nonIdealRange", false);
         Set<AreaLink.DistanceCategory> rangeOverride = LoadUtils.setOfEnumTags(attackTypeElement, "range", AreaLink.DistanceCategory.class);
         Integer rateOverride = LoadUtils.attributeInt(attackTypeElement, "rate", null);
@@ -967,7 +967,7 @@ public class DataLoader {
         Script hitChanceOverall = loadExpressionScript(LoadUtils.singleChildWithName(attackTypeElement, "hitChanceOverall"), "WeaponAttackType(" + ID + ") - overall hit chance");
         float hitChanceMult = LoadUtils.attributeFloat(attackTypeElement, "hitChanceMult", 0.0f);
         Boolean isLoudOverride = LoadUtils.attributeBool(attackTypeElement, "isLoudOverride", null);
-        return new WeaponAttackType(ID, category, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, useNonIdealRange, rangeOverride, rateOverride, damageOverride, damageMult, damageTypeOverride, armorMultOverride, targetEffects, overrideTargetEffects, hitChance, hitChanceOverall, hitChanceMult, isLoudOverride);
+        return new AttackType(ID, category, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, useNonIdealRange, rangeOverride, rateOverride, damageOverride, damageMult, damageTypeOverride, armorMultOverride, targetEffects, overrideTargetEffects, hitChance, hitChanceOverall, hitChanceMult, isLoudOverride);
     }
 
     private static NetworkNode loadNetworkNode(Element nodeElement) {

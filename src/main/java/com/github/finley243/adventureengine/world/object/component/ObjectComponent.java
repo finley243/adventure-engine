@@ -66,7 +66,7 @@ public abstract class ObjectComponent implements ScriptValueHolder {
     @Override
     public Expression getScriptValue(String name, Context context) {
         if ((getStatName() + "_enabled").equals(name)) {
-            return Expression.constant(isEnabled());
+            return Expression.bool(isEnabled());
         }
         return null;
     }

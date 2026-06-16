@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Function;
 
 public class ScriptSetSymmetricDifference extends Script {
 
@@ -31,7 +32,7 @@ public class ScriptSetSymmetricDifference extends Script {
                 setSymmetricDifference.add(expression);
             }
         }
-        return new ScriptReturnData(Expression.constant(setSymmetricDifference), FlowStatementType.RETURN, null);
+        return new ScriptReturnData(Expression.set(setSymmetricDifference, Function.identity()), FlowStatementType.RETURN, null);
     }
 
 }

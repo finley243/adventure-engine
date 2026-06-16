@@ -14,13 +14,13 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.List;
 
-public class BehaviorUse extends Behavior {
+public class UseBehavior extends Behavior {
 
     private String objectID;
     private WorldObject object;
     private final String slot;
 
-    public BehaviorUse(Condition condition, Script startScript, Script eachRoundScript, int duration, List<Idle> idles, String objectID, String slot) {
+    public UseBehavior(Condition condition, Script startScript, Script eachRoundScript, int duration, List<Idle> idles, String objectID, String slot) {
         super(condition, startScript, eachRoundScript, duration, idles);
         this.objectID = objectID;
         this.slot = slot;

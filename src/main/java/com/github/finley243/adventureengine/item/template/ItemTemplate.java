@@ -91,10 +91,10 @@ public class ItemTemplate extends GameInstanced implements Noun, ScriptValueHold
 	@Override
 	public Expression getScriptValue(String name, Context context) {
 		return switch (name) {
-			case "noun" -> Expression.constantNoun(this);
-			case "price" -> Expression.constant(price);
-			case "id" -> Expression.constant(getID());
-			case "name" -> Expression.constant(getName());
+			case "noun" -> Expression.noun(this);
+			case "price" -> Expression.integer(price);
+			case "id" -> Expression.string(getID());
+			case "name" -> Expression.string(getName());
 			default -> null;
 		};
 	}

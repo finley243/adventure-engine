@@ -1,33 +1,31 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.item.Inventory;
+public class IntegerExpression extends Expression {
 
-public class ExpressionConstantInventory extends Expression {
+    private final int value;
 
-    private final Inventory value;
-
-    public ExpressionConstantInventory(Inventory value) {
+    IntegerExpression(int value) {
         this.value = value;
     }
 
     @Override
     public DataType getDataType() {
-        return DataType.INVENTORY;
+        return DataType.INTEGER;
     }
 
     @Override
-    public Inventory getValueInventory() {
+    public int getValueInteger() {
         return value;
     }
 
     @Override
     public String toString() {
-        return null;
+        return Integer.toString(value);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof ExpressionConstantInventory expression)) {
+        if (!(o instanceof IntegerExpression expression)) {
             return false;
         } else {
             return expression.value == this.value;
@@ -36,7 +34,7 @@ public class ExpressionConstantInventory extends Expression {
 
     @Override
     public int hashCode() {
-        return value.hashCode();
+        return Integer.hashCode(value);
     }
 
 }

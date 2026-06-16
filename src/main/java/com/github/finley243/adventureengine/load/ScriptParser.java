@@ -636,17 +636,17 @@ public class ScriptParser {
         if (tokens.size() != 1) throw new ScriptCompileException("Invalid literal expression", tokens.getFirst().fileName, tokens.getFirst().line);
         ScriptToken token = tokens.getFirst();
         if (token.type == ScriptTokenType.STRING) {
-            return Expression.constant(token.value);
+            return Expression.string(token.value);
         } else if (token.type == ScriptTokenType.INTEGER) {
             int value = Integer.parseInt(token.value);
-            return Expression.constant(value);
+            return Expression.integer(value);
         } else if (token.type == ScriptTokenType.FLOAT) {
             float value = Float.parseFloat(token.value);
-            return Expression.constant(value);
+            return Expression.decimal(value);
         } else if (token.type == ScriptTokenType.BOOLEAN_TRUE) {
-            return Expression.constant(true);
+            return Expression.bool(true);
         } else if (token.type == ScriptTokenType.BOOLEAN_FALSE) {
-            return Expression.constant(false);
+            return Expression.bool(false);
         } else if (token.type == ScriptTokenType.NULL) {
             return null;
         }

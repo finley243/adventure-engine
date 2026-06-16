@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.load;
 import com.github.finley243.adventureengine.actor.Skill;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.combat.DamageType;
-import com.github.finley243.adventureengine.combat.WeaponAttackType;
+import com.github.finley243.adventureengine.combat.AttackType;
 import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.gamedata.Registry;
@@ -56,10 +56,10 @@ public class CombatTypeLoader {
     private static final boolean DEFAULT_WEAPON_CLASS_IS_RANGED = false;
     private static final boolean DEFAULT_WEAPON_CLASS_IS_LOUD = false;
 
-    private static final WeaponAttackType.AttackCategory DEFAULT_ATTACK_TYPE_CATEGORY = WeaponAttackType.AttackCategory.SINGLE;
+    private static final AttackType.AttackCategory DEFAULT_ATTACK_TYPE_CATEGORY = AttackType.AttackCategory.SINGLE;
     private static final int DEFAULT_ATTACK_TYPE_AMMO_CONSUMED = 1;
     private static final int DEFAULT_ATTACK_TYPE_ACTION_POINTS = 1;
-    private static final WeaponAttackType.WeaponConsumeType DEFAULT_ATTACK_TYPE_CONSUME_TYPE = WeaponAttackType.WeaponConsumeType.NONE;
+    private static final AttackType.WeaponConsumeType DEFAULT_ATTACK_TYPE_CONSUME_TYPE = AttackType.WeaponConsumeType.NONE;
     private static final boolean DEFAULT_ATTACK_TYPE_NONIDEAL_RANGE = false;
     private static final float DEFAULT_ATTACK_TYPE_DAMAGE_MULT = 0.0f;
     private static final boolean DEFAULT_ATTACK_TYPE_OVERRIDE_EFFECTS = false;
@@ -75,12 +75,12 @@ public class CombatTypeLoader {
         return LoadUtils.loadAll(element, NAME_DAMAGE_TYPE, this::parseDamageType, DamageType::ID);
     }
 
-    public Map<String, WeaponClass> loadWeaponClasses(Element element, Registry<WeaponAttackType> attackTypeRegistry, Registry<Skill> skillRegistry) {
+    public Map<String, WeaponClass> loadWeaponClasses(Element element, Registry<AttackType> attackTypeRegistry, Registry<Skill> skillRegistry) {
         return LoadUtils.loadAll(element, NAME_WEAPON_CLASS, e -> parseWeaponClass(e, attackTypeRegistry, skillRegistry), WeaponClass::ID);
     }
 
-    public Map<String, WeaponAttackType> loadAttackTypes(Element element, Pathfinder pathfinder, Registry<DamageType> damageTypeRegistry, Registry<Effect> effectRegistry) {
-        return LoadUtils.loadAll(element, NAME_ATTACK_TYPE, e -> parseAttackType(e, pathfinder, damageTypeRegistry, effectRegistry), WeaponAttackType::getID);
+    public Map<String, AttackType> loadAttackTypes(Element element, Pathfinder pathfinder, Registry<DamageType> damageTypeRegistry, Registry<Effect> effectRegistry) {
+        return LoadUtils.loadAll(element, NAME_ATTACK_TYPE, e -> parseAttackType(e, pathfinder, damageTypeRegistry, effectRegistry), AttackType::getID);
     }
 
     private DamageType parseDamageType(Element element) {
@@ -89,7 +89,7 @@ public class CombatTypeLoader {
         return new DamageType(ID, name);
     }
 
-    private WeaponClass parseWeaponClass(Element element, Registry<WeaponAttackType> attackTypeRegistry, Registry<Skill> skillRegistry) {
+    private WeaponClass parseWeaponClass(Element element, Registry<AttackType> attackTypeRegistry, Registry<Skill> skillRegistry) {
         String ID = LoadUtils.attribute(element, NAME_WEAPON_CLASS_ID, null);
         String name = LoadUtils.singleTag(element, NAME_WEAPON_CLASS_NAME, null);
         boolean isRanged = LoadUtils.attributeBool(element, NAME_WEAPON_CLASS_IS_RANGED, DEFAULT_WEAPON_CLASS_IS_RANGED);
@@ -99,20 +99,20 @@ public class CombatTypeLoader {
         if (skill == null) throw new GameDataException("WeaponClass has invalid skill");
         Set<AreaLink.DistanceCategory> primaryRanges = LoadUtils.setOfEnumTags(element, NAME_WEAPON_CLASS_RANGE, AreaLink.DistanceCategory.class);
         Set<String> attackTypeIDs = LoadUtils.setOfTags(element, NAME_WEAPON_CLASS_ATTACK_TYPE);
-        Set<WeaponAttackType> attackTypes = new HashSet<>();
+        Set<AttackType> attackTypes = new HashSet<>();
         for (String attackTypeID : attackTypeIDs) {
-            WeaponAttackType attackType = attackTypeRegistry.getFromID(attackTypeID);
+            AttackType attackType = attackTypeRegistry.getFromID(attackTypeID);
             if (attackType == null) throw new GameDataException("WeaponClass has invalid attack type");
             attackTypes.add(attackType);
         }
         return new WeaponClass(ID, name, isRanged, isLoud, skill, primaryRanges, attackTypes);
     }
 
-    private WeaponAttackType parseAttackType(Element element, Pathfinder pathfinder, Registry<DamageType> damageTypeRegistry, Registry<Effect> effectRegistry) {
+    private AttackType parseAttackType(Element element, Pathfinder pathfinder, Registry<DamageType> damageTypeRegistry, Registry<Effect> effectRegistry) {
         String ID = LoadUtils.attribute(element, NAME_ATTACK_TYPE_ID, null);
-        WeaponAttackType.AttackCategory category;
+        AttackType.AttackCategory category;
         try {
-            category = LoadUtils.attributeEnum(element, NAME_ATTACK_TYPE_CATEGORY, WeaponAttackType.AttackCategory.class, DEFAULT_ATTACK_TYPE_CATEGORY);
+            category = LoadUtils.attributeEnum(element, NAME_ATTACK_TYPE_CATEGORY, AttackType.AttackCategory.class, DEFAULT_ATTACK_TYPE_CATEGORY);
         } catch (IllegalArgumentException e) {
             throw new GameDataException("AttackType has invalid category");
         }
@@ -123,9 +123,9 @@ public class CombatTypeLoader {
         String attackOverallPhraseAudible = LoadUtils.singleTag(element, NAME_ATTACK_TYPE_PHRASE_AUDIBLE_OVERALL, null);
         int ammoConsumed = LoadUtils.attributeInt(element, NAME_ATTACK_TYPE_AMMO_CONSUMED, DEFAULT_ATTACK_TYPE_AMMO_CONSUMED);
         int actionPoints = LoadUtils.attributeInt(element, NAME_ATTACK_TYPE_ACTION_POINTS, DEFAULT_ATTACK_TYPE_ACTION_POINTS);
-        WeaponAttackType.WeaponConsumeType weaponConsumeType;
+        AttackType.WeaponConsumeType weaponConsumeType;
         try {
-            weaponConsumeType = LoadUtils.attributeEnum(element, NAME_ATTACK_TYPE_CONSUME_TYPE, WeaponAttackType.WeaponConsumeType.class, DEFAULT_ATTACK_TYPE_CONSUME_TYPE);
+            weaponConsumeType = LoadUtils.attributeEnum(element, NAME_ATTACK_TYPE_CONSUME_TYPE, AttackType.WeaponConsumeType.class, DEFAULT_ATTACK_TYPE_CONSUME_TYPE);
         } catch (IllegalArgumentException e) {
             throw new GameDataException("AttackType has invalid weapon consume type");
         }
@@ -150,7 +150,7 @@ public class CombatTypeLoader {
         Script hitChanceOverall = LoadUtils.loadScriptExpression(LoadUtils.singleChildWithName(element, NAME_ATTACK_TYPE_HIT_CHANCE_OVERALL), scriptParser, "WeaponAttackType(" + ID + ") - overall hit chance");
         float hitChanceMult = LoadUtils.attributeFloat(element, NAME_ATTACK_TYPE_HIT_CHANCE_MULT, DEFAULT_ATTACK_TYPE_HIT_CHANCE_MULT);
         Boolean isLoudOverride = LoadUtils.attributeBool(element, NAME_ATTACK_TYPE_IS_LOUD_OVERRIDE, null);
-        return new WeaponAttackType(pathfinder, ID, category, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, useNonIdealRange, rangeOverride, rateOverride, damageOverride, damageMult, damageTypeOverride, armorMultOverride, targetEffects, overrideTargetEffects, hitChance, hitChanceOverall, hitChanceMult, isLoudOverride);
+        return new AttackType(pathfinder, ID, category, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, useNonIdealRange, rangeOverride, rateOverride, damageOverride, damageMult, damageTypeOverride, armorMultOverride, targetEffects, overrideTargetEffects, hitChance, hitChanceOverall, hitChanceMult, isLoudOverride);
     }
 
 }

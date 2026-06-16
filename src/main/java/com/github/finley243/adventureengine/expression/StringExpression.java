@@ -1,36 +1,36 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.textgen.Noun;
+import java.util.Objects;
 
-public class ExpressionConstantNoun extends Expression {
+public class StringExpression extends Expression {
 
-    private final Noun value;
+    private final String value;
 
-    public ExpressionConstantNoun(Noun value) {
+    StringExpression(String value) {
         this.value = value;
     }
 
     @Override
     public DataType getDataType() {
-        return DataType.NOUN;
+        return DataType.STRING;
     }
 
     @Override
-    public Noun getValueNoun() {
+    public String getValueString() {
         return value;
     }
 
     @Override
     public String toString() {
-        return value.getName();
+        return value;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof ExpressionConstantNoun expression)) {
+        if (!(o instanceof StringExpression expression)) {
             return false;
         } else {
-            return expression.value == this.value;
+            return Objects.equals(expression.value, this.value);
         }
     }
 

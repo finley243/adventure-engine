@@ -22,7 +22,7 @@ public class ScriptCollectionContains extends Script {
         };
         if (collection == null) return new ScriptReturnData(null, null, new ScriptErrorData("Collection parameter is not a collection", getTraceData()));
         boolean listContainsValue = collection.contains(valueExpression);
-        return new ScriptReturnData(Expression.constant(listContainsValue), FlowStatementType.RETURN, null);
+        return new ScriptReturnData(Expression.bool(listContainsValue), FlowStatementType.RETURN, null);
     }
 
 }

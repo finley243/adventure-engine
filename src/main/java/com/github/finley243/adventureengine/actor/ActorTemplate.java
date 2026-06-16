@@ -2,7 +2,7 @@ package com.github.finley243.adventureengine.actor;
 
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.ActionCustom;
-import com.github.finley243.adventureengine.combat.WeaponAttackType;
+import com.github.finley243.adventureengine.combat.AttackType;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.scene.Scene;
@@ -35,7 +35,7 @@ public class ActorTemplate extends GameInstanced {
 	private final Map<String, Integer> attributes;
 	private final Map<String, Integer> skills;
 	private final Set<SenseType> senseTypes;
-	private final List<WeaponAttackType> unarmedAttackTypes;
+	private final List<AttackType> unarmedAttackTypes;
 
 	private final List<Effect> startingEffects;
 	
@@ -48,7 +48,7 @@ public class ActorTemplate extends GameInstanced {
 	private final List<ActionCustom.CustomActionHolder> customActions;
 	private final List<ActionCustom.CustomActionHolder> customInventoryActions;
 	
-	public ActorTemplate(String ID, ActorTemplate parent, String name, Boolean isProperName, Pronoun pronoun, Faction faction, Boolean isEnforcer, Integer actionPoints, Integer movePoints, Integer startingLevel, Script levelUpThresholdExpression, Integer maxHP, Map<String, Integer> damageResistance, Map<String, Float> damageMult, List<Limb> limbs, Map<String, EquipSlot> equipSlots, Map<String, Integer> attributes, Map<String, Integer> skills, Set<SenseType> senseTypes, List<WeaponAttackType> unarmedAttackTypes, List<Effect> startingEffects, LootTable lootTable, Scene dialogueStart, Map<String, List<Script>> scripts, Map<String, Bark> barks, List<ActionCustom.CustomActionHolder> customActions, List<ActionCustom.CustomActionHolder> customInventoryActions) {
+	public ActorTemplate(String ID, ActorTemplate parent, String name, Boolean isProperName, Pronoun pronoun, Faction faction, Boolean isEnforcer, Integer actionPoints, Integer movePoints, Integer startingLevel, Script levelUpThresholdExpression, Integer maxHP, Map<String, Integer> damageResistance, Map<String, Float> damageMult, List<Limb> limbs, Map<String, EquipSlot> equipSlots, Map<String, Integer> attributes, Map<String, Integer> skills, Set<SenseType> senseTypes, List<AttackType> unarmedAttackTypes, List<Effect> startingEffects, LootTable lootTable, Scene dialogueStart, Map<String, List<Script>> scripts, Map<String, Bark> barks, List<ActionCustom.CustomActionHolder> customActions, List<ActionCustom.CustomActionHolder> customInventoryActions) {
 		super(ID);
 		if (parent == null) {
 			if (name == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: name");
@@ -196,7 +196,7 @@ public class ActorTemplate extends GameInstanced {
 		}
 	}
 
-	public List<WeaponAttackType> getUnarmedAttackTypes() {
+	public List<AttackType> getUnarmedAttackTypes() {
 		if (!unarmedAttackTypes.isEmpty()) {
 			return unarmedAttackTypes;
 		} else if (parent != null) {

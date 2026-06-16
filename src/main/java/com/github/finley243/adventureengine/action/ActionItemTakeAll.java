@@ -32,7 +32,7 @@ public class ActionItemTakeAll extends Action {
 	@Override
 	public Context getContext(Actor subject) {
 		Context context = Context.builder().subject(subject).parentItem(item).build();
-		context.setLocalVariable("count", Expression.constant(area.getInventory().itemCount(item)));
+		context.setLocalVariable("count", Expression.integer(area.getInventory().itemCount(item)));
 		return context;
 	}
 	

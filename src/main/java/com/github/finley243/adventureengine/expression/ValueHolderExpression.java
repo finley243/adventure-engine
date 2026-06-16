@@ -1,31 +1,33 @@
 package com.github.finley243.adventureengine.expression;
 
-public class ExpressionConstantFloat extends Expression {
+import com.github.finley243.adventureengine.script.ScriptValueHolder;
 
-    private final float value;
+public class ValueHolderExpression extends Expression {
 
-    public ExpressionConstantFloat(float value) {
+    private final ScriptValueHolder value;
+
+    ValueHolderExpression(ScriptValueHolder value) {
         this.value = value;
     }
 
     @Override
     public DataType getDataType() {
-        return DataType.FLOAT;
+        return DataType.STAT_HOLDER;
     }
 
     @Override
-    public float getValueFloat() {
+    public ScriptValueHolder getValueStatHolder() {
         return value;
     }
 
     @Override
     public String toString() {
-        return Float.toString(value);
+        return null;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof ExpressionConstantFloat expression)) {
+        if (!(o instanceof ValueHolderExpression expression)) {
             return false;
         } else {
             return expression.value == this.value;
@@ -34,7 +36,7 @@ public class ExpressionConstantFloat extends Expression {
 
     @Override
     public int hashCode() {
-        return Float.hashCode(value);
+        return value.hashCode();
     }
 
 }

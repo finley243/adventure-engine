@@ -4,8 +4,8 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.expression.ExpressionConstantBoolean;
-import com.github.finley243.adventureengine.expression.ExpressionConstantString;
+import com.github.finley243.adventureengine.expression.BooleanExpression;
+import com.github.finley243.adventureengine.expression.StringExpression;
 import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.script.ScriptValueHolder;
@@ -76,8 +76,8 @@ public class Scene extends GameInstanced implements ScriptValueHolder {
 	@Override
 	public Expression getScriptValue(String name, Context context) {
 		return switch (name) {
-			case "triggered" -> new ExpressionConstantBoolean(hasTriggered);
-			case "id" -> new ExpressionConstantString(getID());
+			case "triggered" -> new BooleanExpression(hasTriggered);
+			case "id" -> new StringExpression(getID());
 			default -> null;
 		};
 	}

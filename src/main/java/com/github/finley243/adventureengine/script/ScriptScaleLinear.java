@@ -54,7 +54,7 @@ public class ScriptScaleLinear extends Script {
         }
         inputValue = MathUtils.bound(inputValue, inputMinValue, inputMaxValue);
         float scaledValue = ((inputValue - inputMinValue) / (inputMaxValue - inputMinValue)) * (outputMaxValue - outputMinValue) + outputMinValue;
-        return new ScriptReturnData(Expression.constant(scaledValue), FlowStatementType.RETURN, null);
+        return new ScriptReturnData(Expression.decimal(scaledValue), FlowStatementType.RETURN, null);
     }
 
 }

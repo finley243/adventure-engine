@@ -32,7 +32,7 @@ public class ScriptInventoryIterator extends Script {
         }
         Inventory inventory = setResult.value().getValueInventory();
         for (Map.Entry<Item, Integer> currentItem : inventory.getItemMap().entrySet()) {
-            Context innerContext = Context.from(context).addVariable("count", Expression.constant(currentItem.getValue())).parentItem(currentItem.getKey()).build();
+            Context innerContext = Context.from(context).addVariable("count", Expression.integer(currentItem.getValue())).parentItem(currentItem.getKey()).build();
             ScriptReturnData scriptResult = iteratedScript.execute(, innerContext);
             if (scriptResult.error() != null) {
                 return scriptResult;

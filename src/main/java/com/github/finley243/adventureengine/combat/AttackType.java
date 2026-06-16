@@ -20,7 +20,7 @@ import com.github.finley243.adventureengine.world.environment.AreaLink;
 
 import java.util.*;
 
-public class WeaponAttackType {
+public class AttackType {
 
     public enum AttackCategory {
         SINGLE, TARGETED, SPREAD
@@ -57,7 +57,7 @@ public class WeaponAttackType {
     private final float hitChanceMult;
     private final Boolean isLoudOverride;
 
-    public WeaponAttackType(Pathfinder pathfinder, String ID, AttackCategory category, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, WeaponConsumeType weaponConsumeType, boolean useNonIdealRange, Set<AreaLink.DistanceCategory> rangeOverride, Integer rateOverride, Script damageOverride, float damageMult, DamageType damageTypeOverride, Float armorMultOverride, List<Effect> targetEffects, boolean overrideTargetEffects, Script hitChance, Script hitChanceOverall, float hitChanceMult, Boolean isLoudOverride) {
+    public AttackType(Pathfinder pathfinder, String ID, AttackCategory category, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, WeaponConsumeType weaponConsumeType, boolean useNonIdealRange, Set<AreaLink.DistanceCategory> rangeOverride, Integer rateOverride, Script damageOverride, float damageMult, DamageType damageTypeOverride, Float armorMultOverride, List<Effect> targetEffects, boolean overrideTargetEffects, Script hitChance, Script hitChanceOverall, float hitChanceMult, Boolean isLoudOverride) {
         this.pathfinder = pathfinder;
         this.ID = ID;
         this.category = category;
@@ -189,7 +189,7 @@ public class WeaponAttackType {
 
     @Override
     public boolean equals(Object o) {
-        return o instanceof WeaponAttackType attackType && getID().equals(attackType.getID());
+        return o instanceof AttackType attackType && getID().equals(attackType.getID());
     }
 
 }

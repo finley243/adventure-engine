@@ -115,9 +115,9 @@ public class MagazineItemComponent extends ItemComponent {
     @Override
     public Expression getScriptValue(String name, Context context) {
         return switch (name) {
-            case "magazine_size" -> Expression.constant(getMagazineSize());
-            case "reload_action_points" -> Expression.constant(getReloadActionPoints(context));
-            case "ammo_count" -> Expression.constant(ammoCount);
+            case "magazine_size" -> Expression.integer(getMagazineSize());
+            case "reload_action_points" -> Expression.integer(getReloadActionPoints(context));
+            case "ammo_count" -> Expression.integer(ammoCount);
             default -> super.getScriptValue(name, context);
         };
     }

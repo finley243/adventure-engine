@@ -27,7 +27,7 @@ public class ScriptStringCase extends Script {
             case UPPER -> stringValue.toUpperCase();
             case TITLE -> LangUtils.titleCase(stringValue);
         };
-        return new ScriptReturnData(Expression.constant(modifiedValue), FlowStatementType.RETURN, null);
+        return new ScriptReturnData(Expression.string(modifiedValue), FlowStatementType.RETURN, null);
     }
 
 }

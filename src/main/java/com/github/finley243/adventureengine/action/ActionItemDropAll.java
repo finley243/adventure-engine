@@ -29,7 +29,7 @@ public class ActionItemDropAll extends Action {
 	@Override
 	public Context getContext(Actor subject) {
 		Context context = Context.builder().subject(subject).parentItem(item).build();
-		context.setLocalVariable("count", Expression.constant(subject.getInventory().itemCount(item)));
+		context.setLocalVariable("count", Expression.integer(subject.getInventory().itemCount(item)));
 		return context;
 	}
 	

@@ -23,11 +23,11 @@ public class ScriptModifyGlobal extends Script {
         switch (expression.getDataType()) {
             case INTEGER -> {
                 int oldValueInt = context.game().data().getGlobalExpression(globalIDValue).getValueInteger();
-                context.game().data().setGlobalExpression(globalIDValue, Expression.constant(oldValueInt + expression.getValueInteger()));
+                context.game().data().setGlobalExpression(globalIDValue, Expression.integer(oldValueInt + expression.getValueInteger()));
             }
             case FLOAT -> {
                 float oldValueFloat = context.game().data().getGlobalExpression(globalIDValue).getValueFloat();
-                context.game().data().setGlobalExpression(globalIDValue, Expression.constant(oldValueFloat + expression.getValueFloat()));
+                context.game().data().setGlobalExpression(globalIDValue, Expression.decimal(oldValueFloat + expression.getValueFloat()));
             }
             default ->
                     throw new UnsupportedOperationException("No modify functions for provided data type: " + expression.getDataType());

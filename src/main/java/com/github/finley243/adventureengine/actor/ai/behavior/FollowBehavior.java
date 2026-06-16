@@ -11,12 +11,12 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.List;
 
-public class BehaviorFollow extends Behavior {
+public class FollowBehavior extends Behavior {
 
     private String actorID;
     private Actor actor;
 
-    public BehaviorFollow(Condition condition, Script startScript, Script eachRoundScript, int duration, List<Idle> idles, String actorID) {
+    public FollowBehavior(Condition condition, Script startScript, Script eachRoundScript, int duration, List<Idle> idles, String actorID) {
         super(condition, startScript, eachRoundScript, duration, idles);
         this.actorID = actorID;
     }

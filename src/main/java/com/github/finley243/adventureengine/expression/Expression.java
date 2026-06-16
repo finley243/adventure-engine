@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
 public abstract class Expression {
 
@@ -71,58 +72,57 @@ public abstract class Expression {
         return this.getDataType() == other.getDataType();
     }
 
-    public static Expression constantNoun(Noun noun) {
-        if (noun == null) return null;
-        return new ExpressionConstantNoun(noun);
+    public static Expression bool(Boolean value) {
+        if (value == null) return null;
+        return new BooleanExpression(value);
     }
 
-    /*
-     * DO NOT USE WITH FOR GENERATING NOUN CONSTANTS! Use Expression.constantNoun() instead.
-     */
-    public static Expression constant(Object valueObject) {
-        switch (valueObject) {
-            case null -> {
-                return null;
-            }
-            case Expression expression -> {
-                return expression;
-            }
-            case Set<?> set -> {
-                Set<Expression> expressionSet = new HashSet<>();
-                for (Object elementObject : set) {
-                    Expression elementExpression = Expression.constant(elementObject);
-                    expressionSet.add(elementExpression);
-                }
-                return new ExpressionConstantSet(expressionSet);
-            }
-            case List<?> set -> {
-                List<Expression> expressionList = new ArrayList<>();
-                for (Object elementObject : set) {
-                    Expression elementExpression = Expression.constant(elementObject);
-                    expressionList.add(elementExpression);
-                }
-                return new ExpressionConstantList(expressionList);
-            }
-            case Boolean value -> {
-                return new ExpressionConstantBoolean(value);
-            }
-            case Float value -> {
-                return new ExpressionConstantFloat(value);
-            }
-            case Integer value -> {
-                return new ExpressionConstantInteger(value);
-            }
-            case String value -> {
-                return new ExpressionConstantString(value);
-            }
-            case Inventory value -> {
-                return new ExpressionConstantInventory(value);
-            }
-            case ScriptValueHolder value -> {
-                return new ExpressionConstantStatHolder(value);
-            }
-            default -> throw new IllegalArgumentException("Expression is not a valid type");
+    public static Expression integer(Integer value) {
+        if (value == null) return null;
+        return new IntegerExpression(value);
+    }
+
+    public static Expression decimal(Float value) {
+        if (value == null) return null;
+        return new FloatExpression(value);
+    }
+
+    public static Expression string(String value) {
+        if (value == null) return null;
+        return new StringExpression(value);
+    }
+
+    public static <T> Expression set(Set<T> value, Function<T, Expression> expressionFunction) {
+        if (value == null) return null;
+        Set<Expression> convertedValue = new HashSet<>();
+        for (T item : value) {
+            convertedValue.add(expressionFunction.apply(item));
         }
+        return new SetExpression(convertedValue);
+    }
+
+    public static <T> Expression list(List<T> value, Function<T, Expression> expressionFunction) {
+        if (value == null) return null;
+        List<Expression> convertedValue = new ArrayList<>();
+        for (T item : value) {
+            convertedValue.add(expressionFunction.apply(item));
+        }
+        return new ListExpression(convertedValue);
+    }
+
+    public static Expression inventory(Inventory value) {
+        if (value == null) return null;
+        return new InventoryExpression(value);
+    }
+
+    public static Expression noun(Noun value) {
+        if (value == null) return null;
+        return new NounExpression(value);
+    }
+
+    public static Expression valueHolder(ScriptValueHolder value) {
+        if (value == null) return null;
+        return new ValueHolderExpression(value);
     }
 
 }

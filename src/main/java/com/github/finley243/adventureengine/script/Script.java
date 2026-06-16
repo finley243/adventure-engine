@@ -56,8 +56,8 @@ public abstract class Script {
 		functions.add(new ScriptParser.ScriptData("attributeMenu", false, null, List.of(new ScriptParser.ScriptParameter("actor", true, null), new ScriptParser.ScriptParameter("points", true, null)), false, new ScriptAttributeMenu(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME))));
 		functions.add(new ScriptParser.ScriptData("skillMenu", false, null, List.of(new ScriptParser.ScriptParameter("actor", true, null), new ScriptParser.ScriptParameter("points", true, null)), false, new ScriptSkillMenu(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME))));
 		functions.add(new ScriptParser.ScriptData("startTimer", false, null, List.of(new ScriptParser.ScriptParameter("timer", true, null), new ScriptParser.ScriptParameter("duration", true, null), new ScriptParser.ScriptParameter("scriptExpire", false, null), new ScriptParser.ScriptParameter("scriptUpdate", false, null)), false, new ScriptTimerStart(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME))));
-		functions.add(new ScriptParser.ScriptData("transferItem", false, null, List.of(new ScriptParser.ScriptParameter("transferType", false, Expression.constant("count")), new ScriptParser.ScriptParameter("from", false, null), new ScriptParser.ScriptParameter("to", false, null), new ScriptParser.ScriptParameter("item", false, null), new ScriptParser.ScriptParameter("count", false, Expression.constant(1))), false, new ScriptTransferItem(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME))));
-		functions.add(new ScriptParser.ScriptData("sendSensoryEvent", false, null, List.of(new ScriptParser.ScriptParameter("area", true, null), new ScriptParser.ScriptParameter("phrase", false, null), new ScriptParser.ScriptParameter("phraseAudible", false, null), new ScriptParser.ScriptParameter("detectSelf", false, Expression.constant(true))), true, new ScriptSensoryEvent(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME))));
+		functions.add(new ScriptParser.ScriptData("transferItem", false, null, List.of(new ScriptParser.ScriptParameter("transferType", false, Expression.string("count")), new ScriptParser.ScriptParameter("from", false, null), new ScriptParser.ScriptParameter("to", false, null), new ScriptParser.ScriptParameter("item", false, null), new ScriptParser.ScriptParameter("count", false, Expression.integer(1))), false, new ScriptTransferItem(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME))));
+		functions.add(new ScriptParser.ScriptData("sendSensoryEvent", false, null, List.of(new ScriptParser.ScriptParameter("area", true, null), new ScriptParser.ScriptParameter("phrase", false, null), new ScriptParser.ScriptParameter("phraseAudible", false, null), new ScriptParser.ScriptParameter("detectSelf", false, Expression.bool(true))), true, new ScriptSensoryEvent(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME))));
 		functions.add(new ScriptParser.ScriptData("sendBark", false, null, List.of(new ScriptParser.ScriptParameter("actor", true, null), new ScriptParser.ScriptParameter("bark", true, null)), true, new ScriptBark(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME))));
 		functions.add(new ScriptParser.ScriptData("addEffect", false, null, List.of(new ScriptParser.ScriptParameter("target", true, null), new ScriptParser.ScriptParameter("effect", true, null)), false, new ScriptEffectAdd(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME))));
 		functions.add(new ScriptParser.ScriptData("removeEffect", false, null, List.of(new ScriptParser.ScriptParameter("target", true, null), new ScriptParser.ScriptParameter("effect", true, null)), false, new ScriptEffectRemove(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME))));
@@ -69,7 +69,7 @@ public abstract class Script {
 		functions.add(new ScriptParser.ScriptData("targetType", true, Expression.DataType.STRING, List.of(new ScriptParser.ScriptParameter("actor", true, null), new ScriptParser.ScriptParameter("target", true, null)), false, new ScriptTargetType(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME))));
 		functions.add(new ScriptParser.ScriptData("randomBoolean", true, Expression.DataType.BOOLEAN, List.of(new ScriptParser.ScriptParameter("chance", true, null)), false, new ScriptRandomBoolean(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME))));
 		functions.add(new ScriptParser.ScriptData("randomInteger", true, Expression.DataType.INTEGER, List.of(new ScriptParser.ScriptParameter("min", true, null), new ScriptParser.ScriptParameter("max", true, null)), false, new ScriptRandomInteger(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME))));
-		functions.add(new ScriptParser.ScriptData("inventoryContains", true, Expression.DataType.BOOLEAN, List.of(new ScriptParser.ScriptParameter("inventory", true, null), new ScriptParser.ScriptParameter("item", true, null), new ScriptParser.ScriptParameter("requireAll", false, Expression.constant(false))), false, new ScriptInventoryContains(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME))));
+		functions.add(new ScriptParser.ScriptData("inventoryContains", true, Expression.DataType.BOOLEAN, List.of(new ScriptParser.ScriptParameter("inventory", true, null), new ScriptParser.ScriptParameter("item", true, null), new ScriptParser.ScriptParameter("requireAll", false, Expression.bool(false))), false, new ScriptInventoryContains(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME))));
 		functions.add(new ScriptParser.ScriptData("round", true, Expression.DataType.INTEGER, List.of(new ScriptParser.ScriptParameter("value", true, null)), false, new ScriptRound(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME))));
 		functions.add(new ScriptParser.ScriptData("scaleLinear", true, Expression.DataType.FLOAT, List.of(new ScriptParser.ScriptParameter("input", true, null), new ScriptParser.ScriptParameter("inputMin", true, null), new ScriptParser.ScriptParameter("inputMax", true, null), new ScriptParser.ScriptParameter("outputMin", true, null), new ScriptParser.ScriptParameter("outputMax", true, null)), false, new ScriptScaleLinear(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME))));
 		functions.add(new ScriptParser.ScriptData("scaleLog", true, Expression.DataType.FLOAT, List.of(new ScriptParser.ScriptParameter("input", true, null), new ScriptParser.ScriptParameter("inputMin", true, null), new ScriptParser.ScriptParameter("inputMax", true, null), new ScriptParser.ScriptParameter("outputMin", true, null), new ScriptParser.ScriptParameter("outputMax", true, null)), false, new ScriptScaleLog(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME))));
@@ -104,35 +104,35 @@ public abstract class Script {
 	}
 
 	public static Script constant(boolean value) {
-		return new ScriptExpression(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME), Expression.constant(value));
+		return new ScriptExpression(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME), Expression.bool(value));
 	}
 
 	public static Script constant(int value) {
-		return new ScriptExpression(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME), Expression.constant(value));
+		return new ScriptExpression(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME), Expression.integer(value));
 	}
 
 	public static Script constant(float value) {
-		return new ScriptExpression(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME), Expression.constant(value));
+		return new ScriptExpression(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME), Expression.decimal(value));
 	}
 
 	public static Script constant(String value) {
-		return new ScriptExpression(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME), Expression.constant(value));
+		return new ScriptExpression(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME), Expression.string(value));
 	}
 
 	public static Script constant(Set<String> value) {
-		return new ScriptExpression(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME), Expression.constant(value));
+		return new ScriptExpression(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME), Expression.set(value, Expression::string));
 	}
 
 	public static Script constant(Inventory value) {
-		return new ScriptExpression(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME), Expression.constant(value));
+		return new ScriptExpression(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME), Expression.inventory(value));
 	}
 
 	public static Script constant(Noun value) {
-		return new ScriptExpression(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME), Expression.constant(value));
+		return new ScriptExpression(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME), Expression.noun(value));
 	}
 
 	public static Script constant(ScriptValueHolder value) {
-		return new ScriptExpression(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME), Expression.constant(value));
+		return new ScriptExpression(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME), Expression.valueHolder(value));
 	}
 
 	public record ScriptReturnData(Expression value, FlowStatementType flowStatement, ScriptErrorData error) {

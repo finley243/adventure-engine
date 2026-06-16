@@ -161,9 +161,9 @@ public class Item extends GameInstanced implements Noun, ScriptValueHolder, Stat
 			if (componentValue != null) return componentValue;
 		}
 		return switch (name) {
-			case "inventory" -> (currentInventory == null ? null : Expression.constant(currentInventory));
-			case "noun" -> Expression.constantNoun(this);
-			case "id" -> Expression.constant(getID());
+			case "inventory" -> Expression.inventory(currentInventory);
+			case "noun" -> Expression.noun(this);
+			case "id" -> Expression.string(getID());
 			default -> null;
 		};
 	}

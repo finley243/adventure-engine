@@ -21,7 +21,7 @@ public class ScriptCollectionSize extends Script {
         };
         if (collection == null) return new ScriptReturnData(null, null, new ScriptErrorData("Collection parameter is not a collection", getTraceData()));
         int collectionSize = collection.size();
-        return new ScriptReturnData(Expression.constant(collectionSize), FlowStatementType.RETURN, null);
+        return new ScriptReturnData(Expression.integer(collectionSize), FlowStatementType.RETURN, null);
     }
 
 }

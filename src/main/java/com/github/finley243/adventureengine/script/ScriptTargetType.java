@@ -19,7 +19,7 @@ public class ScriptTargetType extends Script {
         if (targetExpression.getDataType() != Expression.DataType.STAT_HOLDER) return new ScriptReturnData(null, null, new ScriptErrorData("Target parameter is not a stat holder", getTraceData()));
         if (!(targetExpression.getValueStatHolder() instanceof Actor target)) return new ScriptReturnData(null, null, new ScriptErrorData("Target parameter is not an actor", getTraceData()));
         String targetType = actor.getTargetingComponent().getTargetType(target).toString().toLowerCase();
-        return new ScriptReturnData(Expression.constant(targetType), FlowStatementType.RETURN, null);
+        return new ScriptReturnData(Expression.string(targetType), FlowStatementType.RETURN, null);
     }
 
 }

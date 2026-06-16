@@ -20,7 +20,7 @@ public class ScriptRandomInteger extends Script {
         int min = minExpression.getValueInteger();
         int max = maxExpression.getValueInteger();
         int result = ThreadLocalRandom.current().nextInt(min, max);
-        return new ScriptReturnData(Expression.constant(result), FlowStatementType.RETURN, null);
+        return new ScriptReturnData(Expression.integer(result), FlowStatementType.RETURN, null);
     }
 
 }

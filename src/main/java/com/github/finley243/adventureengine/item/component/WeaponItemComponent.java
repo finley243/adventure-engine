@@ -5,7 +5,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Skill;
 import com.github.finley243.adventureengine.combat.DamageType;
-import com.github.finley243.adventureengine.combat.WeaponAttackType;
+import com.github.finley243.adventureengine.combat.AttackType;
 import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -26,7 +26,7 @@ public class WeaponItemComponent extends ItemComponent {
     public static final float HIT_CHANCE_BASE_RANGED_MIN = 0.10f;
     public static final float HIT_CHANCE_BASE_RANGED_MAX = 0.90f;
 
-    private final StringSetRegistryStat<WeaponAttackType> attackTypes;
+    private final StringSetRegistryStat<AttackType> attackTypes;
     private final IntStat damage;
     private final IntStat rate;
     private final IntStat critDamage;
@@ -38,9 +38,9 @@ public class WeaponItemComponent extends ItemComponent {
     private final BooleanStat isSilenced;
     private final StringSetRegistryStat<Effect> targetEffects;
 
-    public WeaponItemComponent(Item item, WeaponItemComponentTemplate template, ScriptRuntime scriptRuntime, Registry<WeaponAttackType> attackTypeRegistry, Registry<Effect> effectRegistry, Registry<DamageType> damageTypeRegistry) {
+    public WeaponItemComponent(Item item, WeaponItemComponentTemplate template, ScriptRuntime scriptRuntime, Registry<AttackType> attackTypeRegistry, Registry<Effect> effectRegistry, Registry<DamageType> damageTypeRegistry) {
         super(item, template);
-        this.attackTypes = new StringSetRegistryStat<>("attack_types", item, scriptRuntime, attackTypeRegistry, WeaponAttackType::getID);
+        this.attackTypes = new StringSetRegistryStat<>("attack_types", item, scriptRuntime, attackTypeRegistry, AttackType::getID);
         this.damage = new IntStat("damage", item, scriptRuntime);
         this.rate = new IntStat("rate", item, scriptRuntime);
         this.critDamage = new IntStat("crit_damage", item, scriptRuntime);
@@ -65,7 +65,7 @@ public class WeaponItemComponent extends ItemComponent {
     @Override
     protected List<Action> getPossibleInventoryActions(ScriptRuntime scriptRuntime, Actor subject) {
         List<Action> actions = super.getPossibleInventoryActions(scriptRuntime, subject);
-        for (WeaponAttackType attackType : getAttackTypes(Context.builder().subject(subject).parentItem(getItem()).build())) {
+        for (AttackType attackType : getAttackTypes(Context.builder().subject(subject).parentItem(getItem()).build())) {
             actions.addAll(attackType.generateActions(subject, getItem(), scriptRuntime, sensoryEventDispatcher));
         }
         return actions;
@@ -135,7 +135,7 @@ public class WeaponItemComponent extends ItemComponent {
         return getWeaponClass().skill();
     }
 
-    public Set<WeaponAttackType> getAttackTypes(Context context) {
+    public Set<AttackType> getAttackTypes(Context context) {
         return attackTypes.valueObjects(getWeaponClass().attackTypes(), context);
     }
 
@@ -159,16 +159,16 @@ public class WeaponItemComponent extends ItemComponent {
     @Override
     public Expression getScriptValue(String name, Context context) {
         return switch (name) {
-            case "damage" -> Expression.constant(getDamage(context));
-            case "rate" -> Expression.constant(getRate(context));
-            case "crit_damage" -> Expression.constant(getCritDamage(context));
-            case "armor_mult" -> Expression.constant(getArmorMult(context));
-            case "is_silenced" -> Expression.constant(isSilenced(context));
-            case "damage_type" -> Expression.constant(getDamageType(context));
-            case "attack_types" -> Expression.constant(getAttackTypes(context));
-            case "ranges" -> Expression.constant(ranges.valueFromEnum(getWeaponClass().primaryRanges(), context));
-            case "target_effects" -> Expression.constant(getTargetEffects(context));
-            case "skill" -> Expression.constant(getSkill());
+            case "damage" -> Expression.integer(getDamage(context));
+            case "rate" -> Expression.integer(getRate(context));
+            case "crit_damage" -> Expression.integer(getCritDamage(context));
+            case "armor_mult" -> Expression.decimal(getArmorMult(context));
+            case "is_silenced" -> Expression.bool(isSilenced(context));
+            case "damage_type" -> Expression.string(getDamageType(context).ID());
+            case "attack_types" -> Expression.set(getAttackTypes(context), e -> Expression.string(e.getID()));
+            case "ranges" -> Expression.set(ranges.valueFromEnum(getWeaponClass().primaryRanges(), context), Expression::string);
+            case "target_effects" -> Expression.set(getTargetEffects(context), e -> Expression.string(e.getID()));
+            case "skill" -> Expression.string(getSkill().ID());
             default -> super.getScriptValue(name, context);
         };
     }

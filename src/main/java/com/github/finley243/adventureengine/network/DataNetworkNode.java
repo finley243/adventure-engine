@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.network.ActionNetworkReadData;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.ArrayList;
@@ -11,15 +12,15 @@ import java.util.List;
 
 public class DataNetworkNode extends NetworkNode {
 
-    private final String sceneID;
+    private final Scene scene;
 
-    public DataNetworkNode(String ID, String name, String sceneID) {
+    public DataNetworkNode(String ID, String name, Scene scene) {
         super(ID, name);
-        this.sceneID = sceneID;
+        this.scene = scene;
     }
 
-    public String getSceneID() {
-        return sceneID;
+    public Scene getScene() {
+        return scene;
     }
 
     @Override

@@ -28,7 +28,7 @@ public class ScriptModifyState extends Script {
                 if (oldValueExpression == null) throw new UnsupportedOperationException("Expression " + stateValue + " does not exist on holder");
                 if (oldValueExpression.getDataType() != Expression.DataType.INTEGER) throw new UnsupportedOperationException("Expression " + stateValue + " is not a float");
                 int oldValue = oldValueExpression.getValueInteger();
-                Expression newValueExpression = Expression.constant(oldValue + expression.getValueInteger());
+                Expression newValueExpression = Expression.integer(oldValue + expression.getValueInteger());
                 holder.getHolder(context).setScriptValue(stateValue, newValueExpression, context);
             }
             case FLOAT -> {
@@ -36,7 +36,7 @@ public class ScriptModifyState extends Script {
                 if (oldValueExpression == null) throw new UnsupportedOperationException("Expression " + stateValue + " does not exist on holder");
                 if (oldValueExpression.getDataType() != Expression.DataType.FLOAT) throw new UnsupportedOperationException("Expression " + stateValue + " is not a float");
                 float oldValue = oldValueExpression.getValueFloat();
-                Expression newValueExpression = Expression.constant(oldValue + expression.getValueFloat());
+                Expression newValueExpression = Expression.decimal(oldValue + expression.getValueFloat());
                 holder.getHolder(context).setScriptValue(stateValue, newValueExpression, context);
             }
             default ->

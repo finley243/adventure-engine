@@ -29,7 +29,7 @@ public class ActionNetworkBreach extends NetworkAction {
     @Override
     public Context getContext(Actor subject) {
         Context context = Context.builder().subject(subject).parentObject(object).parentAction(this).build();
-        context.setLocalVariable("node", Expression.constant(node));
+        context.setLocalVariable("node", Expression.valueHolder(node));
         return context;
     }
 

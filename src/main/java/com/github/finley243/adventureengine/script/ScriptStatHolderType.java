@@ -32,7 +32,7 @@ public class ScriptStatHolderType extends Script {
             case null, default -> null;
         };
         if (typeString == null) return new ScriptReturnData(null, null, new ScriptErrorData("Holder parameter is not a recognized type of StatHolder", getTraceData()));
-        return new ScriptReturnData(Expression.constant(typeString), FlowStatementType.RETURN, null);
+        return new ScriptReturnData(Expression.string(typeString), FlowStatementType.RETURN, null);
     }
 
 }

@@ -442,15 +442,15 @@ public class Area extends GameInstanced implements Noun, ScriptValueHolder, Stat
 	@Override
 	public Expression getScriptValue(String name, Context context) {
 		return switch (name) {
-			case "inventory" -> (itemInventory == null ? null : Expression.constant(itemInventory));
-			case "noun" -> Expression.constantNoun(this);
-			case "id" -> Expression.constant(getID());
-			case "name" -> Expression.constant(getName());
-			case "relative_name" -> Expression.constant(getRelativeName());
-			case "move_phrase" -> Expression.constant(getMovePhrase(context.getSubject()));
-			case "room" -> Expression.constant((ScriptValueHolder) room);
-			case "movable_areas" -> Expression.constant(getMovableAreaIDs(null));
-			case "obstruction_types" -> Expression.constant(StatUtils.objectSetToIDSet(getObstructionTypes(), ObstructionType::ID));
+			case "inventory" -> Expression.inventory(itemInventory);
+			case "noun" -> Expression.noun(this);
+			case "id" -> Expression.string(getID());
+			case "name" -> Expression.string(getName());
+			case "relative_name" -> Expression.string(getRelativeName());
+			case "move_phrase" -> Expression.string(getMovePhrase(context.getSubject()));
+			case "room" -> Expression.valueHolder(room);
+			case "movable_areas" -> Expression.set(getMovableAreas(null), Expression::valueHolder);
+			case "obstruction_types" -> Expression.set(StatUtils.objectSetToIDSet(getObstructionTypes(), ObstructionType::ID), Expression::string);
 			default -> null;
 		};
 	}

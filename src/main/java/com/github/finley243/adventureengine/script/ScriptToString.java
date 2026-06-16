@@ -13,10 +13,10 @@ public class ScriptToString extends Script {
     ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression valueExpression = context.getLocalVariables().get("value").getExpression();
         if (valueExpression == null) {
-            return new ScriptReturnData(Expression.constant("null"), FlowStatementType.RETURN, null);
+            return new ScriptReturnData(Expression.string("null"), FlowStatementType.RETURN, null);
         }
         String stringValue = valueExpression.toString();
-        return new ScriptReturnData(Expression.constant(stringValue), FlowStatementType.RETURN, null);
+        return new ScriptReturnData(Expression.string(stringValue), FlowStatementType.RETURN, null);
     }
 
 }

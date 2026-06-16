@@ -153,11 +153,11 @@ public class Room extends GameInstanced implements Noun, ScriptValueHolder {
 	@Override
 	public Expression getScriptValue(String name, Context context) {
 		return switch (name) {
-			case "noun" -> Expression.constantNoun(this);
-			case "name" -> Expression.constant(getName());
-			case "visited" -> Expression.constant(hasVisited());
-			case "id" -> Expression.constant(getID());
-			case "owner_faction" -> Expression.constant(ownerFaction);
+			case "noun" -> Expression.noun(this);
+			case "name" -> Expression.string(getName());
+			case "visited" -> Expression.bool(hasVisited());
+			case "id" -> Expression.string(getID());
+			case "owner_faction" -> Expression.string(ownerFaction.getID());
 			default -> null;
 		};
 	}

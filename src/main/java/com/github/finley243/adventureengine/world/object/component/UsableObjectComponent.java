@@ -140,7 +140,7 @@ public class UsableObjectComponent extends ObjectComponent {
         if (name.startsWith("has_user_")) {
             for (String slotID : getTemplateUsable().getUsableSlotData().keySet()) {
                 if (name.equals("has_user_" + slotID)) {
-                    return Expression.constant(getUser(slotID) != null);
+                    return Expression.bool(getUser(slotID) != null);
                 }
             }
             return null;

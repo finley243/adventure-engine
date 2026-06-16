@@ -17,7 +17,7 @@ public class ScriptRandomBoolean extends Script {
         float chance = chanceExpression.getValueFloat();
         if (chance < 0.0f || chance > 1.0f) return new ScriptReturnData(null, null, new ScriptErrorData("Chance parameter is outside the valid range", getTraceData()));
         boolean result = MathUtils.randomCheck(chance);
-        return new ScriptReturnData(Expression.constant(result), FlowStatementType.RETURN, null);
+        return new ScriptReturnData(Expression.bool(result), FlowStatementType.RETURN, null);
     }
 
 }
