@@ -106,6 +106,9 @@ public class GameDataLoader {
             throw new RuntimeException(e);
         }
 
+        Pathfinder pathfinder = new Pathfinder();
+        SensoryEventDispatcher sensoryEventDispatcher = new SensoryEventDispatcher(pathfinder, eventBus);
+
         ActionLoader actionLoader = new ActionLoader(scriptParser);
         Map<String, ActionTemplate> actionMap = loadMapFromFileName(dir, NAME_ACTION_TEMPLATE, builder, actionLoader::load);
         Registry<ActionTemplate> actionRegistry = new Registry<>(actionMap);
@@ -124,10 +127,14 @@ public class GameDataLoader {
         Map<String, SenseType> senseTypeMap = loadMapFromFileName(dir, NAME_SENSE_TYPE, builder, e -> characterTypeLoader.loadSenseTypes(e, obstructionTypeRegistry));
         Registry<SenseType> senseTypeRegistry = new Registry<>(senseTypeMap);
 
+        EffectLoader effectLoader = new EffectLoader(scriptParser);
+        Map<String, Effect> effectMap = loadMapFromFileName(dir, NAME_EFFECT, builder, effectLoader::load);
+        Registry<Effect> effectRegistry = new Registry<>(effectMap);
+
         CombatTypeLoader combatTypeLoader = new CombatTypeLoader(scriptParser);
         Map<String, DamageType> damageTypeMap = loadMapFromFileName(dir, NAME_DAMAGE_TYPE, builder, combatTypeLoader::loadDamageTypes);
         Registry<DamageType> damageTypeRegistry = new Registry<>(damageTypeMap);
-        Map<String, WeaponAttackType> attackTypeMap = loadMapFromFileName(dir, NAME_ATTACK_TYPE, builder, combatTypeLoader::loadAttackTypes);
+        Map<String, WeaponAttackType> attackTypeMap = loadMapFromFileName(dir, NAME_ATTACK_TYPE, builder, e -> combatTypeLoader.loadAttackTypes(e, pathfinder, damageTypeRegistry, effectRegistry));
         Registry<WeaponAttackType> attackTypeRegistry = new Registry<>(attackTypeMap);
         Map<String, WeaponClass> weaponClassMap = loadMapFromFileName(dir, NAME_WEAPON_CLASS, builder, e -> combatTypeLoader.loadWeaponClasses(e, attackTypeRegistry, skillRegistry));
         Registry<WeaponClass> weaponClassRegistry = new Registry<>(weaponClassMap);
@@ -139,10 +146,6 @@ public class GameDataLoader {
         SceneLoader sceneLoader = new SceneLoader(scriptParser);
         Map<String, Scene> sceneMap = loadMapFromFileName(dir, NAME_SCENE, builder, sceneLoader::load);
         Registry<Scene> sceneRegistry = new Registry<>(sceneMap);
-
-        EffectLoader effectLoader = new EffectLoader(scriptParser);
-        Map<String, Effect> effectMap = loadMapFromFileName(dir, NAME_EFFECT, builder, effectLoader::load);
-        Registry<Effect> effectRegistry = new Registry<>(effectMap);
 
         ItemTemplateLoader itemTemplateLoader = new ItemTemplateLoader(configHandler, scriptParser, sceneLoader, actionRegistry, effectRegistry, weaponClassRegistry, damageTypeRegistry);
         Map<String, ItemTemplate> itemTemplateMap = loadMapFromFileName(dir, NAME_ITEM_TEMPLATE, builder, itemTemplateLoader::load);
@@ -168,11 +171,8 @@ public class GameDataLoader {
         Map<String, ActorTemplate> actorTemplateMap = loadMapFromFileName(dir, NAME_ACTOR_TEMPLATE, builder, actorTemplateLoader::load);
         Registry<ActorTemplate> actorTemplateRegistry = new Registry<>(actorTemplateMap);
 
-        ItemComponentFactory itemComponentFactory = new ItemComponentFactory(scriptRuntime, attackTypeRegistry, effectRegistry);
+        ItemComponentFactory itemComponentFactory = new ItemComponentFactory(scriptRuntime, attackTypeRegistry, effectRegistry, damageTypeRegistry);
         ItemFactory itemFactory = new ItemFactory(itemTemplateRegistry, itemMutableRegistry, itemComponentFactory);
-
-        Pathfinder pathfinder = new Pathfinder();
-        SensoryEventDispatcher sensoryEventDispatcher = new SensoryEventDispatcher(pathfinder, eventBus);
 
         ActorLoader actorLoader = new ActorLoader(scriptParser, actorTemplateRegistry, scriptRuntime, eventBus, sensoryEventDispatcher, itemFactory, senseTypeRegistry, effectRegistry, damageTypeRegistry, attributeRegistry, skillRegistry);
         ObjectLoader objectLoader = new ObjectLoader(scriptParser, objectTemplateRegistry);

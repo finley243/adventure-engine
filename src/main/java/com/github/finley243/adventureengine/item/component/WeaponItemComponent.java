@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.item.component;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.Skill;
 import com.github.finley243.adventureengine.combat.DamageType;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.combat.WeaponClass;
@@ -33,23 +34,23 @@ public class WeaponItemComponent extends ItemComponent {
     private final StringSetStat ranges;
     private final FloatStat hitChanceModifier;
     private final FloatStat armorMult;
-    private final StringStat damageType;
+    private final StringRegistryStat<DamageType> damageType;
     private final BooleanStat isSilenced;
     private final StringSetRegistryStat<Effect> targetEffects;
 
-    public WeaponItemComponent(Item item, WeaponItemComponentTemplate template, Registry<WeaponAttackType> attackTypeRegistry, Registry<Effect> effectRegistry) {
+    public WeaponItemComponent(Item item, WeaponItemComponentTemplate template, ScriptRuntime scriptRuntime, Registry<WeaponAttackType> attackTypeRegistry, Registry<Effect> effectRegistry, Registry<DamageType> damageTypeRegistry) {
         super(item, template);
-        this.attackTypes = new StringSetRegistryStat<>("attack_types", item, attackTypeRegistry, WeaponAttackType::getID);
-        this.damage = new IntStat("damage", item);
-        this.rate = new IntStat("rate", item);
-        this.critDamage = new IntStat("crit_damage", item);
-        this.critChance = new FloatStat("crit_chance", item);
-        this.ranges = new StringSetStat("ranges", item);
-        this.hitChanceModifier = new FloatStat("hit_chance_bonus", item);
-        this.armorMult = new FloatStat("armor_mult", item);
-        this.damageType = new StringStat("damage_type", item);
-        this.isSilenced = new BooleanStat("is_silenced", item, false);
-        this.targetEffects = new StringSetRegistryStat<>("target_effects", item, effectRegistry, Effect::getID);
+        this.attackTypes = new StringSetRegistryStat<>("attack_types", item, scriptRuntime, attackTypeRegistry, WeaponAttackType::getID);
+        this.damage = new IntStat("damage", item, scriptRuntime);
+        this.rate = new IntStat("rate", item, scriptRuntime);
+        this.critDamage = new IntStat("crit_damage", item, scriptRuntime);
+        this.critChance = new FloatStat("crit_chance", item, scriptRuntime);
+        this.ranges = new StringSetStat("ranges", item, scriptRuntime);
+        this.hitChanceModifier = new FloatStat("hit_chance_bonus", item, scriptRuntime);
+        this.armorMult = new FloatStat("armor_mult", item, scriptRuntime);
+        this.damageType = new StringRegistryStat<>("damage_type", item, scriptRuntime, damageTypeRegistry, DamageType::ID);
+        this.isSilenced = new BooleanStat("is_silenced", item, scriptRuntime, false);
+        this.targetEffects = new StringSetRegistryStat<>("target_effects", item, scriptRuntime, effectRegistry, Effect::getID);
     }
 
     @Override
@@ -64,8 +65,8 @@ public class WeaponItemComponent extends ItemComponent {
     @Override
     protected List<Action> getPossibleInventoryActions(ScriptRuntime scriptRuntime, Actor subject) {
         List<Action> actions = super.getPossibleInventoryActions(scriptRuntime, subject);
-        for (WeaponAttackType attackType : getAttackTypes(scriptRuntime, Context.builder().subject(subject).parentItem(getItem()).build())) {
-            actions.addAll(attackType.generateActions(subject, getItem()));
+        for (WeaponAttackType attackType : getAttackTypes(Context.builder().subject(subject).parentItem(getItem()).build())) {
+            actions.addAll(attackType.generateActions(subject, getItem(), scriptRuntime, sensoryEventDispatcher));
         }
         return actions;
     }
@@ -115,11 +116,11 @@ public class WeaponItemComponent extends ItemComponent {
     }
 
     public Set<Effect> getTargetEffects(Context context) {
-        return targetEffects.value(getWeaponTemplate().getTargetEffects(), context);
+        return targetEffects.valueObjects(getWeaponTemplate().getTargetEffects(), context);
     }
 
     public DamageType getDamageType(Context context) {
-        return damageType.value(getWeaponTemplate().getDamageType(), context);
+        return damageType.valueObject(getWeaponTemplate().getDamageType(), context);
     }
 
     public boolean isSilenced(Context context) {
@@ -130,11 +131,11 @@ public class WeaponItemComponent extends ItemComponent {
         return getWeaponClass().isLoud() && !isSilenced(context);
     }
 
-    public String getSkill() {
+    public Skill getSkill() {
         return getWeaponClass().skill();
     }
 
-    public Set<WeaponAttackType> getAttackTypes(ScriptRuntime scriptRuntime, Context context) {
+    public Set<WeaponAttackType> getAttackTypes(Context context) {
         return attackTypes.valueObjects(getWeaponClass().attackTypes(), context);
     }
 
@@ -165,8 +166,8 @@ public class WeaponItemComponent extends ItemComponent {
             case "is_silenced" -> Expression.constant(isSilenced(context));
             case "damage_type" -> Expression.constant(getDamageType(context));
             case "attack_types" -> Expression.constant(getAttackTypes(context));
-            case "ranges" -> Expression.constant(ranges.valueFromEnum(getWeaponClass().primaryRanges()));
-            case "target_effects" -> Expression.constant(getTargetEffects());
+            case "ranges" -> Expression.constant(ranges.valueFromEnum(getWeaponClass().primaryRanges(), context));
+            case "target_effects" -> Expression.constant(getTargetEffects(context));
             case "skill" -> Expression.constant(getSkill());
             default -> super.getScriptValue(name, context);
         };

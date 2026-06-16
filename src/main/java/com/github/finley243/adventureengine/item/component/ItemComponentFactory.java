@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.item.component;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.combat.DamageType;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.gamedata.Registry;
@@ -13,11 +14,13 @@ public class ItemComponentFactory {
     private final ScriptRuntime scriptRuntime;
     private final Registry<WeaponAttackType> attackTypeRegistry;
     private final Registry<Effect> effectRegistry;
+    private final Registry<DamageType> damageTypeRegistry;
 
-    public ItemComponentFactory(ScriptRuntime scriptRuntime, Registry<WeaponAttackType> attackTypeRegistry, Registry<Effect> effectRegistry) {
+    public ItemComponentFactory(ScriptRuntime scriptRuntime, Registry<WeaponAttackType> attackTypeRegistry, Registry<Effect> effectRegistry, Registry<DamageType> damageTypeRegistry) {
         this.scriptRuntime = scriptRuntime;
         this.attackTypeRegistry = attackTypeRegistry;
         this.effectRegistry = effectRegistry;
+        this.damageTypeRegistry = damageTypeRegistry;
     }
 
     public ItemComponent create(ItemComponentTemplate template, Item item) {
@@ -30,7 +33,7 @@ public class ItemComponentFactory {
             case MagazineItemComponentTemplate typeTemplate -> new MagazineItemComponent(item, typeTemplate);
             case ModItemComponentTemplate typeTemplate -> new ModItemComponent(item, typeTemplate);
             case ModdableItemComponentTemplate typeTemplate -> new ModdableItemComponent(item, typeTemplate);
-            case WeaponItemComponentTemplate typeTemplate -> new WeaponItemComponent(item, typeTemplate, attackTypeRegistry, effectRegistry);
+            case WeaponItemComponentTemplate typeTemplate -> new WeaponItemComponent(item, typeTemplate, scriptRuntime, attackTypeRegistry, effectRegistry, damageTypeRegistry);
             default -> null;
         };
     }
@@ -40,7 +43,7 @@ public class ItemComponentFactory {
             case "ammo" -> AmmoItemComponent.class;
             case "armor" -> ArmorItemComponent.class;
             case "consumable" -> ConsumableItemComponent.class;
-            case "effectible" -> EffectableItemComponent.class;
+            case "effectable" -> EffectableItemComponent.class;
             case "equippable" -> EquippableItemComponent.class;
             case "magazine" -> MagazineItemComponent.class;
             case "mod" -> ModItemComponent.class;

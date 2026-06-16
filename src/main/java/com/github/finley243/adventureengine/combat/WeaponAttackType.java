@@ -30,6 +30,8 @@ public class WeaponAttackType {
         NONE, PLACE, DESTROY
     }
 
+    private final Pathfinder pathfinder;
+
     private final String ID;
     private final AttackCategory category;
     private final String prompt;
@@ -55,7 +57,8 @@ public class WeaponAttackType {
     private final float hitChanceMult;
     private final Boolean isLoudOverride;
 
-    public WeaponAttackType(String ID, AttackCategory category, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, WeaponConsumeType weaponConsumeType, boolean useNonIdealRange, Set<AreaLink.DistanceCategory> rangeOverride, Integer rateOverride, Script damageOverride, float damageMult, DamageType damageTypeOverride, Float armorMultOverride, List<Effect> targetEffects, boolean overrideTargetEffects, Script hitChance, Script hitChanceOverall, float hitChanceMult, Boolean isLoudOverride) {
+    public WeaponAttackType(Pathfinder pathfinder, String ID, AttackCategory category, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, WeaponConsumeType weaponConsumeType, boolean useNonIdealRange, Set<AreaLink.DistanceCategory> rangeOverride, Integer rateOverride, Script damageOverride, float damageMult, DamageType damageTypeOverride, Float armorMultOverride, List<Effect> targetEffects, boolean overrideTargetEffects, Script hitChance, Script hitChanceOverall, float hitChanceMult, Boolean isLoudOverride) {
+        this.pathfinder = pathfinder;
         this.ID = ID;
         this.category = category;
         this.prompt = prompt;
@@ -85,15 +88,15 @@ public class WeaponAttackType {
         return ID;
     }
 
-    public List<Action> generateActions(Actor subject, Item weapon, ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Pathfinder pathfinder) {
+    public List<Action> generateActions(Actor subject, Item weapon, ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher) {
         if (weapon != null) {
-            return generateActionsWeapon(subject, weapon, scriptRuntime, sensoryEventDispatcher, pathfinder);
+            return generateActionsWeapon(subject, weapon, scriptRuntime, sensoryEventDispatcher);
         } else {
-            return generateActionsUnarmed(subject, scriptRuntime, sensoryEventDispatcher, pathfinder);
+            return generateActionsUnarmed(subject, scriptRuntime, sensoryEventDispatcher);
         }
     }
 
-    private List<Action> generateActionsWeapon(Actor subject, Item weapon, ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Pathfinder pathfinder) {
+    private List<Action> generateActionsWeapon(Actor subject, Item weapon, ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher) {
         if (weapon == null) throw new IllegalArgumentException("Weapon cannot be null");
         Context context = Context.builder().subject(subject).target(subject).parentItem(weapon).build();
         List<Action> actions = new ArrayList<>();
@@ -141,7 +144,7 @@ public class WeaponAttackType {
         return actions;
     }
 
-    private List<Action> generateActionsUnarmed(Actor subject, ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Pathfinder pathfinder) {
+    private List<Action> generateActionsUnarmed(Actor subject, ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher) {
         Set<AreaLink.DistanceCategory> ranges = rangeOverride;
         int rate = rateOverride;
         Script damage = damageOverride;

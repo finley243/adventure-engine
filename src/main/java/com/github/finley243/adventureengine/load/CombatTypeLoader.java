@@ -1,18 +1,17 @@
 package com.github.finley243.adventureengine.load;
 
 import com.github.finley243.adventureengine.actor.Skill;
+import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.combat.DamageType;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.combat.WeaponClass;
+import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 import org.w3c.dom.Element;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class CombatTypeLoader {
 
@@ -80,8 +79,8 @@ public class CombatTypeLoader {
         return LoadUtils.loadAll(element, NAME_WEAPON_CLASS, e -> parseWeaponClass(e, attackTypeRegistry, skillRegistry), WeaponClass::ID);
     }
 
-    public Map<String, WeaponAttackType> loadAttackTypes(Element element) {
-        return LoadUtils.loadAll(element, NAME_ATTACK_TYPE, this::parseAttackType, WeaponAttackType::getID);
+    public Map<String, WeaponAttackType> loadAttackTypes(Element element, Pathfinder pathfinder, Registry<DamageType> damageTypeRegistry, Registry<Effect> effectRegistry) {
+        return LoadUtils.loadAll(element, NAME_ATTACK_TYPE, e -> parseAttackType(e, pathfinder, damageTypeRegistry, effectRegistry), WeaponAttackType::getID);
     }
 
     private DamageType parseDamageType(Element element) {
@@ -109,7 +108,7 @@ public class CombatTypeLoader {
         return new WeaponClass(ID, name, isRanged, isLoud, skill, primaryRanges, attackTypes);
     }
 
-    private WeaponAttackType parseAttackType(Element element) {
+    private WeaponAttackType parseAttackType(Element element, Pathfinder pathfinder, Registry<DamageType> damageTypeRegistry, Registry<Effect> effectRegistry) {
         String ID = LoadUtils.attribute(element, NAME_ATTACK_TYPE_ID, null);
         WeaponAttackType.AttackCategory category;
         try {
@@ -135,15 +134,23 @@ public class CombatTypeLoader {
         Integer rateOverride = LoadUtils.attributeInt(element, NAME_ATTACK_TYPE_RATE, null);
         Script damageOverride = LoadUtils.loadScriptExpression(LoadUtils.singleChildWithName(element, NAME_ATTACK_TYPE_DAMAGE), scriptParser, "WeaponAttackType(" + ID + ") - damage");
         float damageMult = LoadUtils.attributeFloat(element, NAME_ATTACK_TYPE_DAMAGE_MULT, DEFAULT_ATTACK_TYPE_DAMAGE_MULT);
-        String damageTypeOverride = LoadUtils.attribute(element, NAME_ATTACK_TYPE_DAMAGE_TYPE, null);
+        String damageTypeOverrideID = LoadUtils.attribute(element, NAME_ATTACK_TYPE_DAMAGE_TYPE, null);
+        DamageType damageTypeOverride = damageTypeRegistry.getFromID(damageTypeOverrideID);
+        if (damageTypeOverride == null) throw new GameDataException("AttackType has invalid damage type override");
         Float armorMultOverride = LoadUtils.attributeFloat(element, NAME_ATTACK_TYPE_ARMOR_MULT, null);
-        List<String> targetEffects = LoadUtils.listOfTags(element, NAME_ATTACK_TYPE_TARGET_EFFECT);
+        List<String> targetEffectIDs = LoadUtils.listOfTags(element, NAME_ATTACK_TYPE_TARGET_EFFECT);
+        List<Effect> targetEffects = new ArrayList<>();
+        for (String effectID : targetEffectIDs) {
+            Effect effect = effectRegistry.getFromID(effectID);
+            if (effect == null) throw new GameDataException("AttackType has invalid target effect");
+            targetEffects.add(effect);
+        }
         boolean overrideTargetEffects = LoadUtils.attributeBool(element, NAME_ATTACK_TYPE_OVERRIDE_EFFECTS, DEFAULT_ATTACK_TYPE_OVERRIDE_EFFECTS);
         Script hitChance = LoadUtils.loadScriptExpression(LoadUtils.singleChildWithName(element, NAME_ATTACK_TYPE_HIT_CHANCE), scriptParser, "WeaponAttackType(" + ID + ") - hit chance");
         Script hitChanceOverall = LoadUtils.loadScriptExpression(LoadUtils.singleChildWithName(element, NAME_ATTACK_TYPE_HIT_CHANCE_OVERALL), scriptParser, "WeaponAttackType(" + ID + ") - overall hit chance");
         float hitChanceMult = LoadUtils.attributeFloat(element, NAME_ATTACK_TYPE_HIT_CHANCE_MULT, DEFAULT_ATTACK_TYPE_HIT_CHANCE_MULT);
         Boolean isLoudOverride = LoadUtils.attributeBool(element, NAME_ATTACK_TYPE_IS_LOUD_OVERRIDE, null);
-        return new WeaponAttackType(ID, category, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, useNonIdealRange, rangeOverride, rateOverride, damageOverride, damageMult, damageTypeOverride, armorMultOverride, targetEffects, overrideTargetEffects, hitChance, hitChanceOverall, hitChanceMult, isLoudOverride);
+        return new WeaponAttackType(pathfinder, ID, category, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, useNonIdealRange, rangeOverride, rateOverride, damageOverride, damageMult, damageTypeOverride, armorMultOverride, targetEffects, overrideTargetEffects, hitChance, hitChanceOverall, hitChanceMult, isLoudOverride);
     }
 
 }
