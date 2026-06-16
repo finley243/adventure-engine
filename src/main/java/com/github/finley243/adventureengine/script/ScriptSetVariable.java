@@ -23,7 +23,7 @@ public class ScriptSetVariable extends Script {
         } else if (!isDefinition && !context.getLocalVariables().containsKey(variableName)) {
             return new ScriptReturnData(null, null, new ScriptErrorData("Variable with name has not been defined", getTraceData()));
         }
-        ScriptReturnData valueResult = variableValue.execute(, context);
+        ScriptReturnData valueResult = variableValue.execute(scriptRuntime, context);
         if (valueResult.error() != null) {
             return valueResult;
         } else if (valueResult.flowStatement() != null) {

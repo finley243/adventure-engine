@@ -26,19 +26,19 @@ public class ScriptSensoryEvent extends Script {
         if (area.getDataType() != Expression.DataType.STRING && area.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, new ScriptErrorData("Area parameter is not a string or set", getTraceData()));
         if (isDetectedBySelfExpression.getDataType() != Expression.DataType.BOOLEAN) return new ScriptReturnData(null, null, new ScriptErrorData("DetectSelf parameter is not a boolean", getTraceData()));
         boolean isDetectedBySelf = isDetectedBySelfExpression.getValueBoolean();
-        Area[] originAreas = getOriginAreas(context, area);
+        Area[] originAreas = getOriginAreas(scriptRuntime, area);
         String phraseString = (phrase == null ? null : phrase.getValueString());
         String phraseAudibleString = (phraseAudible == null ? null : phraseAudible.getValueString());
         SensoryEvent sensoryEvent = new SensoryEvent(originAreas, Phrases.get(phraseString), Phrases.get(phraseAudibleString), context, isDetectedBySelf, false, context.getParentAction(), null);
-        SensoryEvent.execute(context.game(), sensoryEvent);
+        scriptRuntime.postSensoryEvent(sensoryEvent);
         return new ScriptReturnData(null, null, null);
     }
 
-    private Area[] getOriginAreas(Context context, Expression area) {
+    private Area[] getOriginAreas(ScriptRuntime scriptRuntime, Expression area) {
         if (area.getDataType() == Expression.DataType.STRING) {
             String areaID = area.getValueString();
             Area[] areaArray = new Area[1];
-            areaArray[0] = context.game().data().getArea(areaID);
+            areaArray[0] = scriptRuntime.getArea(areaID);
             return areaArray;
         } else if (area.getDataType() == Expression.DataType.SET) {
             Set<String> areaIDSet = new HashSet<>();
@@ -49,7 +49,7 @@ public class ScriptSensoryEvent extends Script {
             Area[] areaArray = new Area[areaIDSet.size()];
             int index = 0;
             for (String areaID : areaIDSet) {
-                areaArray[index] = context.game().data().getArea(areaID);
+                areaArray[index] = scriptRuntime.getArea(areaID);
                 index++;
             }
             return areaArray;

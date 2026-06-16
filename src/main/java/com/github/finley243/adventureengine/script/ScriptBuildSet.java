@@ -21,7 +21,7 @@ public class ScriptBuildSet extends Script {
     ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Set<Expression> computedValues = new HashSet<>();
         for (Script valueScript : valueScripts) {
-            ScriptReturnData scriptResult = valueScript.execute(, context);
+            ScriptReturnData scriptResult = valueScript.execute(scriptRuntime, context);
             if (scriptResult.error() != null) {
                 return scriptResult;
             } else if (scriptResult.flowStatement() != null) {

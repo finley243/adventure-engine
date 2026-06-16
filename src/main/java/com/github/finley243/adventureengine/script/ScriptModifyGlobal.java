@@ -19,15 +19,15 @@ public class ScriptModifyGlobal extends Script {
     ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         if (globalID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptModifyGlobal globalID is not a string");
         String globalIDValue = globalID.getValueString();
-        if (context.game().data().getGlobalExpression(globalIDValue).getDataType() != expression.getDataType()) throw new IllegalArgumentException("ScriptModifyGlobal expression data type does not match global");
+        if (scriptRuntime.getGlobalExpression(globalIDValue).getDataType() != expression.getDataType()) throw new IllegalArgumentException("ScriptModifyGlobal expression data type does not match global");
         switch (expression.getDataType()) {
             case INTEGER -> {
-                int oldValueInt = context.game().data().getGlobalExpression(globalIDValue).getValueInteger();
-                context.game().data().setGlobalExpression(globalIDValue, Expression.integer(oldValueInt + expression.getValueInteger()));
+                int oldValueInt = scriptRuntime.getGlobalExpression(globalIDValue).getValueInteger();
+                scriptRuntime.setGlobalExpression(globalIDValue, Expression.integer(oldValueInt + expression.getValueInteger()));
             }
             case FLOAT -> {
-                float oldValueFloat = context.game().data().getGlobalExpression(globalIDValue).getValueFloat();
-                context.game().data().setGlobalExpression(globalIDValue, Expression.decimal(oldValueFloat + expression.getValueFloat()));
+                float oldValueFloat = scriptRuntime.getGlobalExpression(globalIDValue).getValueFloat();
+                scriptRuntime.setGlobalExpression(globalIDValue, Expression.decimal(oldValueFloat + expression.getValueFloat()));
             }
             default ->
                     throw new UnsupportedOperationException("No modify functions for provided data type: " + expression.getDataType());

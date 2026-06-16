@@ -3,6 +3,9 @@ package com.github.finley243.adventureengine.script;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Timer;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.Faction;
+import com.github.finley243.adventureengine.effect.Effect;
+import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
@@ -25,6 +28,10 @@ public interface ScriptRuntime {
     Room getRoom(String id);
 
     Scene getScene(String id);
+
+    Effect getEffect(String id);
+
+    Faction getFaction(String id);
 
     Actor getActor(String id);
 
@@ -53,5 +60,9 @@ public interface ScriptRuntime {
     void setGlobalExpression(String id, Expression expression);
 
     Expression getGlobalExpression(String id);
+
+    void postSensoryEvent(SensoryEvent event);
+
+    boolean actorCanSeeTargetActor(Actor observer, Actor target);
 
 }

@@ -16,7 +16,7 @@ public class ScriptReturn extends Script {
         if (scriptReturn == null) {
             return new ScriptReturnData(null, FlowStatementType.RETURN, null);
         }
-        ScriptReturnData scriptResult = scriptReturn.execute(, context);
+        ScriptReturnData scriptResult = scriptReturn.execute(scriptRuntime, context);
         if (scriptResult.error() != null) {
             return scriptResult;
         } else if (scriptResult.flowStatement() != null) {

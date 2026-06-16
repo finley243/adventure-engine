@@ -21,7 +21,7 @@ public class ScriptIterator extends Script {
 
     @Override
     ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
-        ScriptReturnData setResult = setExpression.execute(, context);
+        ScriptReturnData setResult = setExpression.execute(scriptRuntime, context);
         if (setResult.error() != null) {
             return setResult;
         } else if (setResult.flowStatement() != null) {
@@ -39,7 +39,7 @@ public class ScriptIterator extends Script {
         }
         for (Expression currentExpression : expressions) {
             Context innerContext = Context.from(context).addVariable(iteratorParameterName, currentExpression).build();
-            ScriptReturnData scriptResult = iteratedScript.execute(, innerContext);
+            ScriptReturnData scriptResult = iteratedScript.execute(scriptRuntime, innerContext);
             if (scriptResult.error() != null) {
                 return scriptResult;
             } else if (scriptResult.flowStatement() == FlowStatementType.RETURN) {

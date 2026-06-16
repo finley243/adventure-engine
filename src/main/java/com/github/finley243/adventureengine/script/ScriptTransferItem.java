@@ -35,47 +35,49 @@ public class ScriptTransferItem extends Script {
             }
         }
         Expression itemID = context.getLocalVariables().get("item").getExpression();
-        Expression inventoryOrigin = context.getLocalVariables().get("from").getExpression();
-        Expression inventoryTarget = context.getLocalVariables().get("to").getExpression();
+        Expression inventoryOriginExpression = context.getLocalVariables().get("from").getExpression();
+        Expression inventoryTargetExpression = context.getLocalVariables().get("to").getExpression();
         Expression count = context.getLocalVariables().get("count").getExpression();
-        if (inventoryOrigin != null && inventoryOrigin.getDataType() != Expression.DataType.INVENTORY) return new ScriptReturnData(null, null, new ScriptErrorData("From parameter is not an inventory", getTraceData()));
-        if (inventoryTarget != null && inventoryTarget.getDataType() != Expression.DataType.INVENTORY) return new ScriptReturnData(null, null, new ScriptErrorData("To parameter is not an inventory", getTraceData()));
+        if (inventoryOriginExpression != null && inventoryOriginExpression.getDataType() != Expression.DataType.INVENTORY) return new ScriptReturnData(null, null, new ScriptErrorData("From parameter is not an inventory", getTraceData()));
+        if (inventoryTargetExpression != null && inventoryTargetExpression.getDataType() != Expression.DataType.INVENTORY) return new ScriptReturnData(null, null, new ScriptErrorData("To parameter is not an inventory", getTraceData()));
+        Inventory inventoryOrigin = inventoryOriginExpression == null ? null : inventoryOriginExpression.getValueInventory();
+        Inventory inventoryTarget = inventoryTargetExpression == null ? null : inventoryTargetExpression.getValueInventory();
         if (itemID != null && itemID.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("Item parameter is not a string", getTraceData()));
         if (count != null && count.getDataType() != Expression.DataType.INTEGER) return new ScriptReturnData(null, null, new ScriptErrorData("Count parameter is not an integer", getTraceData()));
         switch (transferType) {
             case INSTANCE -> {
                 String itemIDValue = itemID.getValueString();
-                Item itemState = context.game().data().getItemInstance(itemIDValue);
-                inventoryOrigin.getValueInventory().removeItem(itemState, context.game());
+                Item itemState = scriptRuntime.getItem(itemIDValue);
+                if (inventoryOrigin == null) return new ScriptReturnData(null, null, new ScriptErrorData("From parameter cannot be null for instance transfer", getTraceData()));
+                inventoryOrigin.removeItem(itemState);
                 if (inventoryTarget != null) {
-                    inventoryTarget.getValueInventory().addItem(itemState, context.game());
+                    inventoryTarget.addItem(itemState);
                 }
             }
             case COUNT -> {
                 String itemIDValue = itemID.getValueString();
                 int countValue = count.getValueInteger();
                 if (inventoryOrigin != null) {
-                    inventoryOrigin.getValueInventory().removeItems(itemIDValue, countValue);
+                    inventoryOrigin.removeItems(itemIDValue, countValue);
                 }
                 if (inventoryTarget != null) {
-                    inventoryTarget.getValueInventory().addItems(itemIDValue, countValue, context.game());
+                    inventoryTarget.addItems(itemIDValue, countValue);
                 }
             }
             case TYPE -> {
                 String itemIDValue = itemID.getValueString();
-                Inventory invOriginValue = inventoryOrigin.getValueInventory();
-                int countInInventory = invOriginValue.itemCount(itemIDValue);
-                invOriginValue.removeItems(itemIDValue, countInInventory);
+                if (inventoryOrigin == null) return new ScriptReturnData(null, null, new ScriptErrorData("From parameter cannot be null for type transfer", getTraceData()));
+                int countInInventory = inventoryOrigin.itemCount(itemIDValue);
+                inventoryOrigin.removeItems(itemIDValue, countInInventory);
                 if (inventoryTarget != null) {
-                    inventoryTarget.getValueInventory().addItems(itemIDValue, countInInventory, context.game());
+                    inventoryTarget.addItems(itemIDValue, countInInventory);
                 }
             }
             case ALL -> {
-                Inventory invOriginValue = inventoryOrigin.getValueInventory();
-                Map<Item, Integer> allItems = invOriginValue.getItemMap();
-                invOriginValue.clear();
+                if (inventoryOrigin == null) return new ScriptReturnData(null, null, new ScriptErrorData("From parameter cannot be null for all transfer", getTraceData()));
+                Map<Item, Integer> allItems = inventoryOrigin.getItemMap();
                 if (inventoryTarget != null) {
-                    inventoryTarget.getValueInventory().addItems(allItems, context.game());
+                    inventoryTarget.addItems(allItems);
                 }
             }
         }

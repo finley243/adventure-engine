@@ -16,7 +16,7 @@ public class ScriptSubtract extends Script {
 
     @Override
     ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
-        ScriptReturnData firstReturn = firstScript.execute(, context);
+        ScriptReturnData firstReturn = firstScript.execute(scriptRuntime, context);
         if (firstReturn.error() != null) {
             return firstReturn;
         } else if (firstReturn.flowStatement() != null) {
@@ -24,7 +24,7 @@ public class ScriptSubtract extends Script {
         } else if (firstReturn.value() == null) {
             return new ScriptReturnData(null, null, new ScriptErrorData("Expression did not receive a value", getTraceData()));
         }
-        ScriptReturnData secondReturn = secondScript.execute(, context);
+        ScriptReturnData secondReturn = secondScript.execute(scriptRuntime, context);
         if (secondReturn.error() != null) {
             return secondReturn;
         } else if (secondReturn.flowStatement() != null) {

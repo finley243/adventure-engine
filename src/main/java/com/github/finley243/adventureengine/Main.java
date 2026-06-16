@@ -1,6 +1,8 @@
 package com.github.finley243.adventureengine;
 
 import com.github.finley243.adventureengine.action.ActionDependencies;
+import com.github.finley243.adventureengine.actor.ai.Pathfinder;
+import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.event.UIEventBusImpl;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -43,8 +45,11 @@ public class Main {
 		DateTimeController dateTimeController = new DateTimeController();
 		TimerManager timerManager = new TimerManager();
 
+		Pathfinder pathfinder = new Pathfinder();
+		SensoryEventDispatcher sensoryEventDispatcher = new SensoryEventDispatcher(pathfinder, eventBus);
+
 		MutableRegistry<Expression> globalExpressionRegistry = new MutableRegistry<>(Map.of());
-		ScriptRuntimeImpl scriptRuntime = new ScriptRuntimeImpl(menuManager, timerManager, dateTimeController, globalExpressionRegistry);
+		ScriptRuntimeImpl scriptRuntime = new ScriptRuntimeImpl(sensoryEventDispatcher, menuManager, timerManager, pathfinder, dateTimeController, globalExpressionRegistry);
 		menuManager.setScriptRuntime(scriptRuntime);
 
 		if (configHandler.get(ConfigOption.ENABLE_DEBUG_LOG).equalsIgnoreCase("true")) {
@@ -53,7 +58,7 @@ public class Main {
 
 		MutableRegistry<Item> itemMutableRegistry = new MutableRegistry<>(Map.of());
 
-		GameDataLoader gameDataLoader = new GameDataLoader(configHandler, scriptRuntime, itemMutableRegistry, eventBus);
+		GameDataLoader gameDataLoader = new GameDataLoader(configHandler, scriptRuntime, itemMutableRegistry, pathfinder, sensoryEventDispatcher);
 		File dataDirectory = Path.of(GAMEFILES + DATA_DIRECTORY).toFile();
 		GameData gameData = gameDataLoader.loadData(dataDirectory);
 		scriptRuntime.setGameData(gameData);

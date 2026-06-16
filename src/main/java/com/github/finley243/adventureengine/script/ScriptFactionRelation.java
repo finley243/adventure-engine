@@ -27,7 +27,7 @@ public class ScriptFactionRelation extends Script {
 				return new ScriptReturnData(null, null, new ScriptErrorData("Relation parameter is not a valid faction relation", getTraceData()));
 			}
 		}
-		context.game().data().getFaction(factionExpression.getValueString()).setRelation(relatedFactionExpression.getValueString(), relation);
+		scriptRuntime.getFaction(factionExpression.getValueString()).setRelation(relatedFactionExpression.getValueString(), relation);
 		return new ScriptReturnData(null, null, null);
 	}
 

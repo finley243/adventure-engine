@@ -20,7 +20,7 @@ public class ScriptBuildList extends Script {
     ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         List<Expression> computedValues = new ArrayList<>();
         for (Script valueScript : valueScripts) {
-            ScriptReturnData scriptResult = valueScript.execute(, context);
+            ScriptReturnData scriptResult = valueScript.execute(scriptRuntime, context);
             if (scriptResult.error() != null) {
                 return scriptResult;
             } else if (scriptResult.flowStatement() != null) {

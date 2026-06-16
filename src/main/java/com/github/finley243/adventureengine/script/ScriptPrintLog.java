@@ -15,7 +15,7 @@ public class ScriptPrintLog extends Script {
 
     @Override
     ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
-        ScriptReturnData messageResult = scriptMessage.execute(, context);
+        ScriptReturnData messageResult = scriptMessage.execute(scriptRuntime, context);
         if (messageResult.error() != null) {
             return messageResult;
         } else if (messageResult.flowStatement() != null) {

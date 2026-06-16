@@ -8,7 +8,6 @@ import com.github.finley243.adventureengine.combat.DamageType;
 import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
-import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.gamedata.*;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemFactory;
@@ -68,13 +67,15 @@ public class GameDataLoader {
     private final ConfigHandler configHandler;
     private final ScriptRuntime scriptRuntime;
     private final MutableRegistry<Item> itemMutableRegistry;
-    private final UIEventBus eventBus;
+    private final Pathfinder pathfinder;
+    private final SensoryEventDispatcher sensoryEventDispatcher;
 
-    public GameDataLoader(ConfigHandler configHandler, ScriptRuntime scriptRuntime, MutableRegistry<Item> itemMutableRegistry, UIEventBus eventBus) {
+    public GameDataLoader(ConfigHandler configHandler, ScriptRuntime scriptRuntime, MutableRegistry<Item> itemMutableRegistry, Pathfinder pathfinder, SensoryEventDispatcher sensoryEventDispatcher) {
         this.configHandler = configHandler;
         this.scriptRuntime = scriptRuntime;
         this.itemMutableRegistry = itemMutableRegistry;
-        this.eventBus = eventBus;
+        this.pathfinder = pathfinder;
+        this.sensoryEventDispatcher = sensoryEventDispatcher;
     }
 
     public GameData loadData(File dir) throws GameDataException {
@@ -106,9 +107,6 @@ public class GameDataLoader {
         } catch (ParserConfigurationException e) {
             throw new RuntimeException(e);
         }
-
-        Pathfinder pathfinder = new Pathfinder();
-        SensoryEventDispatcher sensoryEventDispatcher = new SensoryEventDispatcher(pathfinder, eventBus);
 
         ActionLoader actionLoader = new ActionLoader(scriptParser, scriptRuntime);
         Map<String, ActionTemplate> actionMap = loadMapFromFileName(dir, NAME_ACTION_TEMPLATE, builder, actionLoader::load);

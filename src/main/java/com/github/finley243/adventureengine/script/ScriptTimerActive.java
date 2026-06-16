@@ -13,7 +13,7 @@ public class ScriptTimerActive extends Script {
     ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression timerID = context.getLocalVariables().get("timer").getExpression();
         if (timerID.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("Timer parameter is not a string", getTraceData()));
-        boolean timerIsActive = context.game().data().isTimerActive(timerID.getValueString());
+        boolean timerIsActive = scriptRuntime.isTimerActive(timerID.getValueString());
         return new ScriptReturnData(Expression.bool(timerIsActive), FlowStatementType.RETURN, null);
     }
 

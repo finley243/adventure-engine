@@ -17,7 +17,7 @@ public class ScriptCompound extends Script {
     ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Context innerContext = Context.from(context).build();
         for (Script subScript : subScripts) {
-            ScriptReturnData result = subScript.execute(, innerContext);
+            ScriptReturnData result = subScript.execute(scriptRuntime, innerContext);
             if (result.error() != null) {
                 return result;
             } else if (result.flowStatement() != null) {

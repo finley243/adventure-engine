@@ -4,6 +4,11 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.DateTimeController;
 import com.github.finley243.adventureengine.Timer;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.Faction;
+import com.github.finley243.adventureengine.actor.ai.Pathfinder;
+import com.github.finley243.adventureengine.effect.Effect;
+import com.github.finley243.adventureengine.event.SensoryEvent;
+import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.gamedata.GameData;
 import com.github.finley243.adventureengine.gamedata.MutableRegistry;
@@ -19,16 +24,20 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class ScriptRuntimeImpl implements ScriptRuntime {
 
+    private final SensoryEventDispatcher sensoryEventDispatcher;
     private final MenuManager menuManager;
     private final TimerManager timerManager;
+    private final Pathfinder pathfinder;
     private final DateTimeController dateTimeController;
     private final MutableRegistry<Expression> globalExpressionRegistry;
 
     private GameData gameData;
 
-    public ScriptRuntimeImpl(MenuManager menuManager, TimerManager timerManager, DateTimeController dateTimeController, MutableRegistry<Expression> globalExpressionRegistry) {
+    public ScriptRuntimeImpl(SensoryEventDispatcher sensoryEventDispatcher, MenuManager menuManager, TimerManager timerManager, Pathfinder pathfinder, DateTimeController dateTimeController, MutableRegistry<Expression> globalExpressionRegistry) {
+        this.sensoryEventDispatcher = sensoryEventDispatcher;
         this.menuManager = menuManager;
         this.timerManager = timerManager;
+        this.pathfinder = pathfinder;
         this.dateTimeController = dateTimeController;
         this.globalExpressionRegistry = globalExpressionRegistry;
     }
@@ -71,6 +80,16 @@ public class ScriptRuntimeImpl implements ScriptRuntime {
     @Override
     public Scene getScene(String id) {
         return gameData().sceneRegistry().getFromID(id);
+    }
+
+    @Override
+    public Effect getEffect(String id) {
+        return gameData().effectRegistry().getFromID(id);
+    }
+
+    @Override
+    public Faction getFaction(String id) {
+        return gameData().factionRegistry().getFromID(id);
     }
 
     @Override
@@ -141,6 +160,16 @@ public class ScriptRuntimeImpl implements ScriptRuntime {
     @Override
     public Expression getGlobalExpression(String id) {
         return globalExpressionRegistry.getFromID(id);
+    }
+
+    @Override
+    public void postSensoryEvent(SensoryEvent event) {
+        sensoryEventDispatcher.dispatch(event);
+    }
+
+    @Override
+    public boolean actorCanSeeTargetActor(Actor observer, Actor target) {
+        return target.isVisible(observer) && observer.getLineOfSightActors(pathfinder).contains(target);
     }
 
 }

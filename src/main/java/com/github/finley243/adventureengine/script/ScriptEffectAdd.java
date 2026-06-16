@@ -19,7 +19,7 @@ public class ScriptEffectAdd extends Script{
         if (!(targetExpression.getValueStatHolder() instanceof Effectable effectableTarget)) return new ScriptReturnData(null, null, new ScriptErrorData("Target parameter does not support effects", getTraceData()));
         if (targetExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("Effect parameter is not a string", getTraceData()));
         String effectID = effectExpression.getValueString();
-        Effect effect = context.game().data().getEffect(effectID);
+        Effect effect = scriptRuntime.getEffect(effectID);
         effectableTarget.addEffect(effect);
         return new ScriptReturnData(null, null, null);
     }

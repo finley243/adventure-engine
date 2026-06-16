@@ -24,14 +24,14 @@ public class ScriptTimerStart extends Script {
         Script scriptUpdate = null;
         if (timerScriptExpire != null) {
             String scriptExpireID = timerScriptExpire.getValueString();
-            scriptExpire = context.game().data().getScript(scriptExpireID).script();
+            scriptExpire = scriptRuntime.getScript(scriptExpireID).script();
         }
         if (timerScriptUpdate != null) {
             String scriptUpdateID = timerScriptUpdate.getValueString();
-            scriptUpdate = context.game().data().getScript(scriptUpdateID).script();
+            scriptUpdate = scriptRuntime.getScript(scriptUpdateID).script();
         }
         Timer timer = new Timer(timerID.getValueString(), timerDuration.getValueInteger(), scriptExpire, scriptUpdate, context);
-        context.game().data().addTimer(timer.getID(), timer);
+        scriptRuntime.addTimer(timer.getID(), timer);
         return new ScriptReturnData(null, null, null);
     }
 

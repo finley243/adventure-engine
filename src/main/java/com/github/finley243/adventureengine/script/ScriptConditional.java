@@ -19,7 +19,7 @@ public class ScriptConditional extends Script {
     @Override
     ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         for (ConditionalScriptPair scriptPair : conditionalScriptPairs) {
-            ScriptReturnData conditionResult = scriptPair.condition.execute(, context);
+            ScriptReturnData conditionResult = scriptPair.condition.execute(scriptRuntime, context);
             if (conditionResult.error() != null) {
                 return conditionResult;
             } else if (conditionResult.flowStatement() != null) {
@@ -30,11 +30,11 @@ public class ScriptConditional extends Script {
                 return new ScriptReturnData(null, null, new ScriptErrorData("Expression did not return a boolean value", getTraceData()));
             }
             if (conditionResult.value().getValueBoolean()) {
-                return scriptPair.script.execute(, context);
+                return scriptPair.script.execute(scriptRuntime, context);
             }
         }
         if (scriptElse != null) {
-            return scriptElse.execute(, context);
+            return scriptElse.execute(scriptRuntime, context);
         }
         return new ScriptReturnData(null, null, null);
     }

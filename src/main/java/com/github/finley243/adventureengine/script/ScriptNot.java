@@ -14,7 +14,7 @@ public class ScriptNot extends Script {
 
     @Override
     ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
-        ScriptReturnData scriptResult = subScript.execute(, context);
+        ScriptReturnData scriptResult = subScript.execute(scriptRuntime, context);
         if (scriptResult.error() != null) {
             return scriptResult;
         } else if (scriptResult.flowStatement() != null) {

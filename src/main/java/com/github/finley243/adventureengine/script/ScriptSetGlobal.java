@@ -16,13 +16,13 @@ public class ScriptSetGlobal extends Script {
 
     @Override
     ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
-        ScriptReturnData globalValueResult = globalValue.execute(, context);
+        ScriptReturnData globalValueResult = globalValue.execute(scriptRuntime, context);
         if (globalValueResult.error() != null) {
             return globalValueResult;
         } else if (globalValueResult.flowStatement() != null) {
             return new ScriptReturnData(null, null, new ScriptErrorData("Script expression contains unexpected flow statement", getTraceData()));
         }
-        context.game().data().setGlobalExpression(globalName, globalValueResult.value());
+        scriptRuntime.setGlobalExpression(globalName, globalValueResult.value());
         return new ScriptReturnData(null, null, null);
     }
 

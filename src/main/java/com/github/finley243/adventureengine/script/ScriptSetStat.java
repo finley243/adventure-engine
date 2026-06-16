@@ -20,7 +20,7 @@ public class ScriptSetStat extends Script {
 
     @Override
     ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
-        ScriptReturnData statNameResult = statName.execute(, context);
+        ScriptReturnData statNameResult = statName.execute(scriptRuntime, context);
         if (statNameResult.error() != null) {
             return statNameResult;
         } else if (statNameResult.flowStatement() != null) {
@@ -30,14 +30,14 @@ public class ScriptSetStat extends Script {
         if (statNameExpression == null) return new ScriptReturnData(null, null, new ScriptErrorData("Specified stat name is null", getTraceData()));
         if (statNameExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("Specified stat name is not a string", getTraceData()));
         String statNameString = statNameExpression.getValueString();
-        ScriptReturnData statValueResult = statValue.execute(, context);
+        ScriptReturnData statValueResult = statValue.execute(scriptRuntime, context);
         if (statValueResult.error() != null) {
             return statValueResult;
         } else if (statValueResult.flowStatement() != null) {
             return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain flow statement", getTraceData()));
         }
         Expression statValueExpression = statValueResult.value();
-        boolean success = holder.getHolder(context).setScriptValue(statNameString, statValueExpression, context);
+        boolean success = holder.getHolder(scriptRuntime, context).setScriptValue(statNameString, statValueExpression, context);
         if (!success) {
             return new ScriptReturnData(null, null, new ScriptErrorData("Stat value could not be set", getTraceData()));
         }

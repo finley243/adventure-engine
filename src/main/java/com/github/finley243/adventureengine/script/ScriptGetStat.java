@@ -17,7 +17,7 @@ public class ScriptGetStat extends Script {
 
     @Override
     ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
-        ScriptReturnData statNameResult = statName.execute(, context);
+        ScriptReturnData statNameResult = statName.execute(scriptRuntime, context);
         if (statNameResult.error() != null) {
             return statNameResult;
         } else if (statNameResult.flowStatement() != null) {
@@ -27,7 +27,7 @@ public class ScriptGetStat extends Script {
         if (statNameExpression == null) return new ScriptReturnData(null, null, new ScriptErrorData("Specified stat name is null", getTraceData()));
         if (statNameExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("Specified stat name is not a string", getTraceData()));
         String statNameString = statNameExpression.getValueString();
-        ScriptValueHolder statHolderValue = statHolder.getHolder(context);
+        ScriptValueHolder statHolderValue = statHolder.getHolder(scriptRuntime, context);
         if (statHolderValue == null) return new ScriptReturnData(null, null, new ScriptErrorData("Specified stat holder is null", getTraceData()));
         Expression statValue = statHolderValue.getScriptValue(statNameString, context);
         return new ScriptReturnData(statValue, null, null);
