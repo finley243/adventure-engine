@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.effect;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.stat.MutableStatHolder;
+import com.github.finley243.adventureengine.stat.StatHolder;
 
 /**
  * An effect that modifies an EffectableStatHolder
@@ -34,11 +34,11 @@ public class Effect extends GameInstanced {
 		this.scriptRound = scriptRound;
 	}
 	
-	public void start(MutableStatHolder target) {}
+	public void start(StatHolder target) {}
 	
-	public void end(MutableStatHolder target) {}
+	public void end(StatHolder target) {}
 	
-	public void eachRound(MutableStatHolder target) {}
+	public void eachRound(StatHolder target) {}
 
 	public boolean manualRemoval() {
 		return manualRemoval;

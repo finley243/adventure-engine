@@ -4,7 +4,6 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.item.Inventory;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.load.ScriptParser;
-import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.textgen.Noun;
 
 import java.util.ArrayList;
@@ -132,7 +131,7 @@ public abstract class Script {
 		return new ScriptExpression(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME), Expression.constant(value));
 	}
 
-	public static Script constant(StatHolder value) {
+	public static Script constant(ScriptValueHolder value) {
 		return new ScriptExpression(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME), Expression.constant(value));
 	}
 

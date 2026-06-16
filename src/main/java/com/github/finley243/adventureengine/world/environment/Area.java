@@ -22,6 +22,7 @@ import com.github.finley243.adventureengine.menu.action.MenuDataMove;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
+import com.github.finley243.adventureengine.script.ScriptValueHolder;
 import com.github.finley243.adventureengine.stat.*;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
@@ -35,7 +36,7 @@ import java.util.*;
 /**
  * Represents a section of a room that can contain objects and actors
  */
-public class Area extends GameInstanced implements Noun, MutableStatHolder, Effectable {
+public class Area extends GameInstanced implements Noun, ScriptValueHolder, StatHolder, Effectable {
 
 	public enum RestrictionType {
 		PUBLIC, PRIVATE, HOSTILE
@@ -251,7 +252,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	@Override
-	public StatHolder getSubHolder(String name, String ID) {
+	public ScriptValueHolder getSubHolder(String name, String ID) {
 		if ("room".equals(name)) {
 			return getRoom();
 		}
@@ -439,7 +440,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	@Override
-	public Expression getStatValue(String name, Context context) {
+	public Expression getScriptValue(String name, Context context) {
 		return switch (name) {
 			case "inventory" -> (itemInventory == null ? null : Expression.constant(itemInventory));
 			case "noun" -> Expression.constantNoun(this);
@@ -447,7 +448,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 			case "name" -> Expression.constant(getName());
 			case "relative_name" -> Expression.constant(getRelativeName());
 			case "move_phrase" -> Expression.constant(getMovePhrase(context.getSubject()));
-			case "room" -> Expression.constant((StatHolder) room);
+			case "room" -> Expression.constant((ScriptValueHolder) room);
 			case "movable_areas" -> Expression.constant(getMovableAreaIDs(null));
 			case "obstruction_types" -> Expression.constant(StatUtils.objectSetToIDSet(getObstructionTypes(), ObstructionType::ID));
 			default -> null;
@@ -455,32 +456,12 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	@Override
-	public boolean setStatValue(String name, Expression value, Context context) {
+	public boolean setScriptValue(String name, Expression value, Context context) {
 		return false;
 	}
 
 	@Override
-	public IntStat getStatInt(String name) {
-		return null;
-	}
-
-	@Override
-	public FloatStat getStatFloat(String name) {
-		return null;
-	}
-
-	@Override
-	public BooleanStat getStatBoolean(String name) {
-		return null;
-	}
-
-	@Override
-	public StringStat getStatString(String name) {
-		return null;
-	}
-
-	@Override
-	public StringSetStat getStatStringSet(String name) {
+	public Stat getStat(String name) {
 		if ("effects".equals(name)) {
 			return effects;
 		} else if ("obstructions".equals(name)) {

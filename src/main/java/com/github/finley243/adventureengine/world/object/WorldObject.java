@@ -19,7 +19,7 @@ import com.github.finley243.adventureengine.network.NetworkNode;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
-import com.github.finley243.adventureengine.stat.StatHolder;
+import com.github.finley243.adventureengine.script.ScriptValueHolder;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 import com.github.finley243.adventureengine.world.AttackTarget;
@@ -34,7 +34,7 @@ import java.util.*;
 /**
  * An object that can exist in the game world
  */
-public class WorldObject extends GameInstanced implements Noun, Physical, StatHolder, AttackTarget {
+public class WorldObject extends GameInstanced implements Noun, Physical, ScriptValueHolder, AttackTarget {
 
 	private final ObjectTemplate template;
 	private boolean isKnown;
@@ -269,9 +269,9 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public Expression getStatValue(String name, Context context) {
+	public Expression getScriptValue(String name, Context context) {
 		for (ObjectComponent component : components.values()) {
-			Expression componentValue = component.getStatValue(name, context);
+			Expression componentValue = component.getScriptValue(name, context);
 			if (componentValue != null) return componentValue;
 		}
 		return switch (name) {
@@ -295,9 +295,9 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public boolean setStatValue(String name, Expression value, Context context) {
+	public boolean setScriptValue(String name, Expression value, Context context) {
 		for (ObjectComponent component : components.values()) {
-			boolean success = component.setStatValue(name, value, context);
+			boolean success = component.setScriptValue(name, value, context);
 			if (success) return true;
 		}
 		switch (name) {
@@ -317,7 +317,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public StatHolder getSubHolder(String name, String ID) {
+	public ScriptValueHolder getSubHolder(String name, String ID) {
 		return switch (name) {
 			case "area" -> getArea();
 			default -> null;

@@ -13,7 +13,7 @@ public class StringSetStat extends Stat {
 
     private final List<StatStringSetMod> mods;
 
-    public StringSetStat(String name, MutableStatHolder target) {
+    public StringSetStat(String name, StatHolder target) {
         super(name, target);
         this.mods = new ArrayList<>();
     }

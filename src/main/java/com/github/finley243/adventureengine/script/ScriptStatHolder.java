@@ -2,21 +2,19 @@ package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.stat.StatHolder;
-import com.github.finley243.adventureengine.stat.StatHolderReference;
 
 public class ScriptStatHolder extends Script {
 
-    private final StatHolderReference statHolderReference;
+    private final ScriptValueHolderReference scriptValueHolderReference;
 
-    public ScriptStatHolder(ScriptTraceData traceData, StatHolderReference statHolderReference) {
+    public ScriptStatHolder(ScriptTraceData traceData, ScriptValueHolderReference scriptValueHolderReference) {
         super(traceData);
-        this.statHolderReference = statHolderReference;
+        this.scriptValueHolderReference = scriptValueHolderReference;
     }
 
     @Override
     ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
-        StatHolder statHolder = statHolderReference.getHolder(context);
+        ScriptValueHolder statHolder = scriptValueHolderReference.getHolder(context);
         return new ScriptReturnData(Expression.constant(statHolder), null, null);
     }
 

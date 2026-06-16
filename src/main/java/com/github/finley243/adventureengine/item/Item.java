@@ -16,13 +16,14 @@ import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
+import com.github.finley243.adventureengine.script.ScriptValueHolder;
 import com.github.finley243.adventureengine.stat.*;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.TextContext;
 
 import java.util.*;
 
-public class Item extends GameInstanced implements Noun, MutableStatHolder, Effectable {
+public class Item extends GameInstanced implements Noun, ScriptValueHolder, StatHolder, Effectable {
 
 	private Inventory currentInventory;
 	private boolean isKnown;
@@ -154,9 +155,9 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	@Override
-	public Expression getStatValue(String name, Context context) {
+	public Expression getScriptValue(String name, Context context) {
 		for (ItemComponent component : components.values()) {
-			Expression componentValue = component.getStatValue(name, context);
+			Expression componentValue = component.getScriptValue(name, context);
 			if (componentValue != null) return componentValue;
 		}
 		return switch (name) {
@@ -168,9 +169,9 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	@Override
-	public boolean setStatValue(String name, Expression value, Context context) {
+	public boolean setScriptValue(String name, Expression value, Context context) {
 		for (ItemComponent component : components.values()) {
-			boolean success = component.setStatValue(name, value, context);
+			boolean success = component.setScriptValue(name, value, context);
 			if (success) return true;
 		}
 		return false;
@@ -185,9 +186,9 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	@Override
-	public StatHolder getSubHolder(String name, String ID) {
+	public ScriptValueHolder getSubHolder(String name, String ID) {
 		for (ItemComponent component : components.values()) {
-			StatHolder componentValue = component.getSubHolder(name, ID);
+			ScriptValueHolder componentValue = component.getSubHolder(name, ID);
 			if (componentValue != null) return componentValue;
 		}
 		if ("template".equals(name)) {
@@ -197,45 +198,9 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	@Override
-	public IntStat getStatInt(String name) {
+	public Stat getStat(String name) {
 		for (ItemComponent component : components.values()) {
-			IntStat componentValue = component.getStatInt(name);
-			if (componentValue != null) return componentValue;
-		}
-		return null;
-	}
-
-	@Override
-	public FloatStat getStatFloat(String name) {
-		for (ItemComponent component : components.values()) {
-			FloatStat componentValue = component.getStatFloat(name);
-			if (componentValue != null) return componentValue;
-		}
-		return null;
-	}
-
-	@Override
-	public BooleanStat getStatBoolean(String name) {
-		for (ItemComponent component : components.values()) {
-			BooleanStat componentValue = component.getStatBoolean(name);
-			if (componentValue != null) return componentValue;
-		}
-		return null;
-	}
-
-	@Override
-	public StringStat getStatString(String name) {
-		for (ItemComponent component : components.values()) {
-			StringStat componentValue = component.getStatString(name);
-			if (componentValue != null) return componentValue;
-		}
-		return null;
-	}
-
-	@Override
-	public StringSetStat getStatStringSet(String name) {
-		for (ItemComponent component : components.values()) {
-			StringSetStat componentValue = component.getStatStringSet(name);
+			Stat componentValue = component.getStat(name);
 			if (componentValue != null) return componentValue;
 		}
 		return null;

@@ -7,12 +7,13 @@ import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.template.ItemComponentTemplate;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
+import com.github.finley243.adventureengine.script.ScriptValueHolder;
 import com.github.finley243.adventureengine.stat.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ItemComponent implements MutableStatHolder {
+public abstract class ItemComponent implements ScriptValueHolder, StatHolder {
 
     private final Item item;
     private final ItemComponentTemplate template;
@@ -52,42 +53,22 @@ public abstract class ItemComponent implements MutableStatHolder {
     }
 
     @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getScriptValue(String name, Context context) {
         return null;
     }
 
     @Override
-    public boolean setStatValue(String name, Expression value, Context context) {
+    public boolean setScriptValue(String name, Expression value, Context context) {
         return false;
     }
 
     @Override
-    public StatHolder getSubHolder(String name, String ID) {
+    public ScriptValueHolder getSubHolder(String name, String ID) {
         return null;
     }
 
     @Override
-    public IntStat getStatInt(String name) {
-        return null;
-    }
-
-    @Override
-    public FloatStat getStatFloat(String name) {
-        return null;
-    }
-
-    @Override
-    public BooleanStat getStatBoolean(String name) {
-        return null;
-    }
-
-    @Override
-    public StringStat getStatString(String name) {
-        return null;
-    }
-
-    @Override
-    public StringSetStat getStatStringSet(String name) {
+    public Stat getStat(String name) {
         return null;
     }
 

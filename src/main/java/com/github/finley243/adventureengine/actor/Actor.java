@@ -40,7 +40,7 @@ import com.github.finley243.adventureengine.world.obstruction.ObstructionType;
 import java.util.*;
 import java.util.function.Function;
 
-public class Actor extends GameInstanced implements Noun, Physical, MutableStatHolder, AttackTarget, Effectable, InventoryOwner {
+public class Actor extends GameInstanced implements Noun, Physical, ScriptValueHolder, StatHolder, AttackTarget, Effectable, InventoryOwner {
 
 	public static final boolean SHOW_HP_CHANGES = true;
 	public static final int ATTRIBUTE_MIN = 1;
@@ -753,7 +753,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	@Override
-	public IntStat getStatInt(String name) {
+	public Stat getStat(String name) {
 		if (name.startsWith("damage_resist_")) {
 			String damageType = name.substring("damage_resist_".length());
 			return damageResistance.get(damageType);
@@ -763,54 +763,33 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		} else if (name.startsWith("skill_")) {
 			String skill = name.substring("skill_".length());
 			return skills.get(skill);
+		} else if (name.startsWith("damage_mult_")) {
+			String damageType = name.substring("damage_mult_".length());
+			return damageMult.get(damageType);
 		}
 		return switch (name) {
 			case "max_hp" -> maxHP;
 			case "action_points" -> actionPoints;
 			case "move_points" -> movePoints;
+			case "can_perform_actions" -> canPerformActions;
+			case "can_move" -> canMove;
+			case "can_dodge" -> canDodge;
+			case "sense_types" -> senseTypes;
+			case "equipment_effects" -> equipmentEffects;
 			default -> null;
 		};
 	}
 
 	@Override
-	public FloatStat getStatFloat(String name) {
-		if (name.startsWith("damage_mult_")) {
-			String damageType = name.substring("damage_mult_".length());
-			return damageMult.get(damageType);
+	public void onStatChange(String name) {
+		if ("max_hp".equals(name) && HP > getMaxHP()) {
+			HP = getMaxHP();
 		}
-		return null;
-	}
-
-	@Override
-	public BooleanStat getStatBoolean(String name) {
-		if ("can_perform_actions".equals(name)) {
-			return canPerformActions;
-		} else if ("can_move".equals(name)) {
-			return canMove;
-		} else if ("can_dodge".equals(name)) {
-			return canDodge;
-		}
-		return null;
-	}
-
-	@Override
-	public StringStat getStatString(String name) {
-		return null;
-	}
-
-	@Override
-	public StringSetStat getStatStringSet(String name) {
-		if ("equipment_effects".equals(name)) {
-			return equipmentEffects;
-		} else if ("sense_types".equals(name)) {
-			return senseTypes;
-		}
-		return null;
 	}
 
 	// TODO - Do not pass script Context to evaluate Stat objects (use default context instead)
 	@Override
-	public Expression getStatValue(String name, Context context) {
+	public Expression getScriptValue(String name, Context context) {
 		if (name.startsWith("damage_resist_")) {
 			return resolveExpressionPrefix(name, "damage_resist_", damageResistance, "damage type", Expression.constant(0), key -> Expression.constant(getDamageResistance(key, context)));
 		} else if (name.startsWith("attribute_")) {
@@ -852,14 +831,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	@Override
-	public void onStatChange(String name) {
-		if ("max_hp".equals(name) && HP > getMaxHP()) {
-			HP = getMaxHP();
-		}
-	}
-
-	@Override
-	public boolean setStatValue(String name, Expression value, Context context) {
+	public boolean setScriptValue(String name, Expression value, Context context) {
 		if (name.startsWith("equip_slot_block_")) {
 			for (String slot : getEquipSlots().keySet()) {
 				if (name.equals("equip_slot_block_" + slot)) {
@@ -905,7 +877,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	@Override
-	public StatHolder getSubHolder(String name, String ID) {
+	public ScriptValueHolder getSubHolder(String name, String ID) {
 		return switch (name) {
 			case "equipped_item" -> equipmentComponent.getEquippedItemInSlot(ID);
 			case "using_object" -> getUsingObject().object();

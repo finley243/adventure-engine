@@ -8,7 +8,7 @@ import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
-import com.github.finley243.adventureengine.stat.StatHolder;
+import com.github.finley243.adventureengine.script.ScriptValueHolder;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 
@@ -17,7 +17,7 @@ import java.util.*;
 /**
  * Represents a self-contained space (e.g. an actual room) that contains smaller areas
  */
-public class Room extends GameInstanced implements Noun, StatHolder {
+public class Room extends GameInstanced implements Noun, ScriptValueHolder {
 
 	private final ScriptRuntime scriptRuntime;
 
@@ -151,7 +151,7 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public Expression getStatValue(String name, Context context) {
+	public Expression getScriptValue(String name, Context context) {
 		return switch (name) {
 			case "noun" -> Expression.constantNoun(this);
 			case "name" -> Expression.constant(getName());
@@ -163,7 +163,7 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public boolean setStatValue(String name, Expression value, Context context) {
+	public boolean setScriptValue(String name, Expression value, Context context) {
 		switch (name) {
 			case "visited" -> {
 				this.hasVisited = value.getValueBoolean();
@@ -174,7 +174,7 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public StatHolder getSubHolder(String name, String ID) {
+	public ScriptValueHolder getSubHolder(String name, String ID) {
 		return null;
 	}
 

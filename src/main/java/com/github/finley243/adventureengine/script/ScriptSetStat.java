@@ -2,15 +2,14 @@ package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.stat.StatHolderReference;
 
 public class ScriptSetStat extends Script {
 
-    private final StatHolderReference holder;
+    private final ScriptValueHolderReference holder;
     private final Script statName;
     private final Script statValue;
 
-    public ScriptSetStat(ScriptTraceData traceData, StatHolderReference holder, Script statName, Script statValue) {
+    public ScriptSetStat(ScriptTraceData traceData, ScriptValueHolderReference holder, Script statName, Script statValue) {
         super(traceData);
         if (holder == null) throw new IllegalArgumentException("ScriptSetState stat holder is null");
         if (statName == null) throw new IllegalArgumentException("ScriptSetState state name is null");
@@ -38,7 +37,7 @@ public class ScriptSetStat extends Script {
             return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain flow statement", getTraceData()));
         }
         Expression statValueExpression = statValueResult.value();
-        boolean success = holder.getHolder(context).setStatValue(statNameString, statValueExpression, context);
+        boolean success = holder.getHolder(context).setScriptValue(statNameString, statValueExpression, context);
         if (!success) {
             return new ScriptReturnData(null, null, new ScriptErrorData("Stat value could not be set", getTraceData()));
         }

@@ -8,11 +8,11 @@ import com.github.finley243.adventureengine.expression.ExpressionConstantBoolean
 import com.github.finley243.adventureengine.expression.ExpressionConstantString;
 import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
-import com.github.finley243.adventureengine.stat.StatHolder;
+import com.github.finley243.adventureengine.script.ScriptValueHolder;
 
 import java.util.List;
 
-public class Scene extends GameInstanced implements StatHolder {
+public class Scene extends GameInstanced implements ScriptValueHolder {
 
 	public enum SceneType {
 		ALL, SELECT, RANDOM
@@ -74,7 +74,7 @@ public class Scene extends GameInstanced implements StatHolder {
 	}
 
 	@Override
-	public Expression getStatValue(String name, Context context) {
+	public Expression getScriptValue(String name, Context context) {
 		return switch (name) {
 			case "triggered" -> new ExpressionConstantBoolean(hasTriggered);
 			case "id" -> new ExpressionConstantString(getID());
@@ -83,7 +83,7 @@ public class Scene extends GameInstanced implements StatHolder {
 	}
 
 	@Override
-	public boolean setStatValue(String name, Expression value, Context context) {
+	public boolean setScriptValue(String name, Expression value, Context context) {
 		switch (name) {
 			case "triggered" -> {
 				this.hasTriggered = value.getValueBoolean();
@@ -94,7 +94,7 @@ public class Scene extends GameInstanced implements StatHolder {
 	}
 
 	@Override
-	public StatHolder getSubHolder(String name, String ID) {
+	public ScriptValueHolder getSubHolder(String name, String ID) {
 		return null;
 	}
 

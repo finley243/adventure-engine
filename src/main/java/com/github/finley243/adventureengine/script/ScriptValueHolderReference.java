@@ -1,24 +1,23 @@
-package com.github.finley243.adventureengine.stat;
+package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.script.Script;
 
-public class StatHolderReference {
+public class ScriptValueHolderReference {
 
     private final String holderType;
     private final Script holderIDScript;
-    private final StatHolderReference parentReference;
+    private final ScriptValueHolderReference parentReference;
     private final Script holderExpression;
 
-    public StatHolderReference(String holderType, Script holderIDScript, StatHolderReference parentReference, Script holderExpression) {
+    public ScriptValueHolderReference(String holderType, Script holderIDScript, ScriptValueHolderReference parentReference, Script holderExpression) {
         this.holderType = holderType;
         this.holderIDScript = holderIDScript;
         this.parentReference = parentReference;
         this.holderExpression = holderExpression;
     }
 
-    public StatHolder getHolder(Context context) {
+    public ScriptValueHolder getHolder(Context context) {
         if (holderExpression != null) {
             Expression expressionResult = computeHolderExpression(context);
             if (expressionResult.getDataType() != Expression.DataType.STAT_HOLDER) throw new IllegalArgumentException("StatHolderReference expression is not a stat holder");
@@ -33,7 +32,7 @@ public class StatHolderReference {
         }
     }
 
-    private StatHolder getTopLevelHolder(Context context) {
+    private ScriptValueHolder getTopLevelHolder(Context context) {
         Expression holderID = computeHolderID(context);
         String holderIDValue = holderID != null ? holderID.getValueString() : null;
         return switch (holderType) {

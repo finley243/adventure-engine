@@ -6,7 +6,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.menu.action.MenuDataObject;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
-import com.github.finley243.adventureengine.stat.StatHolder;
+import com.github.finley243.adventureengine.script.ScriptValueHolder;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
@@ -136,7 +136,7 @@ public class UsableObjectComponent extends ObjectComponent {
     }
 
     @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getScriptValue(String name, Context context) {
         if (name.startsWith("has_user_")) {
             for (String slotID : getTemplateUsable().getUsableSlotData().keySet()) {
                 if (name.equals("has_user_" + slotID)) {
@@ -145,11 +145,11 @@ public class UsableObjectComponent extends ObjectComponent {
             }
             return null;
         }
-        return super.getStatValue(name, context);
+        return super.getScriptValue(name, context);
     }
 
     @Override
-    public StatHolder getSubHolder(String name, String ID) {
+    public ScriptValueHolder getSubHolder(String name, String ID) {
         if ("user".equals(name)) {
             return getUser(ID);
         }

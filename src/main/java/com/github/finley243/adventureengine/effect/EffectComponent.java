@@ -2,18 +2,18 @@ package com.github.finley243.adventureengine.effect;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
-import com.github.finley243.adventureengine.stat.MutableStatHolder;
+import com.github.finley243.adventureengine.stat.StatHolder;
 
 import java.util.*;
 
 public class EffectComponent {
 
-    private final MutableStatHolder statHolder;
+    private final StatHolder statHolder;
     private final ScriptRuntime scriptRuntime;
     private final Context scriptContext;
     private final Map<Effect, List<EffectData>> effects;
 
-    public EffectComponent(MutableStatHolder statHolder, ScriptRuntime scriptRuntime, Context scriptContext) {
+    public EffectComponent(StatHolder statHolder, ScriptRuntime scriptRuntime, Context scriptContext) {
         this.statHolder = statHolder;
         this.scriptRuntime = scriptRuntime;
         this.scriptContext = scriptContext;

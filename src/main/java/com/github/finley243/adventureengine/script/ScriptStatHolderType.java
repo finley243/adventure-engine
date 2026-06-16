@@ -6,7 +6,6 @@ import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.scene.Scene;
-import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -21,7 +20,7 @@ public class ScriptStatHolderType extends Script {
     ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression statHolderExpression = context.getLocalVariables().get("holder").getExpression();
         if (statHolderExpression.getDataType() != Expression.DataType.STAT_HOLDER) return new ScriptReturnData(null, null, new ScriptErrorData("Holder parameter is not a stat holder", getTraceData()));
-        StatHolder statHolder = statHolderExpression.getValueStatHolder();
+        ScriptValueHolder statHolder = statHolderExpression.getValueStatHolder();
         String typeString = switch (statHolder) {
             case Actor ignored -> "actor";
             case WorldObject ignored -> "object";

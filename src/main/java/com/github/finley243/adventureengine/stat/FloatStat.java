@@ -10,7 +10,7 @@ public class FloatStat extends Stat {
 
     private final List<StatFloatMod> mods;
 
-    public FloatStat(String name, MutableStatHolder target) {
+    public FloatStat(String name, StatHolder target) {
         super(name, target);
         this.mods = new ArrayList<>();
     }

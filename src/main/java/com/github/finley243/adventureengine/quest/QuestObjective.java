@@ -6,9 +6,9 @@ import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
-import com.github.finley243.adventureengine.stat.StatHolder;
+import com.github.finley243.adventureengine.script.ScriptValueHolder;
 
-public class QuestObjective extends GameInstanced implements StatHolder {
+public class QuestObjective extends GameInstanced implements ScriptValueHolder {
 
     public enum State {
         OPEN, COMPLETED, FAILED
@@ -133,7 +133,7 @@ public class QuestObjective extends GameInstanced implements StatHolder {
     }
 
     @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getScriptValue(String name, Context context) {
         return switch (name) {
             case "id" -> Expression.constant(getID());
             case "name" -> Expression.constant(name);
@@ -147,7 +147,7 @@ public class QuestObjective extends GameInstanced implements StatHolder {
     }
 
     @Override
-    public boolean setStatValue(String name, Expression value, Context context) {
+    public boolean setScriptValue(String name, Expression value, Context context) {
         switch (name) {
             case "isActive" -> setActive(value.getValueBoolean());
             case "state" -> state = State.valueOf(value.getValueString());
@@ -158,7 +158,7 @@ public class QuestObjective extends GameInstanced implements StatHolder {
     }
 
     @Override
-    public StatHolder getSubHolder(String name, String ID) {
+    public ScriptValueHolder getSubHolder(String name, String ID) {
         return null;
     }
 

@@ -10,8 +10,9 @@ import com.github.finley243.adventureengine.item.ItemFactory;
 import com.github.finley243.adventureengine.item.template.ItemComponentTemplate;
 import com.github.finley243.adventureengine.item.template.MagazineItemComponentTemplate;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
-import com.github.finley243.adventureengine.stat.StatHolder;
+import com.github.finley243.adventureengine.script.ScriptValueHolder;
 import com.github.finley243.adventureengine.stat.IntStat;
+import com.github.finley243.adventureengine.stat.Stat;
 
 import java.util.List;
 
@@ -103,21 +104,21 @@ public class MagazineItemComponent extends ItemComponent {
     }
 
     @Override
-    public IntStat getStatInt(String name) {
+    public Stat getStat(String name) {
         return switch (name) {
             case "clip_size" -> clipSize;
             case "reload_action_points" -> reloadActionPoints;
-            default -> super.getStatInt(name);
+            default -> super.getStat(name);
         };
     }
 
     @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getScriptValue(String name, Context context) {
         return switch (name) {
             case "magazine_size" -> Expression.constant(getMagazineSize());
             case "reload_action_points" -> Expression.constant(getReloadActionPoints(context));
             case "ammo_count" -> Expression.constant(ammoCount);
-            default -> super.getStatValue(name, context);
+            default -> super.getScriptValue(name, context);
         };
     }
 
@@ -135,7 +136,7 @@ public class MagazineItemComponent extends ItemComponent {
     }
 
     @Override
-    public StatHolder getSubHolder(String name, String ID) {
+    public ScriptValueHolder getSubHolder(String name, String ID) {
         if ("ammo_type".equals(name)) {
             return ammoType;
         }

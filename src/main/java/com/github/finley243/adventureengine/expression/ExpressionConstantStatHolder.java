@@ -1,12 +1,12 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.stat.StatHolder;
+import com.github.finley243.adventureengine.script.ScriptValueHolder;
 
 public class ExpressionConstantStatHolder extends Expression {
 
-    private final StatHolder value;
+    private final ScriptValueHolder value;
 
-    public ExpressionConstantStatHolder(StatHolder value) {
+    public ExpressionConstantStatHolder(ScriptValueHolder value) {
         this.value = value;
     }
 
@@ -16,7 +16,7 @@ public class ExpressionConstantStatHolder extends Expression {
     }
 
     @Override
-    public StatHolder getValueStatHolder() {
+    public ScriptValueHolder getValueStatHolder() {
         return value;
     }
 

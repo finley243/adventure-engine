@@ -6,7 +6,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
-import com.github.finley243.adventureengine.stat.StatHolder;
+import com.github.finley243.adventureengine.script.ScriptValueHolder;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
@@ -14,7 +14,7 @@ import com.github.finley243.adventureengine.world.object.template.ObjectComponen
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ObjectComponent implements StatHolder {
+public abstract class ObjectComponent implements ScriptValueHolder {
 
     private boolean isEnabled;
     private final WorldObject object;
@@ -64,7 +64,7 @@ public abstract class ObjectComponent implements StatHolder {
     protected abstract String getStatName();
 
     @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getScriptValue(String name, Context context) {
         if ((getStatName() + "_enabled").equals(name)) {
             return Expression.constant(isEnabled());
         }
@@ -72,7 +72,7 @@ public abstract class ObjectComponent implements StatHolder {
     }
 
     @Override
-    public boolean setStatValue(String name, Expression value, Context context) {
+    public boolean setScriptValue(String name, Expression value, Context context) {
         if ((getStatName() + "_enabled").equals(name)) {
             setEnabled(value.getValueBoolean());
         }
@@ -80,7 +80,7 @@ public abstract class ObjectComponent implements StatHolder {
     }
 
     @Override
-    public StatHolder getSubHolder(String name, String ID) {
+    public ScriptValueHolder getSubHolder(String name, String ID) {
         if ("object".equals(name)) {
             return object;
         }

@@ -13,7 +13,7 @@ public class StringSetRegistryStat<T> extends StringSetStat {
     private final Registry<T> registry;
     private final Function<T, String> idFunction;
 
-    public StringSetRegistryStat(String name, MutableStatHolder target, Registry<T> registry, Function<T, String> idFunction) {
+    public StringSetRegistryStat(String name, StatHolder target, Registry<T> registry, Function<T, String> idFunction) {
         super(name, target);
         this.registry = registry;
         this.idFunction = idFunction;

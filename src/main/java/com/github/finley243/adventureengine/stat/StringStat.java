@@ -11,7 +11,7 @@ public class StringStat extends Stat {
 
     private final List<StatStringMod> mods;
 
-    public StringStat(String name, MutableStatHolder target) {
+    public StringStat(String name, StatHolder target) {
         super(name, target);
         this.mods = new ArrayList<>();
     }

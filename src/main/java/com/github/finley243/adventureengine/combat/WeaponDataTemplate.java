@@ -2,11 +2,11 @@ package com.github.finley243.adventureengine.combat;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.stat.StatHolder;
+import com.github.finley243.adventureengine.script.ScriptValueHolder;
 
 import java.util.Set;
 
-public class WeaponDataTemplate implements StatHolder {
+public class WeaponDataTemplate implements ScriptValueHolder {
 
     private final int damage;
     private final int rate;
@@ -29,7 +29,7 @@ public class WeaponDataTemplate implements StatHolder {
     }
 
     @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getScriptValue(String name, Context context) {
         return switch (name) {
             case "damage" -> Expression.constant(damage);
             case "rate" -> Expression.constant(rate);
@@ -44,12 +44,12 @@ public class WeaponDataTemplate implements StatHolder {
     }
 
     @Override
-    public boolean setStatValue(String name, Expression value, Context context) {
+    public boolean setScriptValue(String name, Expression value, Context context) {
         return false;
     }
 
     @Override
-    public StatHolder getSubHolder(String name, String ID) {
+    public ScriptValueHolder getSubHolder(String name, String ID) {
         return null;
     }
 

@@ -1,8 +1,10 @@
 package com.github.finley243.adventureengine.effect;
 
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.load.GameDataException;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.stat.MutableStatHolder;
+import com.github.finley243.adventureengine.stat.Stat;
+import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.stat.FloatStat;
 import com.github.finley243.adventureengine.stat.IntStat;
 
@@ -20,28 +22,24 @@ public class MultEffect extends Effect {
     }
 
     @Override
-    public void start(MutableStatHolder target) {
-        IntStat intStat = target.getStatInt(stat);
-        if(intStat != null) {
-            intStat.addMod(new IntStat.StatIntMod(statCondition, 0, amount));
-        } else {
-            FloatStat floatStat = target.getStatFloat(stat);
-            if(floatStat != null) {
-                floatStat.addMod(new FloatStat.StatFloatMod(statCondition, 0.0f, amount));
-            }
+    public void start(StatHolder target) {
+        Stat statObject = target.getStat(stat);
+        switch (statObject) {
+            case null -> throw new GameDataException("Invalid stat on target holder");
+            case IntStat intStat -> intStat.addMod(new IntStat.StatIntMod(statCondition, 0, amount));
+            case FloatStat floatStat -> floatStat.addMod(new FloatStat.StatFloatMod(statCondition, 0.0f, amount));
+            default -> throw new GameDataException("Stat on target holder is not an integer or float");
         }
     }
 
     @Override
-    public void end(MutableStatHolder target) {
-        IntStat intStat = target.getStatInt(stat);
-        if(intStat != null) {
-            intStat.removeMod(new IntStat.StatIntMod(statCondition, 0, amount));
-        } else {
-            FloatStat floatStat = target.getStatFloat(stat);
-            if(floatStat != null) {
-                floatStat.removeMod(new FloatStat.StatFloatMod(statCondition, 0.0f, amount));
-            }
+    public void end(StatHolder target) {
+        Stat statObject = target.getStat(stat);
+        switch (statObject) {
+            case null -> throw new GameDataException("Invalid stat on target holder");
+            case IntStat intStat -> intStat.removeMod(new IntStat.StatIntMod(statCondition, 0, amount));
+            case FloatStat floatStat -> floatStat.removeMod(new FloatStat.StatFloatMod(statCondition, 0.0f, amount));
+            default -> throw new GameDataException("Stat on target holder is not an integer or float");
         }
     }
 

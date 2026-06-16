@@ -7,14 +7,14 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.network.ActionNetworkBreach;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.stat.StatHolder;
+import com.github.finley243.adventureengine.script.ScriptValueHolder;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public abstract class NetworkNode extends GameInstanced implements StatHolder {
+public abstract class NetworkNode extends GameInstanced implements ScriptValueHolder {
 
     private final String name;
 
@@ -54,7 +54,7 @@ public abstract class NetworkNode extends GameInstanced implements StatHolder {
     protected abstract List<Action> breachedActions(Game game, Actor subject, WorldObject object);
 
     @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getScriptValue(String name, Context context) {
         return switch (name) {
             case "id" -> Expression.constant(getID());
             case "name" -> Expression.constant(name);
@@ -64,12 +64,12 @@ public abstract class NetworkNode extends GameInstanced implements StatHolder {
     }
 
     @Override
-    public boolean setStatValue(String name, Expression value, Context context) {
+    public boolean setScriptValue(String name, Expression value, Context context) {
         return false;
     }
 
     @Override
-    public StatHolder getSubHolder(String name, String ID) {
+    public ScriptValueHolder getSubHolder(String name, String ID) {
         return null;
     }
 

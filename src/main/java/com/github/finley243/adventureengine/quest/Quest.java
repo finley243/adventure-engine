@@ -3,11 +3,11 @@ package com.github.finley243.adventureengine.quest;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.stat.StatHolder;
+import com.github.finley243.adventureengine.script.ScriptValueHolder;
 
 import java.util.Map;
 
-public class Quest extends GameInstanced implements StatHolder {
+public class Quest extends GameInstanced implements ScriptValueHolder {
 
     private final String name;
 
@@ -24,7 +24,7 @@ public class Quest extends GameInstanced implements StatHolder {
     }
 
     @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getScriptValue(String name, Context context) {
         return switch (name) {
             case "id" -> Expression.constant(getID());
             case "name" -> Expression.constant(name);
@@ -33,12 +33,12 @@ public class Quest extends GameInstanced implements StatHolder {
     }
 
     @Override
-    public boolean setStatValue(String name, Expression value, Context context) {
+    public boolean setScriptValue(String name, Expression value, Context context) {
         return false;
     }
 
     @Override
-    public StatHolder getSubHolder(String name, String ID) {
+    public ScriptValueHolder getSubHolder(String name, String ID) {
         if ("objective".equals(name)) {
             return objectives.get(ID);
         }

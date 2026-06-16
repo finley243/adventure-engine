@@ -64,10 +64,10 @@ public class InventoryObjectComponent extends ObjectComponent {
     }
 
     @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getScriptValue(String name, Context context) {
         return switch (name) {
             case "inventory" -> (inventory == null ? null : new ExpressionConstantInventory(inventory));
-            default -> super.getStatValue(name, context);
+            default -> super.getScriptValue(name, context);
         };
     }
 

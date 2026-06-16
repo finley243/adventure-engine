@@ -12,7 +12,7 @@ public class BooleanStat extends Stat {
     private final boolean priorityValue;
     private final List<StatBooleanMod> mods;
 
-    public BooleanStat(String name, MutableStatHolder target, boolean priorityValue) {
+    public BooleanStat(String name, StatHolder target, boolean priorityValue) {
         super(name, target);
         this.priorityValue = priorityValue;
         this.mods = new ArrayList<>();

@@ -2,7 +2,7 @@ package com.github.finley243.adventureengine.load;
 
 import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.script.*;
-import com.github.finley243.adventureengine.stat.StatHolderReference;
+import com.github.finley243.adventureengine.script.ScriptValueHolderReference;
 import com.google.common.collect.Sets;
 
 import java.util.*;
@@ -574,8 +574,8 @@ public class ScriptParser {
             ScriptStatReference statReference = parseStatReference(tokens);
             return new ScriptGetStat(new Script.ScriptTraceData(tokens.getFirst().line, tokens.getFirst().fileName), statReference.statHolder(), statReference.name());
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("statHolder")) {
-            StatHolderReference statHolderReference = parseStatHolderReference(tokens);
-            return new ScriptStatHolder(new Script.ScriptTraceData(tokens.getFirst().line, tokens.getFirst().fileName), statHolderReference);
+            ScriptValueHolderReference scriptValueHolderReference = parseStatHolderReference(tokens);
+            return new ScriptStatHolder(new Script.ScriptTraceData(tokens.getFirst().line, tokens.getFirst().fileName), scriptValueHolderReference);
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("global")) {
             ScriptGlobalReference globalReference = parseGlobalReference(tokens);
             return new ScriptGetGlobal(new Script.ScriptTraceData(tokens.getFirst().line, tokens.getFirst().fileName), globalReference.name());
@@ -667,19 +667,19 @@ public class ScriptParser {
         } else {
             throw new ScriptCompileException("Stat reference has invalid name", tokens.getFirst().fileName, tokens.getFirst().line);
         }
-        StatHolderReference statHolder = parseStatHolder(tokens.subList(2, lastDotIndex));
+        ScriptValueHolderReference statHolder = parseStatHolder(tokens.subList(2, lastDotIndex));
         return new ScriptStatReference(statName, statHolder);
     }
 
-    private static StatHolderReference parseStatHolderReference(List<ScriptToken> tokens) {
+    private static ScriptValueHolderReference parseStatHolderReference(List<ScriptToken> tokens) {
         if (tokens.getFirst().type != ScriptTokenType.NAME || !tokens.getFirst().value.equals("statHolder")) throw new ScriptCompileException("Stat holder reference is missing statHolder keyword", tokens.getFirst().fileName, tokens.getFirst().line);
         if (tokens.get(1).type != ScriptTokenType.DOT) throw new ScriptCompileException("Stat holder reference is missing period after statHolder keyword", tokens.getFirst().fileName, tokens.getFirst().line);
         return parseStatHolder(tokens.subList(2, tokens.size()));
     }
 
-    private static StatHolderReference parseStatHolder(List<ScriptToken> tokens) {
+    private static ScriptValueHolderReference parseStatHolder(List<ScriptToken> tokens) {
         int lastHolderStartIndex = 0;
-        StatHolderReference parentReference = null;
+        ScriptValueHolderReference parentReference = null;
         int lastDotIndex = findLastTokenIndex(tokens, ScriptTokenType.DOT, tokens.size() - 1);
         if (lastDotIndex != -1) {
             lastHolderStartIndex = lastDotIndex + 1;
@@ -698,7 +698,7 @@ public class ScriptParser {
         if (holderExpression == null && tokens.size() > lastHolderStartIndex + 1 && tokens.get(lastHolderStartIndex + 1).type == ScriptTokenType.PARENTHESIS_OPEN && tokens.getLast().type == ScriptTokenType.PARENTHESIS_CLOSE) {
             holderID = parseExpression(tokens.subList(lastHolderStartIndex + 2, tokens.size() - 1));
         }
-        return new StatHolderReference(holderType, holderID, parentReference, holderExpression);
+        return new ScriptValueHolderReference(holderType, holderID, parentReference, holderExpression);
     }
 
     private static ScriptGlobalReference parseGlobalReference(List<ScriptToken> tokens) {
@@ -907,7 +907,7 @@ public class ScriptParser {
 
     private record ScriptIfTokens(List<ScriptToken> condition, List<ScriptToken> body) {}
 
-    private record ScriptStatReference(Script name, StatHolderReference statHolder) {}
+    private record ScriptStatReference(Script name, ScriptValueHolderReference statHolder) {}
 
     private record ScriptGlobalReference(String name) {}
 

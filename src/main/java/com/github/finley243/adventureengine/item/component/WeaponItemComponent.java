@@ -138,55 +138,24 @@ public class WeaponItemComponent extends ItemComponent {
     }
 
     @Override
-    public IntStat getStatInt(String name) {
+    public Stat getStat(String name) {
         return switch (name) {
             case "damage" -> damage;
             case "rate" -> rate;
             case "crit_damage" -> critDamage;
-            default -> super.getStatInt(name);
+            case "hit_chance_modifier" -> hitChanceModifier;
+            case "armor_mult" -> armorMult;
+            case "is_silenced" -> isSilenced;
+            case "damage_type" -> damageType;
+            case "ranges" -> ranges;
+            case "attack_types" -> attackTypes;
+            case "target_effects" -> targetEffects;
+            default -> super.getStat(name);
         };
     }
 
     @Override
-    public FloatStat getStatFloat(String name) {
-        if ("hit_chance_modifier".equals(name)) {
-            return hitChanceModifier;
-        } else if ("armor_mult".equals(name)) {
-            return armorMult;
-        }
-        return super.getStatFloat(name);
-    }
-
-    @Override
-    public BooleanStat getStatBoolean(String name) {
-        if ("is_silenced".equals(name)) {
-            return isSilenced;
-        }
-        return super.getStatBoolean(name);
-    }
-
-    @Override
-    public StringStat getStatString(String name) {
-        if ("damage_type".equals(name)) {
-            return damageType;
-        }
-        return super.getStatString(name);
-    }
-
-    @Override
-    public StringSetStat getStatStringSet(String name) {
-        if ("ranges".equals(name)) {
-            return ranges;
-        } else if ("attack_types".equals(name)) {
-            return attackTypes;
-        } else if ("target_effects".equals(name)) {
-            return targetEffects;
-        }
-        return super.getStatStringSet(name);
-    }
-
-    @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getScriptValue(String name, Context context) {
         return switch (name) {
             case "damage" -> Expression.constant(getDamage(context));
             case "rate" -> Expression.constant(getRate(context));
@@ -198,7 +167,7 @@ public class WeaponItemComponent extends ItemComponent {
             case "ranges" -> Expression.constant(ranges.valueFromEnum(getWeaponClass().primaryRanges(), context));
             case "target_effects" -> Expression.constant(getTargetEffects(context));
             case "skill" -> Expression.constant(getSkill());
-            default -> super.getStatValue(name, context);
+            default -> super.getScriptValue(name, context);
         };
     }
 

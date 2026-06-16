@@ -1,8 +1,10 @@
 package com.github.finley243.adventureengine.effect;
 
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.load.GameDataException;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.stat.MutableStatHolder;
+import com.github.finley243.adventureengine.stat.Stat;
+import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.stat.BooleanStat;
 
 public class BooleanEffect extends Effect {
@@ -19,13 +21,19 @@ public class BooleanEffect extends Effect {
     }
 
     @Override
-    public void start(MutableStatHolder target) {
-        target.getStatBoolean(stat).addMod(new BooleanStat.StatBooleanMod(statCondition, value));
+    public void start(StatHolder target) {
+        Stat statObject = target.getStat(stat);
+        if (statObject == null) throw new GameDataException("Invalid stat on target holder");
+        if (!(statObject instanceof BooleanStat booleanStat)) throw new GameDataException("Stat on target holder is not a boolean");
+        booleanStat.addMod(new BooleanStat.StatBooleanMod(statCondition, value));
     }
 
     @Override
-    public void end(MutableStatHolder target) {
-        target.getStatBoolean(stat).removeMod(new BooleanStat.StatBooleanMod(statCondition, value));
+    public void end(StatHolder target) {
+        Stat statObject = target.getStat(stat);
+        if (statObject == null) throw new GameDataException("Invalid stat on target holder");
+        if (!(statObject instanceof BooleanStat booleanStat)) throw new GameDataException("Stat on target holder is not a boolean");
+        booleanStat.removeMod(new BooleanStat.StatBooleanMod(statCondition, value));
     }
 
 }

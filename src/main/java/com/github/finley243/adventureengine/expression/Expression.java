@@ -1,7 +1,7 @@
 package com.github.finley243.adventureengine.expression;
 
 import com.github.finley243.adventureengine.item.Inventory;
-import com.github.finley243.adventureengine.stat.StatHolder;
+import com.github.finley243.adventureengine.script.ScriptValueHolder;
 import com.github.finley243.adventureengine.textgen.Noun;
 
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public abstract class Expression {
         throw new UnsupportedOperationException("Invalid data type function: noun");
     }
 
-    public StatHolder getValueStatHolder() {
+    public ScriptValueHolder getValueStatHolder() {
         throw new UnsupportedOperationException("Invalid data type function: statHolder");
     }
 
@@ -118,7 +118,7 @@ public abstract class Expression {
             case Inventory value -> {
                 return new ExpressionConstantInventory(value);
             }
-            case StatHolder value -> {
+            case ScriptValueHolder value -> {
                 return new ExpressionConstantStatHolder(value);
             }
             default -> throw new IllegalArgumentException("Expression is not a valid type");
