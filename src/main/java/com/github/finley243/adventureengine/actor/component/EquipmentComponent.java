@@ -4,11 +4,11 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.component.ItemComponentArmor;
-import com.github.finley243.adventureengine.item.component.ItemComponentEffectible;
-import com.github.finley243.adventureengine.item.component.ItemComponentEquippable;
-import com.github.finley243.adventureengine.item.component.ItemComponentWeapon;
-import com.github.finley243.adventureengine.item.template.ItemComponentTemplateEquippable;
+import com.github.finley243.adventureengine.item.component.ArmorItemComponent;
+import com.github.finley243.adventureengine.item.component.EffectableItemComponent;
+import com.github.finley243.adventureengine.item.component.EquippableItemComponent;
+import com.github.finley243.adventureengine.item.component.WeaponItemComponent;
+import com.github.finley243.adventureengine.item.template.EquippableItemComponentTemplate;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
 
 import java.util.*;
@@ -61,9 +61,9 @@ public class EquipmentComponent {
         return true;
     }
 
-    public void equip(Item item, ItemComponentTemplateEquippable.EquippableSlotsData slotsData) {
+    public void equip(Item item, EquippableItemComponentTemplate.EquippableSlotsData slotsData) {
         if (!actor.getEquipSlots().keySet().containsAll(slotsData.slots())) throw new UnsupportedOperationException("Specified equip slots do not exist on actor: " + actor + ", " + slotsData.slots());
-        if (!item.getComponentOfType(ItemComponentEquippable.class).isValidEquipData(slotsData)) throw new UnsupportedOperationException("Invalid slots for equipping item: " + item + ", " + slotsData.slots());
+        if (!item.getComponentOfType(EquippableItemComponent.class).isValidEquipData(slotsData)) throw new UnsupportedOperationException("Invalid slots for equipping item: " + item + ", " + slotsData.slots());
         for (String slot : slotsData.slots()) {
             Item lastEquipped = equipped.get(slot);
             if (lastEquipped != null) {
@@ -71,25 +71,25 @@ public class EquipmentComponent {
             }
             equipped.put(slot, item);
         }
-        item.getComponentOfType(ItemComponentEquippable.class).onEquip(slotsData);
-        if (item.hasComponentOfType(ItemComponentEffectible.class)) {
+        item.getComponentOfType(EquippableItemComponent.class).onEquip(slotsData);
+        if (item.hasComponentOfType(EffectableItemComponent.class)) {
             for (String equipmentEffectID : actor.getEquipmentEffects(item)) {
                 Effect equipmentEffect = game.data().getEffect(equipmentEffectID);
-                item.getComponentOfType(ItemComponentEffectible.class).addEffect(equipmentEffect);
+                item.getComponentOfType(EffectableItemComponent.class).addEffect(equipmentEffect);
             }
         }
     }
 
     public void unequip(Item item) {
         if (getEquippedItems().contains(item)) {
-            for (String slot : item.getComponentOfType(ItemComponentEquippable.class).getEquippedSlots()) {
+            for (String slot : item.getComponentOfType(EquippableItemComponent.class).getEquippedSlots()) {
                 equipped.remove(slot);
             }
-            item.getComponentOfType(ItemComponentEquippable.class).onUnequip();
-            if (item.hasComponentOfType(ItemComponentEffectible.class)) {
+            item.getComponentOfType(EquippableItemComponent.class).onUnequip();
+            if (item.hasComponentOfType(EffectableItemComponent.class)) {
                 for (String equipmentEffectID : actor.getEquipmentEffects(item)) {
                     Effect equipmentEffect = game.data().getEffect(equipmentEffectID);
-                    item.getComponentOfType(ItemComponentEffectible.class).removeEffect(equipmentEffect);
+                    item.getComponentOfType(EffectableItemComponent.class).removeEffect(equipmentEffect);
                 }
             }
         }
@@ -106,7 +106,7 @@ public class EquipmentComponent {
     public Set<Item> getEquippedWeapons() {
         Set<Item> weapons = new HashSet<>();
         for (Item item : equipped.values()) {
-            if (item.hasComponentOfType(ItemComponentWeapon.class)) {
+            if (item.hasComponentOfType(WeaponItemComponent.class)) {
                 weapons.add(item);
             }
         }
@@ -115,7 +115,7 @@ public class EquipmentComponent {
 
     public boolean hasRangedWeaponEquipped() {
         for (Item item : equipped.values()) {
-            if (item.hasComponentOfType(ItemComponentWeapon.class) && item.getComponentOfType(ItemComponentWeapon.class).isRanged()) {
+            if (item.hasComponentOfType(WeaponItemComponent.class) && item.getComponentOfType(WeaponItemComponent.class).isRanged()) {
                 return true;
             }
         }
@@ -124,7 +124,7 @@ public class EquipmentComponent {
 
     public boolean hasMeleeWeaponEquipped() {
         for (Item item : equipped.values()) {
-            if (item.hasComponentOfType(ItemComponentWeapon.class) && !item.getComponentOfType(ItemComponentWeapon.class).isRanged()) {
+            if (item.hasComponentOfType(WeaponItemComponent.class) && !item.getComponentOfType(WeaponItemComponent.class).isRanged()) {
                 return true;
             }
         }
@@ -134,8 +134,8 @@ public class EquipmentComponent {
     public int getDamageResistanceMain(String damageType) {
         int damageResistance = 0;
         for (Item item : equipped.values()) {
-            if (item.hasComponentOfType(ItemComponentArmor.class) && item.getComponentOfType(ItemComponentArmor.class).coversMainBody()) {
-                damageResistance += item.getComponentOfType(ItemComponentArmor.class).getDamageResistance(damageType);
+            if (item.hasComponentOfType(ArmorItemComponent.class) && item.getComponentOfType(ArmorItemComponent.class).coversMainBody()) {
+                damageResistance += item.getComponentOfType(ArmorItemComponent.class).getDamageResistance(damageType);
             }
         }
         return damageResistance;
@@ -144,8 +144,8 @@ public class EquipmentComponent {
     public float getDamageMultMain(String damageType) {
         float damageMult = 0;
         for (Item item : equipped.values()) {
-            if (item.hasComponentOfType(ItemComponentArmor.class) && item.getComponentOfType(ItemComponentArmor.class).coversMainBody()) {
-                damageMult += item.getComponentOfType(ItemComponentArmor.class).getDamageMult(damageType);
+            if (item.hasComponentOfType(ArmorItemComponent.class) && item.getComponentOfType(ArmorItemComponent.class).coversMainBody()) {
+                damageMult += item.getComponentOfType(ArmorItemComponent.class).getDamageMult(damageType);
             }
         }
         return damageMult;
@@ -154,8 +154,8 @@ public class EquipmentComponent {
     public int getDamageResistanceLimb(String limb, String damageType) {
         int damageResistance = 0;
         for (Item item : equipped.values()) {
-            if (item.hasComponentOfType(ItemComponentArmor.class) && item.getComponentOfType(ItemComponentArmor.class).getCoveredLimbs().contains(limb)) {
-                damageResistance += item.getComponentOfType(ItemComponentArmor.class).getDamageResistance(damageType);
+            if (item.hasComponentOfType(ArmorItemComponent.class) && item.getComponentOfType(ArmorItemComponent.class).getCoveredLimbs().contains(limb)) {
+                damageResistance += item.getComponentOfType(ArmorItemComponent.class).getDamageResistance(damageType);
             }
         }
         return damageResistance;
@@ -164,8 +164,8 @@ public class EquipmentComponent {
     public float getDamageMultLimb(String limb, String damageType) {
         float damageMult = 0;
         for (Item item : equipped.values()) {
-            if (item.hasComponentOfType(ItemComponentArmor.class) && item.getComponentOfType(ItemComponentArmor.class).getCoveredLimbs().contains(limb)) {
-                damageMult += item.getComponentOfType(ItemComponentArmor.class).getDamageMult(damageType);
+            if (item.hasComponentOfType(ArmorItemComponent.class) && item.getComponentOfType(ArmorItemComponent.class).getCoveredLimbs().contains(limb)) {
+                damageMult += item.getComponentOfType(ArmorItemComponent.class).getDamageMult(damageType);
             }
         }
         return damageMult;
@@ -175,7 +175,7 @@ public class EquipmentComponent {
         List<Action> actions = new ArrayList<>();
         for (Item item : getEquippedItems()) {
             // TODO - Fix actions for multiple equipped items with the same name
-            actions.addAll(item.getComponentOfType(ItemComponentEquippable.class).equippedActions(actor, scriptRuntime));
+            actions.addAll(item.getComponentOfType(EquippableItemComponent.class).equippedActions(actor, scriptRuntime));
         }
         return actions;
     }

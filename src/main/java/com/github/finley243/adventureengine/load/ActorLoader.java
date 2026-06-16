@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.load;
 
-import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.actor.*;
 import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.actor.ai.behavior.*;

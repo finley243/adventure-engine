@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.item.Inventory;
 
 public class ExpressionConstantInventory extends Expression {
 

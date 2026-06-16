@@ -2,7 +2,7 @@ package com.github.finley243.adventureengine.world.object;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.GameDataException;
+import com.github.finley243.adventureengine.load.GameDataException;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
@@ -43,12 +43,12 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	private Area area;
 	private int HP;
 	private final Map<Class<? extends ObjectComponent>, ObjectComponent> components;
-	private Set<ObjectComponentLink.LinkDataIntermediate> objectLinks;
+	private Set<LinkObjectComponent.LinkDataIntermediate> objectLinks;
 	private String vehicleObjectOverrideID;
 	private final Map<String, Expression> localVars;
 	private final Set<Actor> activeGuards;
 
-	public WorldObject(String ID, ObjectTemplate template, boolean startDisabled, boolean startHidden, Set<ObjectComponentLink.LinkDataIntermediate> objectLinks, String vehicleObjectOverrideID, Map<String, Expression> localVarsDefault) {
+	public WorldObject(String ID, ObjectTemplate template, boolean startDisabled, boolean startHidden, Set<LinkObjectComponent.LinkDataIntermediate> objectLinks, String vehicleObjectOverrideID, Map<String, Expression> localVarsDefault) {
 		super(ID);
 		this.template = template;
 		this.isHidden = startHidden;
@@ -74,21 +74,21 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	public void resolveComponentReferences(Registry<WorldObject> objectRegistry) {
-		if (components.containsKey(ObjectComponentLink.class)) {
-			Map<String, ObjectComponentLink.LinkData> linkDataMap = new HashMap<>();
-			for (ObjectComponentLink.LinkDataIntermediate unresolvedLinkData : objectLinks) {
+		if (components.containsKey(LinkObjectComponent.class)) {
+			Map<String, LinkObjectComponent.LinkData> linkDataMap = new HashMap<>();
+			for (LinkObjectComponent.LinkDataIntermediate unresolvedLinkData : objectLinks) {
 				WorldObject linkedObject = objectRegistry.getFromID(unresolvedLinkData.objectID());
 				if (linkedObject == null) throw new GameDataException("WorldObject has invalid linked object reference");
-				linkDataMap.put(unresolvedLinkData.linkID(), new ObjectComponentLink.LinkData(unresolvedLinkData.linkID(), linkedObject, unresolvedLinkData.direction()));
+				linkDataMap.put(unresolvedLinkData.linkID(), new LinkObjectComponent.LinkData(unresolvedLinkData.linkID(), linkedObject, unresolvedLinkData.direction()));
 			}
-			ObjectComponentLink linkComponent = (ObjectComponentLink) components.get(ObjectComponentLink.class);
+			LinkObjectComponent linkComponent = (LinkObjectComponent) components.get(LinkObjectComponent.class);
 			linkComponent.resolveLinkedObjects(linkDataMap);
 			this.objectLinks = null;
 		}
-		if (components.containsKey(ObjectComponentVehicle.class)) {
+		if (components.containsKey(VehicleObjectComponent.class)) {
 			WorldObject vehicleObjectOverride = objectRegistry.getFromID(vehicleObjectOverrideID);
 			if (vehicleObjectOverrideID != null && vehicleObjectOverride == null) throw new GameDataException("WorldObject has invalid vehicle object override reference");
-			ObjectComponentVehicle vehicleComponent = (ObjectComponentVehicle) components.get(ObjectComponentVehicle.class);
+			VehicleObjectComponent vehicleComponent = (VehicleObjectComponent) components.get(VehicleObjectComponent.class);
 			vehicleComponent.resolveObjectOverride(vehicleObjectOverride);
 			this.vehicleObjectOverrideID = null;
 		}
@@ -275,7 +275,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 			if (componentValue != null) return componentValue;
 		}
 		return switch (name) {
-			case "inventory" -> (hasComponentOfType(ObjectComponentInventory.class) ? new ExpressionConstantInventory(getComponentOfType(ObjectComponentInventory.class).getInventory()) : null);
+			case "inventory" -> (hasComponentOfType(InventoryObjectComponent.class) ? new ExpressionConstantInventory(getComponentOfType(InventoryObjectComponent.class).getInventory()) : null);
 			case "noun" -> new ExpressionConstantNoun(this);
 			case "enabled" -> new ExpressionConstantBoolean(isEnabled);
 			case "hidden" -> new ExpressionConstantBoolean(isHidden);

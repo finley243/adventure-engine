@@ -8,7 +8,7 @@ import com.github.finley243.adventureengine.action.attack.ActionAttack;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Attribute;
 import com.github.finley243.adventureengine.actor.Skill;
-import com.github.finley243.adventureengine.actor.TurnController;
+import com.github.finley243.adventureengine.actor.controller.TurnController;
 import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.event.ui.*;
 import com.github.finley243.adventureengine.menu.action.*;

@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.load;
 
-import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.actor.Attribute;
 import com.github.finley243.adventureengine.actor.SenseType;
 import com.github.finley243.adventureengine.actor.Skill;

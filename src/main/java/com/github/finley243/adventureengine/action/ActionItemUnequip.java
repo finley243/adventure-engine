@@ -5,7 +5,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.component.ItemComponentWeapon;
+import com.github.finley243.adventureengine.item.component.WeaponItemComponent;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
@@ -49,7 +49,7 @@ public class ActionItemUnequip extends Action {
 
     @Override
     public float utility(Actor subject) {
-        if (item.hasComponentOfType(ItemComponentWeapon.class) && !subject.isInCombat()) {
+        if (item.hasComponentOfType(WeaponItemComponent.class) && !subject.isInCombat()) {
             return 0.4f;
         }
         return 0.0f;

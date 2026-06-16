@@ -7,9 +7,9 @@ import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.component.ItemComponentEquippable;
-import com.github.finley243.adventureengine.item.component.ItemComponentWeapon;
-import com.github.finley243.adventureengine.item.template.ItemComponentTemplateEquippable;
+import com.github.finley243.adventureengine.item.component.EquippableItemComponent;
+import com.github.finley243.adventureengine.item.component.WeaponItemComponent;
+import com.github.finley243.adventureengine.item.template.EquippableItemComponentTemplate;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
@@ -22,9 +22,9 @@ public class ActionItemEquip extends Action {
     public static final float OPTIMAL_WEAPON_UTILITY = 0.7f;
 
     private final Item item;
-    private final ItemComponentTemplateEquippable.EquippableSlotsData slotsData;
+    private final EquippableItemComponentTemplate.EquippableSlotsData slotsData;
 
-    public ActionItemEquip(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Item item, ItemComponentTemplateEquippable.EquippableSlotsData slotsData) {
+    public ActionItemEquip(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Item item, EquippableItemComponentTemplate.EquippableSlotsData slotsData) {
         super(scriptRuntime, sensoryEventDispatcher);
         this.item = item;
         this.slotsData = slotsData;
@@ -55,7 +55,7 @@ public class ActionItemEquip extends Action {
         if (!resultSuper.canChoose()) {
             return resultSuper;
         }
-        if (item.getComponentOfType(ItemComponentEquippable.class).getEquippedActor() != null) {
+        if (item.getComponentOfType(EquippableItemComponent.class).getEquippedActor() != null) {
             return new CanChooseResult(false, "Already equipped");
         }
         if (subject.getEquipmentComponent().isSlotBlocked(slotsData.slots())) {
@@ -89,9 +89,9 @@ public class ActionItemEquip extends Action {
 
     @Override
     public float utility(Actor subject) {
-        if (item.hasComponentOfType(ItemComponentWeapon.class)) {
+        if (item.hasComponentOfType(WeaponItemComponent.class)) {
             if (!subject.isInCombat()) return 0;
-            if (item.getComponentOfType(ItemComponentWeapon.class).isRanged()) {
+            if (item.getComponentOfType(WeaponItemComponent.class).isRanged()) {
                 if (UtilityUtils.actorHasMeleeTargets(subject)) {
                     return SUBOPTIMAL_WEAPON_UTILITY;
                 } else {

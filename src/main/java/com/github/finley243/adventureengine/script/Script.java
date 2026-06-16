@@ -1,7 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.item.Inventory;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.load.ScriptParser;
 import com.github.finley243.adventureengine.stat.StatHolder;

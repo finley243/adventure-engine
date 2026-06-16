@@ -2,15 +2,15 @@ package com.github.finley243.adventureengine.stat;
 
 public interface MutableStatHolder extends StatHolder {
 
-    StatInt getStatInt(String name);
+    IntStat getStatInt(String name);
 
-    StatFloat getStatFloat(String name);
+    FloatStat getStatFloat(String name);
 
-    StatBoolean getStatBoolean(String name);
+    BooleanStat getStatBoolean(String name);
 
-    StatString getStatString(String name);
+    StringStat getStatString(String name);
 
-    StatStringSet getStatStringSet(String name);
+    StringSetStat getStatStringSet(String name);
 
     void onStatChange(String name);
 

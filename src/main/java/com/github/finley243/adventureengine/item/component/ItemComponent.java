@@ -67,27 +67,27 @@ public abstract class ItemComponent implements MutableStatHolder {
     }
 
     @Override
-    public StatInt getStatInt(String name) {
+    public IntStat getStatInt(String name) {
         return null;
     }
 
     @Override
-    public StatFloat getStatFloat(String name) {
+    public FloatStat getStatFloat(String name) {
         return null;
     }
 
     @Override
-    public StatBoolean getStatBoolean(String name) {
+    public BooleanStat getStatBoolean(String name) {
         return null;
     }
 
     @Override
-    public StatString getStatString(String name) {
+    public StringStat getStatString(String name) {
         return null;
     }
 
     @Override
-    public StatStringSet getStatStringSet(String name) {
+    public StringSetStat getStatStringSet(String name) {
         return null;
     }
 

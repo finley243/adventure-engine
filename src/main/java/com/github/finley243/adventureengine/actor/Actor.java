@@ -3,7 +3,6 @@ package com.github.finley243.adventureengine.actor;
 import com.github.finley243.adventureengine.*;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.ai.AreaTarget;
-import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.actor.ai.behavior.Behavior;
 import com.github.finley243.adventureengine.actor.component.*;
@@ -11,15 +10,17 @@ import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.combat.DamageType;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.effect.Effect;
-import com.github.finley243.adventureengine.effect.Effectible;
+import com.github.finley243.adventureengine.effect.EffectComponent;
+import com.github.finley243.adventureengine.effect.Effectable;
 import com.github.finley243.adventureengine.event.*;
 import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.gamedata.MutableRegistry;
 import com.github.finley243.adventureengine.gamedata.Registry;
+import com.github.finley243.adventureengine.item.Inventory;
 import com.github.finley243.adventureengine.item.InventoryOwner;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemFactory;
-import com.github.finley243.adventureengine.item.component.ItemComponentEquippable;
+import com.github.finley243.adventureengine.item.component.EquippableItemComponent;
 import com.github.finley243.adventureengine.load.LoadUtils;
 import com.github.finley243.adventureengine.menu.action.MenuDataActor;
 import com.github.finley243.adventureengine.menu.action.MenuDataActorInventory;
@@ -33,13 +34,13 @@ import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
-import com.github.finley243.adventureengine.world.object.component.ObjectComponentUsable;
+import com.github.finley243.adventureengine.world.object.component.UsableObjectComponent;
 import com.github.finley243.adventureengine.world.obstruction.ObstructionType;
 
 import java.util.*;
 import java.util.function.Function;
 
-public class Actor extends GameInstanced implements Noun, Physical, MutableStatHolder, AttackTarget, Effectible, InventoryOwner {
+public class Actor extends GameInstanced implements Noun, Physical, MutableStatHolder, AttackTarget, Effectable, InventoryOwner {
 
 	public static final boolean SHOW_HP_CHANGES = true;
 	public static final int ATTRIBUTE_MIN = 1;
@@ -67,38 +68,38 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private final Area defaultArea;
 	private Area area;
 
-	private final StatStringSetRegistry<SenseType> senseTypes;
+	private final StringSetRegistryStat<SenseType> senseTypes;
 	private final Set<AreaTarget> areaTargets;
 
 	private int level;
 	private int XP;
 
-	private final StatInt maxHP;
+	private final IntStat maxHP;
 	private int HP;
 	private final boolean startDead;
 	private boolean isDead;
-	private final Map<String, StatInt> damageResistance;
-	private final Map<String, StatFloat> damageMult;
+	private final Map<String, IntStat> damageResistance;
+	private final Map<String, FloatStat> damageMult;
 
 	private boolean isSleeping;
 	private int sleepCounter;
 	private boolean isSneaking;
 	private Actor carriedActor;
-	private ObjectComponentUsable.ObjectUserData usingObject;
+	private UsableObjectComponent.ObjectUserData usingObject;
 
-	private final StatStringSetRegistry<Effect> equipmentEffects;
+	private final StringSetRegistryStat<Effect> equipmentEffects;
 
 	private boolean endTurn;
-	private final StatInt actionPoints;
-	private final StatInt movePoints;
-	private final StatBoolean canPerformActions;
-	private final StatBoolean canMove;
-	private final StatBoolean canDodge;
+	private final IntStat actionPoints;
+	private final IntStat movePoints;
+	private final BooleanStat canPerformActions;
+	private final BooleanStat canMove;
+	private final BooleanStat canDodge;
 
 	private final Map<String, Integer> attributesBase;
 	private final Map<String, Integer> skillsBase;
-	private final Map<String, StatInt> attributes;
-	private final Map<String, StatInt> skills;
+	private final Map<String, IntStat> attributes;
+	private final Map<String, IntStat> skills;
 
 	private final List<Behavior> behaviors;
 
@@ -120,19 +121,19 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.template = template;
 		this.isPlayer = isPlayer;
 		this.areaTargets = new HashSet<>();
-		this.senseTypes = new StatStringSetRegistry<>("sense_types", this, senseTypeRegistry, SenseType::ID);
+		this.senseTypes = new StringSetRegistryStat<>("sense_types", this, senseTypeRegistry, SenseType::ID);
 		this.startDead = startDead;
 		this.isDead = startDead;
-		this.maxHP = new StatInt("max_hp", this);
-		this.actionPoints = new StatInt("action_points", this);
-		this.movePoints = new StatInt("move_points", this);
-		this.canPerformActions = new StatBoolean("can_perform_actions", this, false);
-		this.canMove = new StatBoolean("can_move", this, false);
-		this.canDodge = new StatBoolean("can_dodge", this, false);
+		this.maxHP = new IntStat("max_hp", this);
+		this.actionPoints = new IntStat("action_points", this);
+		this.movePoints = new IntStat("move_points", this);
+		this.canPerformActions = new BooleanStat("can_perform_actions", this, false);
+		this.canMove = new BooleanStat("can_move", this, false);
+		this.canDodge = new BooleanStat("can_dodge", this, false);
 		this.inventory = new Inventory(itemFactory, this);
 		this.equipmentComponent = new EquipmentComponent(this);
 		this.targetingComponent = new TargetingComponent(this);
-		this.equipmentEffects = new StatStringSetRegistry<>("equipment_effects", this, effectRegistry, Effect::getID);
+		this.equipmentEffects = new StringSetRegistryStat<>("equipment_effects", this, effectRegistry, Effect::getID);
 		this.effectComponent = new EffectComponent(this, scriptRuntime, Context.builder().subject(this).build());
 		this.behaviors = behaviors;
 		this.startDisabled = startDisabled;
@@ -143,22 +144,22 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.damageMult = new HashMap<>();
 		for (DamageType damageType : allDamageTypes) {
 			String damageTypeID = damageType.ID();
-			this.damageResistance.put(damageTypeID, new StatInt("damage_resist_" + damageTypeID, this));
-			this.damageMult.put(damageTypeID, new StatFloat("damage_mult_" + damageTypeID, this));
+			this.damageResistance.put(damageTypeID, new IntStat("damage_resist_" + damageTypeID, this));
+			this.damageMult.put(damageTypeID, new FloatStat("damage_mult_" + damageTypeID, this));
 		}
 		this.attributesBase = new HashMap<>();
 		this.attributes = new HashMap<>();
 		for (Attribute attribute : allAttributes) {
 			String attributeID = attribute.ID();
 			this.attributesBase.put(attributeID, getTemplate().getAttribute(attributeID));
-			this.attributes.put(attributeID, new StatInt("attribute_" + attributeID, this));
+			this.attributes.put(attributeID, new IntStat("attribute_" + attributeID, this));
 		}
 		this.skillsBase = new HashMap<>();
 		this.skills = new HashMap<>();
 		for (Skill skill : allSkills) {
 			String skillID = skill.ID();
 			this.skillsBase.put(skillID, getTemplate().getSkill(skillID));
-			this.skills.put(skillID, new StatInt("skill_" + skillID, this));
+			this.skills.put(skillID, new IntStat("skill_" + skillID, this));
 		}
 		this.level = template.getStartingLevel();
 		if (!startDead) {
@@ -313,7 +314,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	public boolean canPerformLocalActions() {
 		if (isUsingObject()) {
-			return getUsingObject().object().getComponentOfType(ObjectComponentUsable.class).userCanPerformLocalActions(getUsingObject().slot());
+			return getUsingObject().object().getComponentOfType(UsableObjectComponent.class).userCanPerformLocalActions(getUsingObject().slot());
 		}
 		return true;
 	}
@@ -327,7 +328,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	public boolean isInCover() {
 		if (isUsingObject()) {
-			return getUsingObject().object().getComponentOfType(ObjectComponentUsable.class).userIsInCover(getUsingObject().slot());
+			return getUsingObject().object().getComponentOfType(UsableObjectComponent.class).userIsInCover(getUsingObject().slot());
 		}
 		return false;
 	}
@@ -539,11 +540,11 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.isSneaking = sneaking;
 	}
 	
-	public void setUsingObject(ObjectComponentUsable.ObjectUserData objectUserData) {
+	public void setUsingObject(UsableObjectComponent.ObjectUserData objectUserData) {
 		this.usingObject = objectUserData;
 	}
 
-	public ObjectComponentUsable.ObjectUserData getUsingObject() {
+	public UsableObjectComponent.ObjectUserData getUsingObject() {
 		return usingObject;
 	}
 	
@@ -554,7 +555,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private void stopUsingObjectOnDeathIfPresent() {
 		if (!isUsingObject()) return;
 		WorldObject object = getUsingObject().object();
-		ObjectComponentUsable usableComponent = object.getComponentOfType(ObjectComponentUsable.class);
+		UsableObjectComponent usableComponent = object.getComponentOfType(UsableObjectComponent.class);
 		String usingSlot = getUsingObject().slot();
 		if (usableComponent.shouldRemoveUserOnDeath(usingSlot)) {
 			usableComponent.removeUser(usingSlot);
@@ -628,8 +629,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			}
 		}
 		if (isUsingObject()) {
-			actions.addAll(getUsingObject().object().getComponentOfType(ObjectComponentUsable.class).getUsingActions(getUsingObject().slot(), this, scriptRuntime));
-			if (getUsingObject().object().getComponentOfType(ObjectComponentUsable.class).userCanPerformParentActions(getUsingObject().slot())) {
+			actions.addAll(getUsingObject().object().getComponentOfType(UsableObjectComponent.class).getUsingActions(getUsingObject().slot(), this, scriptRuntime));
+			if (getUsingObject().object().getComponentOfType(UsableObjectComponent.class).userCanPerformParentActions(getUsingObject().slot())) {
 				actions.addAll(getUsingObject().object().localActions(this, scriptRuntime, sensoryEventDispatcher));
 			}
 		}
@@ -694,7 +695,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	public Map<Area, Pathfinder.VisibleAreaData> getVisibleAreas(Pathfinder pathfinder) {
-		if (isUsingObject() && !getUsingObject().object().getComponentOfType(ObjectComponentUsable.class).userCanSeeOtherAreas(getUsingObject().slot())) {
+		if (isUsingObject() && !getUsingObject().object().getComponentOfType(UsableObjectComponent.class).userCanSeeOtherAreas(getUsingObject().slot())) {
 			return Map.of(getArea(), new Pathfinder.VisibleAreaData(null, Area.pathLengthToDistance(0), List.of(getArea())));
 		} else {
 			return pathfinder.getVisibleAreas(getArea(), this);
@@ -703,7 +704,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	public boolean isVisible(Actor subject) {
 		if (isUsingObject()) {
-			return getUsingObject().object().getComponentOfType(ObjectComponentUsable.class).userCanSeeOtherAreas(getUsingObject().slot()) || getArea().equals(subject.getArea());
+			return getUsingObject().object().getComponentOfType(UsableObjectComponent.class).userCanSeeOtherAreas(getUsingObject().slot()) || getArea().equals(subject.getArea());
 		}
         return true;
     }
@@ -752,7 +753,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	@Override
-	public StatInt getStatInt(String name) {
+	public IntStat getStatInt(String name) {
 		if (name.startsWith("damage_resist_")) {
 			String damageType = name.substring("damage_resist_".length());
 			return damageResistance.get(damageType);
@@ -772,7 +773,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	@Override
-	public StatFloat getStatFloat(String name) {
+	public FloatStat getStatFloat(String name) {
 		if (name.startsWith("damage_mult_")) {
 			String damageType = name.substring("damage_mult_".length());
 			return damageMult.get(damageType);
@@ -781,7 +782,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	@Override
-	public StatBoolean getStatBoolean(String name) {
+	public BooleanStat getStatBoolean(String name) {
 		if ("can_perform_actions".equals(name)) {
 			return canPerformActions;
 		} else if ("can_move".equals(name)) {
@@ -793,12 +794,12 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	@Override
-	public StatString getStatString(String name) {
+	public StringStat getStatString(String name) {
 		return null;
 	}
 
 	@Override
-	public StatStringSet getStatStringSet(String name) {
+	public StringSetStat getStatStringSet(String name) {
 		if ("equipment_effects".equals(name)) {
 			return equipmentEffects;
 		} else if ("sense_types".equals(name)) {
@@ -955,7 +956,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	@Override
 	public void onRemoveItemFromInventory(Item item) {
-		if (item.hasComponentOfType(ItemComponentEquippable.class)) {
+		if (item.hasComponentOfType(EquippableItemComponent.class)) {
 			getEquipmentComponent().unequip(item);
 		}
 	}

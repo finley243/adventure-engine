@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.item.Inventory;
 import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.textgen.Noun;
 

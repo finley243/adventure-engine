@@ -4,7 +4,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.object.WorldObject;
-import com.github.finley243.adventureengine.world.object.component.ObjectComponentLink;
+import com.github.finley243.adventureengine.world.object.component.LinkObjectComponent;
 import com.github.finley243.adventureengine.world.obstruction.ObstructionType;
 
 import java.util.*;
@@ -49,7 +49,7 @@ public class Pathfinder {
 			}
 			List<Area> linkedAreasGlobal = new ArrayList<>(currentArea.getMovableAreas(vehicleType));
 			for (WorldObject object : currentArea.getObjects()) {
-				ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
+				LinkObjectComponent linkComponent = object.getComponentOfType(LinkObjectComponent.class);
 				if (linkComponent == null) continue;
 				linkedAreasGlobal.addAll(linkComponent.getLinkedAreasMovable());
 			}
@@ -157,7 +157,7 @@ public class Pathfinder {
 			List<Area> linkedAreasGlobal = new ArrayList<>(currentArea.getMovableAreas(null));
 			if (useObjectLinks) {
 				for (WorldObject object : currentArea.getObjects()) {
-					ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
+					LinkObjectComponent linkComponent = object.getComponentOfType(LinkObjectComponent.class);
 					if (linkComponent == null) continue;
 					linkedAreasGlobal.addAll(linkComponent.getLinkedAreasMovable());
 				}
@@ -201,7 +201,7 @@ public class Pathfinder {
 			List<Area> linkedAreasGlobal = new ArrayList<>(currentArea.getMovableAreas(null));
 			if (useObjectLinks) {
 				for (WorldObject object : currentArea.getObjects()) {
-					ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
+					LinkObjectComponent linkComponent = object.getComponentOfType(LinkObjectComponent.class);
 					if (linkComponent == null) continue;
 					linkedAreasGlobal.addAll(linkComponent.getLinkedAreasMovable());
 				}

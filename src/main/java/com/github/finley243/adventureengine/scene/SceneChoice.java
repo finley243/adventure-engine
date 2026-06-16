@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.scene;
 
-import com.github.finley243.adventureengine.GameDataException;
+import com.github.finley243.adventureengine.load.GameDataException;
 import com.github.finley243.adventureengine.gamedata.Registry;
 
 public class SceneChoice {

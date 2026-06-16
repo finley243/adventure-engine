@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.load;
 
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.actor.*;
@@ -435,7 +434,7 @@ public class DataLoader {
             case "ammo" -> {
                 List<String> ammoWeaponEffects = LoadUtils.listOfTags(componentElement, "weaponEffect");
                 boolean ammoIsReusable = LoadUtils.attributeBool(componentElement, "isReusable", false);
-                return new ItemComponentTemplateAmmo(actionsRestricted, ammoWeaponEffects, ammoIsReusable);
+                return new AmmoItemComponentTemplate(actionsRestricted, ammoWeaponEffects, ammoIsReusable);
             }
             case "armor" -> {
                 Map<String, Integer> damageResistances = new HashMap<>();
@@ -453,38 +452,38 @@ public class DataLoader {
                 }
                 Set<String> coveredLimbs = LoadUtils.setOfTags(componentElement, "coveredLimb");
                 boolean coversMainBody = LoadUtils.attributeBool(componentElement, "coversMainBody", false);
-                return new ItemComponentTemplateArmor(actionsRestricted, damageResistances, damageMults, coveredLimbs, coversMainBody);
+                return new ArmorItemComponentTemplate(actionsRestricted, damageResistances, damageMults, coveredLimbs, coversMainBody);
             }
             case "consumable" -> {
                 String consumePrompt = LoadUtils.singleTag(componentElement, "consumePrompt", null);
                 String consumePhrase = LoadUtils.singleTag(componentElement, "consumePhrase", null);
                 List<String> consumableEffects = LoadUtils.listOfTags(componentElement, "effect");
-                return new ItemComponentTemplateConsumable(actionsRestricted, consumePrompt, consumePhrase, consumableEffects);
+                return new ConsumableItemComponentTemplate(actionsRestricted, consumePrompt, consumePhrase, consumableEffects);
             }
             case "effectible" -> {
-                return new ItemComponentTemplateEffectible(actionsRestricted);
+                return new EffectableItemComponentTemplate(actionsRestricted);
             }
             case "equippable" -> {
-                Set<ItemComponentTemplateEquippable.EquippableSlotsData> equipSlots = new HashSet<>();
+                Set<EquippableItemComponentTemplate.EquippableSlotsData> equipSlots = new HashSet<>();
                 for (Element slotGroupElement : LoadUtils.directChildrenWithName(componentElement, "slotGroup")) {
                     Set<String> slotGroup = LoadUtils.setOfTags(slotGroupElement, "slot");
                     Set<String> exposedComponents = LoadUtils.setOfTags(slotGroupElement, "exposedComponent");
                     List<String> equippedEffects = LoadUtils.listOfTags(componentElement, "effect");
                     List<ActionCustom.CustomActionHolder> equippedActions = loadCustomActions(componentElement, "equippedAction", "ItemComponent(" + itemID + ")");
-                    equipSlots.add(new ItemComponentTemplateEquippable.EquippableSlotsData(slotGroup, exposedComponents, equippedEffects, equippedActions));
+                    equipSlots.add(new EquippableItemComponentTemplate.EquippableSlotsData(slotGroup, exposedComponents, equippedEffects, equippedActions));
                 }
-                return new ItemComponentTemplateEquippable(actionsRestricted, equipSlots);
+                return new EquippableItemComponentTemplate(actionsRestricted, equipSlots);
             }
             case "magazine" -> {
                 Set<String> ammoTypes = LoadUtils.setOfTags(componentElement, "ammoType");
                 int magazineSize = LoadUtils.singleTagInt(componentElement, "size", 1);
                 int reloadActionPoints = LoadUtils.singleTagInt(componentElement, "reloadActionPoints", 1);
-                return new ItemComponentTemplateMagazine(actionsRestricted, ammoTypes, magazineSize, reloadActionPoints);
+                return new MagazineItemComponentTemplate(actionsRestricted, ammoTypes, magazineSize, reloadActionPoints);
             }
             case "mod" -> {
                 String modSlot = LoadUtils.attribute(componentElement, "modSlot", null);
                 List<String> effects = LoadUtils.listOfTags(componentElement, "effect");
-                return new ItemComponentTemplateMod(actionsRestricted, modSlot, effects);
+                return new ModItemComponentTemplate(actionsRestricted, modSlot, effects);
             }
             case "moddable" -> {
                 Map<String, Integer> modSlots = new HashMap<>();
@@ -493,7 +492,7 @@ public class DataLoader {
                     int slotCount = LoadUtils.attributeInt(modSlotElement, "count", 1);
                     modSlots.put(slotName, slotCount);
                 }
-                return new ItemComponentTemplateModdable(actionsRestricted, modSlots);
+                return new ModdableItemComponentTemplate(actionsRestricted, modSlots);
             }
             case "weapon" -> {
                 String weaponClass = LoadUtils.attribute(componentElement, "class", null);
@@ -506,7 +505,7 @@ public class DataLoader {
                 float weaponArmorMult = LoadUtils.singleTagFloat(componentElement, "armorMult", 1.0f);
                 boolean weaponSilenced = LoadUtils.singleTagBoolean(componentElement, "silenced", false);
                 Set<String> weaponTargetEffects = LoadUtils.setOfTags(componentElement, "targetEffect");
-                return new ItemComponentTemplateWeapon(actionsRestricted, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects);
+                return new WeaponItemComponentTemplate(actionsRestricted, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects);
             }
             default -> {
                 return null;
@@ -545,40 +544,40 @@ public class DataLoader {
                 boolean statModIsFloat = statModValue.contains(".");
                 if (statModIsFloat) {
                     float statModValueFloat = Float.parseFloat(statModValue);
-                    return new EffectStatAddFloat(ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statMod, statModValueFloat, statCondition);
+                    return new AddFloatEffect(ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statMod, statModValueFloat, statCondition);
                 } else {
                     int statModValueInt = Integer.parseInt(statModValue);
-                    return new EffectStatAddInt(ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statMod, statModValueInt, statCondition);
+                    return new AddIntEffect(ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statMod, statModValueInt, statCondition);
                 }
             }
             case "mult" -> {
                 String statMult = LoadUtils.attribute(effectElement, "stat", null);
                 float statMultAmount = LoadUtils.attributeFloat(effectElement, "amount", 0.0f);
                 Condition statCondition = loadCondition(LoadUtils.singleChildWithName(effectElement, "statCondition"), "Effect(" + ID + ") - stat condition");
-                return new EffectStatMult(ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statMult, statMultAmount, statCondition);
+                return new MultEffect(ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statMult, statMultAmount, statCondition);
             }
             case "boolean" -> {
                 String statBoolean = LoadUtils.attribute(effectElement, "stat", null);
                 boolean statBooleanValue = LoadUtils.attributeBool(effectElement, "value", true);
                 Condition statCondition = loadCondition(LoadUtils.singleChildWithName(effectElement, "statCondition"), "Effect(" + ID + ") - stat condition");
-                return new EffectStatBoolean(ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statBoolean, statBooleanValue, statCondition);
+                return new BooleanEffect(ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statBoolean, statBooleanValue, statCondition);
             }
             case "string" -> {
                 String statString = LoadUtils.attribute(effectElement, "stat", null);
                 String statStringValue = LoadUtils.attribute(effectElement, "value", null);
                 Condition statCondition = loadCondition(LoadUtils.singleChildWithName(effectElement, "statCondition"), "Effect(" + ID + ") - stat condition");
-                return new EffectStatString(ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statString, statStringValue, statCondition);
+                return new StringEffect(ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statString, statStringValue, statCondition);
             }
             case "stringSet" -> {
                 String statStringSet = LoadUtils.attribute(effectElement, "stat", null);
                 Set<String> stringSetValuesAdd = LoadUtils.setOfTags(effectElement, "add");
                 Set<String> stringSetValuesRemove = LoadUtils.setOfTags(effectElement, "remove");
                 Condition statCondition = loadCondition(LoadUtils.singleChildWithName(effectElement, "statCondition"), "Effect(" + ID + ") - stat condition");
-                return new EffectStatStringSet(ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statStringSet, stringSetValuesAdd, stringSetValuesRemove, statCondition);
+                return new StringSetEffect(ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statStringSet, stringSetValuesAdd, stringSetValuesRemove, statCondition);
             }
             case "compound" -> {
                 List<Effect> compoundEffects = loadEffects(game, effectElement);
-                return new EffectCompound(ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, compoundEffects);
+                return new CompoundEffect(ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, compoundEffects);
             }
             case null, default -> { // "basic"
                 return new Effect(ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound);
@@ -760,24 +759,24 @@ public class DataLoader {
                 boolean enableTake = LoadUtils.attributeBool(componentElement, "enableTake", true);
                 boolean enableStore = LoadUtils.attributeBool(componentElement, "enableStore", true);
                 List<ActionCustom.CustomActionHolder> perItemActions = loadCustomActions(componentElement, "itemAction", "ObjectComponentInventory(" + objectID + ")");
-                return new ObjectComponentTemplateInventory(startEnabled, actionsRestricted, lootTable, takePrompt, takePhrase, storePrompt, storePhrase, enableTake, enableStore, perItemActions);
+                return new InventoryObjectComponentTemplate(startEnabled, actionsRestricted, lootTable, takePrompt, takePhrase, storePrompt, storePhrase, enableTake, enableStore, perItemActions);
             }
             case "network" -> {
-                return new ObjectComponentTemplateNetwork(startEnabled, actionsRestricted);
+                return new NetworkObjectComponentTemplate(startEnabled, actionsRestricted);
             }
             case "link" -> {
-                Map<String, ObjectComponentTemplateLink.ObjectLinkData> linkData = new HashMap<>();
+                Map<String, LinkObjectComponentTemplate.ObjectLinkData> linkData = new HashMap<>();
                 for (Element linkDataElement : LoadUtils.directChildrenWithName(componentElement, "link")) {
                     String linkID = LoadUtils.attribute(linkDataElement, "id", null);
                     String moveAction = LoadUtils.attribute(linkDataElement, "moveAction", null);
                     Condition conditionVisible = loadCondition(LoadUtils.singleChildWithName(linkDataElement, "conditionVisible"), "ObjectComponentLink(" + objectID + ") - link visible condition");
                     boolean isVisible = LoadUtils.attributeBool(linkDataElement, "visible", false);
-                    linkData.put(linkID, new ObjectComponentTemplateLink.ObjectLinkData(moveAction, conditionVisible, isVisible));
+                    linkData.put(linkID, new LinkObjectComponentTemplate.ObjectLinkData(moveAction, conditionVisible, isVisible));
                 }
-                return new ObjectComponentTemplateLink(startEnabled, actionsRestricted, linkData);
+                return new LinkObjectComponentTemplate(startEnabled, actionsRestricted, linkData);
             }
             case "usable" -> {
-                Map<String, ObjectComponentTemplateUsable.UsableSlotData> usableSlotData = new HashMap<>();
+                Map<String, UsableObjectComponentTemplate.UsableSlotData> usableSlotData = new HashMap<>();
                 for (Element slotElement : LoadUtils.directChildrenWithName(componentElement, "slot")) {
                     String slotID = LoadUtils.attribute(slotElement, "id", null);
                     String startPhrase = LoadUtils.singleTag(slotElement, "startPhrase", null);
@@ -793,13 +792,13 @@ public class DataLoader {
                     boolean shouldRemoveUserOnDeath = LoadUtils.attributeBool(slotElement, "removeUserOnDeath", false);
                     Set<String> componentsExposed = LoadUtils.setOfTags(slotElement, "exposedComponent");
                     List<ActionCustom.CustomActionHolder> usingActions = loadCustomActions(slotElement, "usingAction", "ObjectComponentUsable(" + objectID + ")");
-                    usableSlotData.put(slotID, new ObjectComponentTemplateUsable.UsableSlotData(startPhrase, endPhrase, endDeathPhrase, startPrompt, endPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas, userCanPerformLocalActions, userCanPerformParentActions, shouldRemoveUserOnDeath, componentsExposed, usingActions));
+                    usableSlotData.put(slotID, new UsableObjectComponentTemplate.UsableSlotData(startPhrase, endPhrase, endDeathPhrase, startPrompt, endPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas, userCanPerformLocalActions, userCanPerformParentActions, shouldRemoveUserOnDeath, componentsExposed, usingActions));
                 }
-                return new ObjectComponentTemplateUsable(startEnabled, actionsRestricted, usableSlotData);
+                return new UsableObjectComponentTemplate(startEnabled, actionsRestricted, usableSlotData);
             }
             case "vehicle" -> {
                 String vehicleType = LoadUtils.attribute(componentElement, "vehicleType", null);
-                return new ObjectComponentTemplateVehicle(startEnabled, actionsRestricted, vehicleType);
+                return new VehicleObjectComponentTemplate(startEnabled, actionsRestricted, vehicleType);
             }
             default -> throw new GameDataException("ObjectComponentTemplate has invalid or missing type");
         }
@@ -978,11 +977,11 @@ public class DataLoader {
         switch (type) {
             case "data" -> {
                 String dataSceneID = LoadUtils.attribute(nodeElement, "scene", null);
-                return new NetworkNodeData(ID, name, dataSceneID);
+                return new DataNetworkNode(ID, name, dataSceneID);
             }
             case "control" -> {
                 String controlObjectID = LoadUtils.attribute(nodeElement, "object", null);
-                return new NetworkNodeControl(ID, name, controlObjectID);
+                return new ControlNetworkNode(ID, name, controlObjectID);
             }
             case null, default -> {
                 Set<NetworkNode> groupNodes = new HashSet<>();
@@ -990,7 +989,7 @@ public class DataLoader {
                     NetworkNode childNode = loadNetworkNode(childNodeElement);
                     groupNodes.add(childNode);
                 }
-                return new NetworkNodeGroup(ID, name, groupNodes);
+                return new GroupNetworkNode(ID, name, groupNodes);
             }
         }
     }

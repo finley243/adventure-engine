@@ -3,10 +3,9 @@ package com.github.finley243.adventureengine.actor.ai;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.component.BehaviorComponent;
 import com.github.finley243.adventureengine.actor.component.TargetingComponent;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.component.ItemComponentWeapon;
+import com.github.finley243.adventureengine.item.component.WeaponItemComponent;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 import java.util.ArrayList;
@@ -108,7 +107,7 @@ public class UtilityUtils {
 
 	public static boolean actorHasWeapon(Actor actor) {
 		for (Item item : actor.getInventory().getItems()) {
-			if (item.hasComponentOfType(ItemComponentWeapon.class)) {
+			if (item.hasComponentOfType(WeaponItemComponent.class)) {
 				return true;
 			}
 		}

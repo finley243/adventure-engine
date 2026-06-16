@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.item;
 
 import com.github.finley243.adventureengine.MathUtils;
-import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.gamedata.MutableRegistry;
 
 import java.util.List;

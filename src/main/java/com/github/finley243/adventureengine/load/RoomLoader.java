@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.load;
 
-import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.scene.Scene;

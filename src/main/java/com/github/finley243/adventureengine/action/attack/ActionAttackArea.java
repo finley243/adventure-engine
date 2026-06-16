@@ -4,8 +4,8 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.component.ItemComponentAmmo;
-import com.github.finley243.adventureengine.item.component.ItemComponentMagazine;
+import com.github.finley243.adventureengine.item.component.AmmoItemComponent;
+import com.github.finley243.adventureengine.item.component.MagazineItemComponent;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataAttackArea;
 import com.github.finley243.adventureengine.script.Script;
@@ -30,11 +30,11 @@ public class ActionAttackArea extends ActionAttack {
         if (weapon == null) {
             return;
         }
-        if (weapon.hasComponentOfType(ItemComponentMagazine.class)) {
-            if (weapon.getComponentOfType(ItemComponentMagazine.class).getLoadedAmmoType() != null && weapon.getComponentOfType(ItemComponentMagazine.class).getLoadedAmmoType().getComponentOfType(ItemComponentAmmo.class).isReusable()) {
-                getArea().getInventory().addItems(weapon.getComponentOfType(ItemComponentMagazine.class).getLoadedAmmoType().getTemplateID(), getAmmoConsumed());
+        if (weapon.hasComponentOfType(MagazineItemComponent.class)) {
+            if (weapon.getComponentOfType(MagazineItemComponent.class).getLoadedAmmoType() != null && weapon.getComponentOfType(MagazineItemComponent.class).getLoadedAmmoType().getComponentOfType(AmmoItemComponent.class).isReusable()) {
+                getArea().getInventory().addItems(weapon.getComponentOfType(MagazineItemComponent.class).getLoadedAmmoType().getTemplateID(), getAmmoConsumed());
             }
-            weapon.getComponentOfType(ItemComponentMagazine.class).consumeAmmo();
+            weapon.getComponentOfType(MagazineItemComponent.class).consumeAmmo();
         }
         switch (getWeaponConsumeType()) {
             case PLACE -> {
@@ -51,7 +51,7 @@ public class ActionAttackArea extends ActionAttack {
         if (!resultSuper.canChoose()) {
             return resultSuper;
         }
-        if (weapon != null && weapon.hasComponentOfType(ItemComponentMagazine.class) && weapon.getComponentOfType(ItemComponentMagazine.class).getAmmoRemaining() < getAmmoConsumed()) {
+        if (weapon != null && weapon.hasComponentOfType(MagazineItemComponent.class) && weapon.getComponentOfType(MagazineItemComponent.class).getAmmoRemaining() < getAmmoConsumed()) {
             return new CanChooseResult(false, "Not enough ammo");
         }
         if (!getRanges().contains(subject.getArea().getLinearDistanceTo(getArea()))) {

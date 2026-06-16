@@ -7,22 +7,22 @@ public class ObjectComponentFactory {
 
     public static ObjectComponent create(ObjectComponentTemplate template, WorldObject object) {
         return switch (template) {
-            case ObjectComponentTemplateInventory ignored -> new ObjectComponentInventory(object, template);
-            case ObjectComponentTemplateNetwork ignored -> new ObjectComponentNetwork(object, template);
-            case ObjectComponentTemplateLink ignored -> new ObjectComponentLink(object, template);
-            case ObjectComponentTemplateUsable ignored -> new ObjectComponentUsable(object, template);
-            case ObjectComponentTemplateVehicle ignored -> new ObjectComponentVehicle(object, template);
+            case InventoryObjectComponentTemplate ignored -> new InventoryObjectComponent(object, template);
+            case NetworkObjectComponentTemplate ignored -> new NetworkObjectComponent(object, template);
+            case LinkObjectComponentTemplate ignored -> new LinkObjectComponent(object, template);
+            case UsableObjectComponentTemplate ignored -> new UsableObjectComponent(object, template);
+            case VehicleObjectComponentTemplate ignored -> new VehicleObjectComponent(object, template);
             default -> throw new UnsupportedOperationException("Object template type is unsupported by ObjectComponentFactory");
         };
     }
 
     public static Class<? extends ObjectComponent> getClassFromName(String name) {
         return switch (name) {
-            case "inventory" -> ObjectComponentInventory.class;
-            case "link" -> ObjectComponentLink.class;
-            case "network" -> ObjectComponentNetwork.class;
-            case "usable" -> ObjectComponentUsable.class;
-            case "vehicle" -> ObjectComponentVehicle.class;
+            case "inventory" -> InventoryObjectComponent.class;
+            case "link" -> LinkObjectComponent.class;
+            case "network" -> NetworkObjectComponent.class;
+            case "usable" -> UsableObjectComponent.class;
+            case "vehicle" -> VehicleObjectComponent.class;
             case null, default -> null;
         };
     }

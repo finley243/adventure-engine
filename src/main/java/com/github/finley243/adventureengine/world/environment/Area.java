@@ -7,16 +7,17 @@ import com.github.finley243.adventureengine.action.ActionInspectArea;
 import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Faction;
-import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.item.Inventory;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
-import com.github.finley243.adventureengine.actor.component.EffectComponent;
+import com.github.finley243.adventureengine.effect.EffectComponent;
 import com.github.finley243.adventureengine.effect.Effect;
-import com.github.finley243.adventureengine.effect.Effectible;
+import com.github.finley243.adventureengine.effect.Effectable;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.gamedata.AreaRegistry;
 import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.item.ItemFactory;
+import com.github.finley243.adventureengine.load.GameDataException;
 import com.github.finley243.adventureengine.menu.action.MenuDataMove;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
@@ -26,7 +27,7 @@ import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.object.WorldObject;
-import com.github.finley243.adventureengine.world.object.component.ObjectComponentLink;
+import com.github.finley243.adventureengine.world.object.component.LinkObjectComponent;
 import com.github.finley243.adventureengine.world.obstruction.ObstructionType;
 
 import java.util.*;
@@ -34,7 +35,7 @@ import java.util.*;
 /**
  * Represents a section of a room that can contain objects and actors
  */
-public class Area extends GameInstanced implements Noun, MutableStatHolder, Effectible {
+public class Area extends GameInstanced implements Noun, MutableStatHolder, Effectable {
 
 	public enum RestrictionType {
 		PUBLIC, PRIVATE, HOSTILE
@@ -75,10 +76,10 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 
 	private EffectComponent effectComponent;
 
-	private final StatStringSetRegistry<Effect> effects;
+	private final StringSetRegistryStat<Effect> effects;
 
 	private final Set<ObstructionType> defaultObstructions;
-	private final StatStringSetRegistry<ObstructionType> obstructions;
+	private final StringSetRegistryStat<ObstructionType> obstructions;
 	
 	public Area(ScriptRuntime scriptRuntime, Registry<ObstructionType> obstructionTypeRegistry, Registry<Effect> effectRegistry, ItemFactory itemFactory, String ID, WorldObject landmark, String name, AreaNameType nameType, boolean nameIsPlural, Scene description, Room room, Faction ownerFaction, RestrictionType restrictionType, Boolean allowAllies, Map<String, AreaLink> linkedAreas, Set<ObstructionType> defaultObstructions, Map<String, List<Script>> scripts) {
 		super(ID);
@@ -97,9 +98,9 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 		this.actors = new HashSet<>();
 		this.itemInventory = new Inventory(itemFactory, null);
 		this.scripts = scripts;
-		this.effects = new StatStringSetRegistry<>("effects", this, effectRegistry, Effect::getID);
+		this.effects = new StringSetRegistryStat<>("effects", this, effectRegistry, Effect::getID);
 		this.defaultObstructions = defaultObstructions;
-		this.obstructions = new StatStringSetRegistry<>("obstructions", this, obstructionTypeRegistry, ObstructionType::ID);
+		this.obstructions = new StringSetRegistryStat<>("obstructions", this, obstructionTypeRegistry, ObstructionType::ID);
 		this.effectComponent = new EffectComponent(this, scriptRuntime, Context.builder().parentArea(this).build());
 	}
 
@@ -315,7 +316,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 	public Map<WorldObject, Set<Area>> getObjectVisibleLinkedAreas() {
 		Map<WorldObject, Set<Area>> visibleAreas = new HashMap<>();
 		for (WorldObject object : getObjects()) {
-			ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
+			LinkObjectComponent linkComponent = object.getComponentOfType(LinkObjectComponent.class);
 			if (linkComponent == null) continue;
 			visibleAreas.put(object, linkComponent.getLinkedLineOfSightAreas());
 		}
@@ -328,7 +329,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 			return link.getType().isVisible();
 		}
 		for (WorldObject object : getObjects()) {
-			ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
+			LinkObjectComponent linkComponent = object.getComponentOfType(LinkObjectComponent.class);
 			if (linkComponent == null) continue;
 			if (linkComponent.getLinkedLineOfSightAreas().contains(area)) {
 				return true;
@@ -343,7 +344,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 			return link.getDirection();
 		}
 		for (WorldObject object : getObjects()) {
-			ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
+			LinkObjectComponent linkComponent = object.getComponentOfType(LinkObjectComponent.class);
 			if (linkComponent == null) continue;
 			Map<Area, AreaLink.CompassDirection> visibleAreasWithDirections = linkComponent.getLinkedLineOfSightAreasWithDirections(scriptRuntime);
 			if (visibleAreasWithDirections.containsKey(area)) {
@@ -459,27 +460,27 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	@Override
-	public StatInt getStatInt(String name) {
+	public IntStat getStatInt(String name) {
 		return null;
 	}
 
 	@Override
-	public StatFloat getStatFloat(String name) {
+	public FloatStat getStatFloat(String name) {
 		return null;
 	}
 
 	@Override
-	public StatBoolean getStatBoolean(String name) {
+	public BooleanStat getStatBoolean(String name) {
 		return null;
 	}
 
 	@Override
-	public StatString getStatString(String name) {
+	public StringStat getStatString(String name) {
 		return null;
 	}
 
 	@Override
-	public StatStringSet getStatStringSet(String name) {
+	public StringSetStat getStatStringSet(String name) {
 		if ("effects".equals(name)) {
 			return effects;
 		} else if ("obstructions".equals(name)) {

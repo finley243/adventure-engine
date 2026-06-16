@@ -8,7 +8,7 @@ import com.github.finley243.adventureengine.action.attack.ActionAttackLimb;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.component.ItemComponentWeapon;
+import com.github.finley243.adventureengine.item.component.WeaponItemComponent;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.AttackTarget;
@@ -94,15 +94,15 @@ public class WeaponAttackType {
         if (weapon == null) throw new IllegalArgumentException("Weapon cannot be null");
         Context context = Context.builder().subject(subject).target(subject).parentItem(weapon).build();
         List<Action> actions = new ArrayList<>();
-        Set<AreaLink.DistanceCategory> ranges = rangeOverride != null && !rangeOverride.isEmpty() ? rangeOverride : (useNonIdealRange ? EnumSet.complementOf(EnumSet.copyOf(weapon.getComponentOfType(ItemComponentWeapon.class).getRanges(context))) : weapon.getComponentOfType(ItemComponentWeapon.class).getRanges(context));
-        int rate = rateOverride != null ? rateOverride : weapon.getComponentOfType(ItemComponentWeapon.class).getRate(context);
-        Script damage = Objects.requireNonNullElseGet(damageOverride, () -> Script.constant((int) (weapon.getComponentOfType(ItemComponentWeapon.class).getDamage(context) * (damageMult + 1.0f))));
-        String damageType = damageTypeOverride != null ? damageTypeOverride : weapon.getComponentOfType(ItemComponentWeapon.class).getDamageType(context);
-        float armorMult = armorMultOverride != null ? armorMultOverride : weapon.getComponentOfType(ItemComponentWeapon.class).getArmorMult(context);
-        boolean isLoud = isLoudOverride != null ? isLoudOverride : weapon.getComponentOfType(ItemComponentWeapon.class).isLoud(context);
+        Set<AreaLink.DistanceCategory> ranges = rangeOverride != null && !rangeOverride.isEmpty() ? rangeOverride : (useNonIdealRange ? EnumSet.complementOf(EnumSet.copyOf(weapon.getComponentOfType(WeaponItemComponent.class).getRanges(context))) : weapon.getComponentOfType(WeaponItemComponent.class).getRanges(context));
+        int rate = rateOverride != null ? rateOverride : weapon.getComponentOfType(WeaponItemComponent.class).getRate(context);
+        Script damage = Objects.requireNonNullElseGet(damageOverride, () -> Script.constant((int) (weapon.getComponentOfType(WeaponItemComponent.class).getDamage(context) * (damageMult + 1.0f))));
+        String damageType = damageTypeOverride != null ? damageTypeOverride : weapon.getComponentOfType(WeaponItemComponent.class).getDamageType(context);
+        float armorMult = armorMultOverride != null ? armorMultOverride : weapon.getComponentOfType(WeaponItemComponent.class).getArmorMult(context);
+        boolean isLoud = isLoudOverride != null ? isLoudOverride : weapon.getComponentOfType(WeaponItemComponent.class).isLoud(context);
         List<String> targetEffectsCombined = new ArrayList<>(targetEffects);
         if (!overrideTargetEffects) {
-            targetEffectsCombined.addAll(weapon.getComponentOfType(ItemComponentWeapon.class).getTargetEffects(scriptRuntime, context));
+            targetEffectsCombined.addAll(weapon.getComponentOfType(WeaponItemComponent.class).getTargetEffects(scriptRuntime, context));
         }
         switch (category) {
             case SINGLE -> {

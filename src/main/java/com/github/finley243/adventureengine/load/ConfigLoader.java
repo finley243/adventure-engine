@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.load;
 
-import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.gamedata.ConfigOption;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

@@ -2,7 +2,7 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.item.Inventory;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.expression.Expression;

@@ -6,7 +6,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.component.ItemComponentWeapon;
+import com.github.finley243.adventureengine.item.component.WeaponItemComponent;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.AttackTarget;
@@ -27,7 +27,7 @@ public class CombatHelper {
 		float chance = hitChanceExpression.getValueFloat();
 		if (weapon != null) {
 			// TODO - Find a way to allow hit chance effects on unarmed attacks (no weapon)
-			chance = weapon.getComponentOfType(ItemComponentWeapon.class).getModifiedHitChance(scriptContext, chance);
+			chance = weapon.getComponentOfType(WeaponItemComponent.class).getModifiedHitChance(scriptContext, chance);
 		}
 		if (limb != null) {
 			chance *= limb.getHitChance();
@@ -46,7 +46,7 @@ public class CombatHelper {
 		float chance = hitChanceExpression.getValueFloat();
 		if (weapon != null) {
 			// TODO - Find a way to allow hit chance effects on unarmed attacks (no weapon)
-			chance = weapon.getComponentOfType(ItemComponentWeapon.class).getModifiedHitChance(scriptContext, chance);
+			chance = weapon.getComponentOfType(WeaponItemComponent.class).getModifiedHitChance(scriptContext, chance);
 		}
 		if (limb != null) {
 			chance *= limb.getHitChance();

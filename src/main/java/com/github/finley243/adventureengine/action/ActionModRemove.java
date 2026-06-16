@@ -5,7 +5,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.component.ItemComponentModdable;
+import com.github.finley243.adventureengine.item.component.ModdableItemComponent;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventoryCombine;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
@@ -35,7 +35,7 @@ public class ActionModRemove extends Action {
 
     @Override
     public void choose(Actor subject, int repeatActionCount) {
-        target.getComponentOfType(ItemComponentModdable.class).removeMod(mod);
+        target.getComponentOfType(ModdableItemComponent.class).removeMod(mod);
         subject.getInventory().addItem(mod);
     }
 

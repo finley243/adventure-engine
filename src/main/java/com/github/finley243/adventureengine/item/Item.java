@@ -4,12 +4,11 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.effect.Effect;
-import com.github.finley243.adventureengine.effect.Effectible;
+import com.github.finley243.adventureengine.effect.Effectable;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.component.ItemComponent;
-import com.github.finley243.adventureengine.item.component.ItemComponentEffectible;
+import com.github.finley243.adventureengine.item.component.EffectableItemComponent;
 import com.github.finley243.adventureengine.item.component.ItemComponentFactory;
 import com.github.finley243.adventureengine.item.template.ItemComponentTemplate;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
@@ -23,7 +22,7 @@ import com.github.finley243.adventureengine.textgen.TextContext;
 
 import java.util.*;
 
-public class Item extends GameInstanced implements Noun, MutableStatHolder, Effectible {
+public class Item extends GameInstanced implements Noun, MutableStatHolder, Effectable {
 
 	private Inventory currentInventory;
 	private boolean isKnown;
@@ -142,15 +141,15 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 
 	@Override
 	public void addEffect(Effect effect) {
-		if (hasComponentOfType(ItemComponentEffectible.class)) {
-			getComponentOfType(ItemComponentEffectible.class).addEffect(effect);
+		if (hasComponentOfType(EffectableItemComponent.class)) {
+			getComponentOfType(EffectableItemComponent.class).addEffect(effect);
 		}
 	}
 
 	@Override
 	public void removeEffect(Effect effect) {
-		if (hasComponentOfType(ItemComponentEffectible.class)) {
-			getComponentOfType(ItemComponentEffectible.class).removeEffect(effect);
+		if (hasComponentOfType(EffectableItemComponent.class)) {
+			getComponentOfType(EffectableItemComponent.class).removeEffect(effect);
 		}
 	}
 
@@ -198,45 +197,45 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	@Override
-	public StatInt getStatInt(String name) {
+	public IntStat getStatInt(String name) {
 		for (ItemComponent component : components.values()) {
-			StatInt componentValue = component.getStatInt(name);
+			IntStat componentValue = component.getStatInt(name);
 			if (componentValue != null) return componentValue;
 		}
 		return null;
 	}
 
 	@Override
-	public StatFloat getStatFloat(String name) {
+	public FloatStat getStatFloat(String name) {
 		for (ItemComponent component : components.values()) {
-			StatFloat componentValue = component.getStatFloat(name);
+			FloatStat componentValue = component.getStatFloat(name);
 			if (componentValue != null) return componentValue;
 		}
 		return null;
 	}
 
 	@Override
-	public StatBoolean getStatBoolean(String name) {
+	public BooleanStat getStatBoolean(String name) {
 		for (ItemComponent component : components.values()) {
-			StatBoolean componentValue = component.getStatBoolean(name);
+			BooleanStat componentValue = component.getStatBoolean(name);
 			if (componentValue != null) return componentValue;
 		}
 		return null;
 	}
 
 	@Override
-	public StatString getStatString(String name) {
+	public StringStat getStatString(String name) {
 		for (ItemComponent component : components.values()) {
-			StatString componentValue = component.getStatString(name);
+			StringStat componentValue = component.getStatString(name);
 			if (componentValue != null) return componentValue;
 		}
 		return null;
 	}
 
 	@Override
-	public StatStringSet getStatStringSet(String name) {
+	public StringSetStat getStatStringSet(String name) {
 		for (ItemComponent component : components.values()) {
-			StatStringSet componentValue = component.getStatStringSet(name);
+			StringSetStat componentValue = component.getStatStringSet(name);
 			if (componentValue != null) return componentValue;
 		}
 		return null;

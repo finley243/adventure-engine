@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.menu.action;
 
-import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.item.Inventory;
 import com.github.finley243.adventureengine.item.Item;
 
 public class MenuDataItemWorld extends MenuData {

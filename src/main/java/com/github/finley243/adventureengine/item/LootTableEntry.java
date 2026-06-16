@@ -1,10 +1,9 @@
 package com.github.finley243.adventureengine.item;
 
 import com.github.finley243.adventureengine.MathUtils;
-import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.gamedata.MutableRegistry;
-import com.github.finley243.adventureengine.item.component.ItemComponentMod;
-import com.github.finley243.adventureengine.item.component.ItemComponentModdable;
+import com.github.finley243.adventureengine.item.component.ModItemComponent;
+import com.github.finley243.adventureengine.item.component.ModdableItemComponent;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
 
 import java.util.Map;
@@ -52,16 +51,16 @@ public class LootTableEntry {
 			} else if (itemReference != null) {
 				for (int i = 0; i < count; i++) {
 					Item itemInstance = itemFactory.createWithGenID(itemReference);
-					if (modTable != null && itemInstance.hasComponentOfType(ItemComponentModdable.class) && MathUtils.randomCheck(modChance)) {
+					if (modTable != null && itemInstance.hasComponentOfType(ModdableItemComponent.class) && MathUtils.randomCheck(modChance)) {
 						Inventory modInventory = new Inventory(null);
 						modTable.generateItems(inventory, itemFactory, itemMutableRegistry);
 						for (Map.Entry<Item, Integer> entry : modInventory.getItemMap().entrySet()) {
 							Item modItem = entry.getKey();
 							int modCount = entry.getValue();
-							if (modItem.hasComponentOfType(ItemComponentMod.class)) {
+							if (modItem.hasComponentOfType(ModItemComponent.class)) {
 								for (int j = 0; j < modCount; j++) {
-									if (itemInstance.getComponentOfType(ItemComponentModdable.class).canInstallMod(modItem)) {
-										itemInstance.getComponentOfType(ItemComponentModdable.class).installMod(modItem);
+									if (itemInstance.getComponentOfType(ModdableItemComponent.class).canInstallMod(modItem)) {
+										itemInstance.getComponentOfType(ModdableItemComponent.class).installMod(modItem);
 									}
 								}
 							}

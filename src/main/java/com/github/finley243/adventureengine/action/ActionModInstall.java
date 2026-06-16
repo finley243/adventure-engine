@@ -5,7 +5,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.component.ItemComponentModdable;
+import com.github.finley243.adventureengine.item.component.ModdableItemComponent;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventoryCombine;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
@@ -36,7 +36,7 @@ public class ActionModInstall extends Action {
     @Override
     public void choose(Actor subject, int repeatActionCount) {
         subject.getInventory().removeItem(mod);
-        target.getComponentOfType(ItemComponentModdable.class).installMod(mod);
+        target.getComponentOfType(ModdableItemComponent.class).installMod(mod);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ActionModInstall extends Action {
         if (!resultSuper.canChoose()) {
             return resultSuper;
         }
-        if (!target.getComponentOfType(ItemComponentModdable.class).canInstallMod(mod)) {
+        if (!target.getComponentOfType(ModdableItemComponent.class).canInstallMod(mod)) {
             return new CanChooseResult(false, "Cannot be installed on this item");
         }
         return new CanChooseResult(true, null);
@@ -53,7 +53,7 @@ public class ActionModInstall extends Action {
 
     @Override
     public boolean canShow(Actor subject) {
-        return super.canShow(subject) && target.hasComponentOfType(ItemComponentModdable.class);
+        return super.canShow(subject) && target.hasComponentOfType(ModdableItemComponent.class);
     }
 
     @Override

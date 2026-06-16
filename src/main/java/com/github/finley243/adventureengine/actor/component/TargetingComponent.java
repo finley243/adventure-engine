@@ -11,7 +11,7 @@ import com.github.finley243.adventureengine.actor.ai.AreaTarget;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.component.ItemComponentWeapon;
+import com.github.finley243.adventureengine.item.component.WeaponItemComponent;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
@@ -390,7 +390,7 @@ public class TargetingComponent {
         }
         Set<AreaLink.DistanceCategory> combinedRanges = new HashSet<>();
         for (Item weapon : equippedWeapons) {
-            combinedRanges.addAll(weapon.getComponentOfType(ItemComponentWeapon.class).getRanges(Context.from(defaultContext).parentItem(weapon).build()));
+            combinedRanges.addAll(weapon.getComponentOfType(WeaponItemComponent.class).getRanges(Context.from(defaultContext).parentItem(weapon).build()));
         }
         return combinedRanges;
     }

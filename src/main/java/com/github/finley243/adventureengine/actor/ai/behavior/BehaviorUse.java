@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.actor.ai.behavior;
 
-import com.github.finley243.adventureengine.GameDataException;
+import com.github.finley243.adventureengine.load.GameDataException;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionObjectUseEnd;
 import com.github.finley243.adventureengine.action.ActionObjectUseStart;

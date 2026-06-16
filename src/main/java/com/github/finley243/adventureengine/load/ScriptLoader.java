@@ -1,7 +1,5 @@
 package com.github.finley243.adventureengine.load;
 
-import com.github.finley243.adventureengine.GameDataException;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;

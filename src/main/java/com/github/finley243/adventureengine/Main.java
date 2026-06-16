@@ -6,6 +6,7 @@ import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.gamedata.*;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.load.ConfigLoader;
+import com.github.finley243.adventureengine.load.GameDataException;
 import com.github.finley243.adventureengine.load.GameDataLoader;
 import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.quest.QuestManager;

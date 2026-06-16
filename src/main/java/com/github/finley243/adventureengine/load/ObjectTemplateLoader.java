@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.load;
 
-import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.condition.Condition;
@@ -87,24 +86,24 @@ public class ObjectTemplateLoader {
                 boolean enableTake = LoadUtils.attributeBool(element, "enableTake", true);
                 boolean enableStore = LoadUtils.attributeBool(element, "enableStore", true);
                 List<ActionCustom.CustomActionHolder> perItemActions = LoadUtils.loadCustomActions(element, "itemAction", scriptParser, actionRegistry, "ObjectComponentInventory(" + objectID + ")");
-                return new ObjectComponentTemplateInventory(startEnabled, actionsRestricted, lootTable, takePrompt, takePhrase, storePrompt, storePhrase, enableTake, enableStore, perItemActions);
+                return new InventoryObjectComponentTemplate(startEnabled, actionsRestricted, lootTable, takePrompt, takePhrase, storePrompt, storePhrase, enableTake, enableStore, perItemActions);
             }
             case "network" -> {
-                return new ObjectComponentTemplateNetwork(startEnabled, actionsRestricted);
+                return new NetworkObjectComponentTemplate(startEnabled, actionsRestricted);
             }
             case "link" -> {
-                Map<String, ObjectComponentTemplateLink.ObjectLinkData> linkData = new HashMap<>();
+                Map<String, LinkObjectComponentTemplate.ObjectLinkData> linkData = new HashMap<>();
                 for (Element linkDataElement : LoadUtils.directChildrenWithName(element, "link")) {
                     String linkID = LoadUtils.attribute(linkDataElement, "id", null);
                     String moveAction = LoadUtils.attribute(linkDataElement, "moveAction", null);
                     Condition conditionVisible = LoadUtils.loadCondition(LoadUtils.singleChildWithName(linkDataElement, "conditionVisible"), scriptParser, "ObjectComponentLink(" + objectID + ") - link visible condition");
                     boolean isVisible = LoadUtils.attributeBool(linkDataElement, "visible", false);
-                    linkData.put(linkID, new ObjectComponentTemplateLink.ObjectLinkData(moveAction, conditionVisible, isVisible));
+                    linkData.put(linkID, new LinkObjectComponentTemplate.ObjectLinkData(moveAction, conditionVisible, isVisible));
                 }
-                return new ObjectComponentTemplateLink(startEnabled, actionsRestricted, linkData);
+                return new LinkObjectComponentTemplate(startEnabled, actionsRestricted, linkData);
             }
             case "usable" -> {
-                Map<String, ObjectComponentTemplateUsable.UsableSlotData> usableSlotData = new HashMap<>();
+                Map<String, UsableObjectComponentTemplate.UsableSlotData> usableSlotData = new HashMap<>();
                 for (Element slotElement : LoadUtils.directChildrenWithName(element, "slot")) {
                     String slotID = LoadUtils.attribute(slotElement, "id", null);
                     String startPhrase = LoadUtils.singleTag(slotElement, "startPhrase", null);
@@ -120,13 +119,13 @@ public class ObjectTemplateLoader {
                     boolean shouldRemoveUserOnDeath = LoadUtils.attributeBool(slotElement, "removeUserOnDeath", false);
                     Set<String> componentsExposed = LoadUtils.setOfTags(slotElement, "exposedComponent");
                     List<ActionCustom.CustomActionHolder> usingActions = LoadUtils.loadCustomActions(slotElement, "usingAction", scriptParser, actionRegistry, "ObjectComponentUsable(" + objectID + ")");
-                    usableSlotData.put(slotID, new ObjectComponentTemplateUsable.UsableSlotData(startPhrase, endPhrase, endDeathPhrase, startPrompt, endPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas, userCanPerformLocalActions, userCanPerformParentActions, shouldRemoveUserOnDeath, componentsExposed, usingActions));
+                    usableSlotData.put(slotID, new UsableObjectComponentTemplate.UsableSlotData(startPhrase, endPhrase, endDeathPhrase, startPrompt, endPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas, userCanPerformLocalActions, userCanPerformParentActions, shouldRemoveUserOnDeath, componentsExposed, usingActions));
                 }
-                return new ObjectComponentTemplateUsable(startEnabled, actionsRestricted, usableSlotData);
+                return new UsableObjectComponentTemplate(startEnabled, actionsRestricted, usableSlotData);
             }
             case "vehicle" -> {
                 String vehicleType = LoadUtils.attribute(element, "vehicleType", null);
-                return new ObjectComponentTemplateVehicle(startEnabled, actionsRestricted, vehicleType);
+                return new VehicleObjectComponentTemplate(startEnabled, actionsRestricted, vehicleType);
             }
             default -> throw new GameDataException("ObjectComponentTemplate has invalid or missing type");
         }

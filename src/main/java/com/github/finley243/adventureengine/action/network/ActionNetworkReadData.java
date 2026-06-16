@@ -6,16 +6,16 @@ import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataNetwork;
-import com.github.finley243.adventureengine.network.NetworkNodeData;
+import com.github.finley243.adventureengine.network.DataNetworkNode;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class ActionNetworkReadData extends NetworkAction {
 
-    private final NetworkNodeData node;
+    private final DataNetworkNode node;
     private final WorldObject object;
 
-    public ActionNetworkReadData(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, NetworkNodeData node, WorldObject object) {
+    public ActionNetworkReadData(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, DataNetworkNode node, WorldObject object) {
         super(scriptRuntime, sensoryEventDispatcher);
         this.node = node;
         this.object = object;

@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.load;
 
-import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.actor.*;

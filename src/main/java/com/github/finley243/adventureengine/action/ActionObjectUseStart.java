@@ -10,20 +10,20 @@ import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataObject;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.world.object.component.ObjectComponentUsable;
+import com.github.finley243.adventureengine.world.object.component.UsableObjectComponent;
 
 public class ActionObjectUseStart extends Action {
 
-	private final ObjectComponentUsable component;
+	private final UsableObjectComponent component;
 	private final String slotID;
 
-	public ActionObjectUseStart(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, ObjectComponentUsable component, String slotID) {
+	public ActionObjectUseStart(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, UsableObjectComponent component, String slotID) {
         super(scriptRuntime, sensoryEventDispatcher);
         this.component = component;
 		this.slotID = slotID;
 	}
 
-	public ObjectComponentUsable getComponent() {
+	public UsableObjectComponent getComponent() {
 		return component;
 	}
 
@@ -50,13 +50,13 @@ public class ActionObjectUseStart extends Action {
 		}
 		Context context = getContext(subject);
 		if (subject.isUsingObject()) {
-			subject.getUsingObject().object().getComponentOfType(ObjectComponentUsable.class).removeUser(subject.getUsingObject().slot());
+			subject.getUsingObject().object().getComponentOfType(UsableObjectComponent.class).removeUser(subject.getUsingObject().slot());
 		}
 		if (component.userIsInCover(slotID)) {
 			subject.triggerScript("on_take_cover", context);
 		}
 		component.setUser(slotID, subject);
-		subject.setUsingObject(new ObjectComponentUsable.ObjectUserData(component.getObject(), slotID));
+		subject.setUsingObject(new UsableObjectComponent.ObjectUserData(component.getObject(), slotID));
 		sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get(component.getStartPhrase(slotID)), context, true, this, null));
 	}
 

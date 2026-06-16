@@ -1,7 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.item.Inventory;
 import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.HashSet;

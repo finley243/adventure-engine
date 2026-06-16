@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.load;
 
-import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.combat.DamageType;
@@ -66,7 +65,7 @@ public class ItemTemplateLoader {
             case "ammo" -> {
                 List<String> ammoWeaponEffects = LoadUtils.listOfTags(componentElement, "weaponEffect");
                 boolean ammoIsReusable = LoadUtils.attributeBool(componentElement, "isReusable", false);
-                return new ItemComponentTemplateAmmo(actionsRestricted, ammoWeaponEffects, ammoIsReusable);
+                return new AmmoItemComponentTemplate(actionsRestricted, ammoWeaponEffects, ammoIsReusable);
             }
             case "armor" -> {
                 Map<String, Integer> damageResistances = new HashMap<>();
@@ -84,19 +83,19 @@ public class ItemTemplateLoader {
                 }
                 Set<String> coveredLimbs = LoadUtils.setOfTags(componentElement, "coveredLimb");
                 boolean coversMainBody = LoadUtils.attributeBool(componentElement, "coversMainBody", false);
-                return new ItemComponentTemplateArmor(actionsRestricted, damageResistances, damageMults, coveredLimbs, coversMainBody);
+                return new ArmorItemComponentTemplate(actionsRestricted, damageResistances, damageMults, coveredLimbs, coversMainBody);
             }
             case "consumable" -> {
                 String consumePrompt = LoadUtils.singleTag(componentElement, "consumePrompt", null);
                 String consumePhrase = LoadUtils.singleTag(componentElement, "consumePhrase", null);
                 List<String> consumableEffects = LoadUtils.listOfTags(componentElement, "effect");
-                return new ItemComponentTemplateConsumable(actionsRestricted, consumePrompt, consumePhrase, consumableEffects);
+                return new ConsumableItemComponentTemplate(actionsRestricted, consumePrompt, consumePhrase, consumableEffects);
             }
             case "effectible" -> {
-                return new ItemComponentTemplateEffectible(actionsRestricted);
+                return new EffectableItemComponentTemplate(actionsRestricted);
             }
             case "equippable" -> {
-                Set<ItemComponentTemplateEquippable.EquippableSlotsData> equipSlots = new HashSet<>();
+                Set<EquippableItemComponentTemplate.EquippableSlotsData> equipSlots = new HashSet<>();
                 for (Element slotGroupElement : LoadUtils.directChildrenWithName(componentElement, "slotGroup")) {
                     Set<String> slotGroup = LoadUtils.setOfTags(slotGroupElement, "slot");
                     Set<String> exposedComponents = LoadUtils.setOfTags(slotGroupElement, "exposedComponent");
@@ -108,15 +107,15 @@ public class ItemTemplateLoader {
                         equippedEffects.add(effect);
                     }
                     List<ActionCustom.CustomActionHolder> equippedActions = LoadUtils.loadCustomActions(componentElement, "equippedAction", scriptParser, actionRegistry, "ItemComponent(" + itemID + ")");
-                    equipSlots.add(new ItemComponentTemplateEquippable.EquippableSlotsData(slotGroup, exposedComponents, equippedEffects, equippedActions));
+                    equipSlots.add(new EquippableItemComponentTemplate.EquippableSlotsData(slotGroup, exposedComponents, equippedEffects, equippedActions));
                 }
-                return new ItemComponentTemplateEquippable(actionsRestricted, equipSlots);
+                return new EquippableItemComponentTemplate(actionsRestricted, equipSlots);
             }
             case "magazine" -> {
                 Set<String> ammoTypes = LoadUtils.setOfTags(componentElement, "ammoType");
                 int magazineSize = LoadUtils.singleTagInt(componentElement, "size", 1);
                 int reloadActionPoints = LoadUtils.singleTagInt(componentElement, "reloadActionPoints", 1);
-                return new ItemComponentTemplateMagazine(actionsRestricted, ammoTypes, magazineSize, reloadActionPoints);
+                return new MagazineItemComponentTemplate(actionsRestricted, ammoTypes, magazineSize, reloadActionPoints);
             }
             case "mod" -> {
                 String modSlot = LoadUtils.attribute(componentElement, "modSlot", null);
@@ -127,7 +126,7 @@ public class ItemTemplateLoader {
                     if (effect == null) throw new GameDataException("ItemComponentTemplateMod has invalid effect");
                     effects.add(effect);
                 }
-                return new ItemComponentTemplateMod(actionsRestricted, modSlot, effects);
+                return new ModItemComponentTemplate(actionsRestricted, modSlot, effects);
             }
             case "moddable" -> {
                 Map<String, Integer> modSlots = new HashMap<>();
@@ -136,7 +135,7 @@ public class ItemTemplateLoader {
                     int slotCount = LoadUtils.attributeInt(modSlotElement, "count", 1);
                     modSlots.put(slotName, slotCount);
                 }
-                return new ItemComponentTemplateModdable(actionsRestricted, modSlots);
+                return new ModdableItemComponentTemplate(actionsRestricted, modSlots);
             }
             case "weapon" -> {
                 String weaponClassID = LoadUtils.attribute(componentElement, "class", null);
@@ -159,7 +158,7 @@ public class ItemTemplateLoader {
                     if (effect == null) throw new GameDataException("ItemComponentTemplateWeapon has invalid target effect");
                     weaponTargetEffects.add(effect);
                 }
-                return new ItemComponentTemplateWeapon(actionsRestricted, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects);
+                return new WeaponItemComponentTemplate(actionsRestricted, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects);
             }
             default -> throw new GameDataException("ItemComponentTemplate has invalid or missing type");
         }

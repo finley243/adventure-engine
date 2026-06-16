@@ -1,9 +1,9 @@
 package com.github.finley243.adventureengine;
 
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.NPCController;
-import com.github.finley243.adventureengine.actor.PlayerController;
-import com.github.finley243.adventureengine.actor.TurnController;
+import com.github.finley243.adventureengine.actor.controller.NPCTurnController;
+import com.github.finley243.adventureengine.actor.controller.PlayerTurnController;
+import com.github.finley243.adventureengine.actor.controller.TurnController;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.event.UIEventBus;
@@ -55,9 +55,9 @@ public class Game {
 		for (Actor actor : actorRegistry.getAll()) {
 			TurnController controller;
 			if (actor.isPlayer()) {
-				controller = new PlayerController(actor, sensoryEventDispatcher, menuManager, eventBus, areaRegistry, () -> continueGame = false);
+				controller = new PlayerTurnController(actor, sensoryEventDispatcher, menuManager, eventBus, areaRegistry, () -> continueGame = false);
 			} else {
-				controller = new NPCController(actor, sensoryEventDispatcher, menuManager);
+				controller = new NPCTurnController(actor, sensoryEventDispatcher, menuManager);
 			}
 			actorControllers.put(actor, controller);
 		}

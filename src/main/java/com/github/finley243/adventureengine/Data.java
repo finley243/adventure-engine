@@ -11,6 +11,7 @@ import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.load.DataLoader;
+import com.github.finley243.adventureengine.load.GameDataException;
 import com.github.finley243.adventureengine.load.ScriptParser;
 import com.github.finley243.adventureengine.network.NetworkNode;
 import com.github.finley243.adventureengine.scene.Scene;
