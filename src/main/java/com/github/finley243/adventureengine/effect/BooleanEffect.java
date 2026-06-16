@@ -3,9 +3,9 @@ package com.github.finley243.adventureengine.effect;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.load.GameDataException;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.stat.BooleanStat;
 import com.github.finley243.adventureengine.stat.Stat;
 import com.github.finley243.adventureengine.stat.StatHolder;
-import com.github.finley243.adventureengine.stat.BooleanStat;
 
 public class BooleanEffect extends Effect {
 

@@ -1,7 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.expression.*;
+import com.github.finley243.adventureengine.expression.Expression;
 
 public class ScriptGetGameValue extends Script {
 

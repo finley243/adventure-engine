@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Bark;
 import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.actor.ai.AreaTarget;
+import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
@@ -53,12 +54,14 @@ public class TargetingComponent {
         }
     }
 
+    private final Pathfinder pathfinder;
     private final Actor actor;
     private final Context defaultContext;
     private final Map<Actor, DetectedActor> detectedActors;
     private AlertState alertState;
 
-    public TargetingComponent(Actor actor) {
+    public TargetingComponent(Pathfinder pathfinder, Actor actor) {
+        this.pathfinder = pathfinder;
         this.actor = actor;
         this.defaultContext = Context.builder().subject(actor).build();
         this.detectedActors = new HashMap<>();
@@ -70,7 +73,7 @@ public class TargetingComponent {
     }
 
     public void updateTurn() {
-        Set<Actor> lineOfSightActors = actor.getLineOfSightActors();
+        Set<Actor> lineOfSightActors = actor.getLineOfSightActors(pathfinder);
         detectedActors.entrySet().removeIf(entry -> {
             if (lineOfSightActors.contains(entry.getKey()) && entry.getKey().isVisible(actor)) {
                 entry.getValue().lostVisualCounter = 0;
@@ -94,7 +97,7 @@ public class TargetingComponent {
     }
 
     public void update() {
-        Set<Actor> lineOfSightActors = actor.getLineOfSightActors();
+        Set<Actor> lineOfSightActors = actor.getLineOfSightActors(pathfinder);
         for (Actor lineOfSightActor : lineOfSightActors) {
             if (lineOfSightActor.isVisible(actor)) {
                 processDetectionEvent(lineOfSightActor, getPassiveDetectionChance(lineOfSightActor));
@@ -126,11 +129,11 @@ public class TargetingComponent {
                 targetData.areaTarget = null;
             }
         } else if (targetData.areaTarget == null) {
-            targetData.areaTarget = new AreaTarget(idealAreas(targetData.lastKnownArea), UtilityUtils.getPursueTargetUtility(actor, target), true, pathfinder);
+            targetData.areaTarget = new AreaTarget(idealAreas(targetData.lastKnownArea), UtilityUtils.getPursueTargetUtility(actor, target, pathfinder), true, pathfinder);
             actor.addPursueTarget(targetData.areaTarget);
         } else {
             targetData.areaTarget.setTargetAreas(idealAreas(targetData.lastKnownArea));
-            targetData.areaTarget.setTargetUtility(UtilityUtils.getPursueTargetUtility(actor, target));
+            targetData.areaTarget.setTargetUtility(UtilityUtils.getPursueTargetUtility(actor, target, pathfinder));
         }
     }
 
@@ -397,7 +400,7 @@ public class TargetingComponent {
 
     private Set<Area> idealAreas(Area targetArea) {
         Set<AreaLink.DistanceCategory> idealDistances = idealDistances();
-        return targetArea.visibleAreasInRange(actor, idealDistances);
+        return targetArea.visibleAreasInRange(actor, idealDistances, pathfinder);
     }
 
     public static class DetectedActor {

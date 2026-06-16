@@ -2,12 +2,14 @@ package com.github.finley243.adventureengine.load;
 
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionTemplate;
+import com.github.finley243.adventureengine.combat.DamageType;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.object.template.*;
 import org.w3c.dom.Element;
 
@@ -18,17 +20,21 @@ public class ObjectTemplateLoader {
     private static final String NAME_OBJECT_TEMPLATE = "object";
 
     private final ScriptParser scriptParser;
+    private final ScriptRuntime scriptRuntime;
     private final SceneLoader sceneLoader;
     private final LootTableLoader lootTableLoader;
     private final Registry<ActionTemplate> actionRegistry;
     private final Registry<LootTable> lootTableRegistry;
+    private final Registry<DamageType> damageTypeRegistry;
 
-    public ObjectTemplateLoader(ScriptParser scriptParser, SceneLoader sceneLoader, LootTableLoader lootTableLoader, Registry<ActionTemplate> actionRegistry, Registry<LootTable> lootTableRegistry) {
+    public ObjectTemplateLoader(ScriptParser scriptParser, ScriptRuntime scriptRuntime, SceneLoader sceneLoader, LootTableLoader lootTableLoader, Registry<ActionTemplate> actionRegistry, Registry<LootTable> lootTableRegistry, Registry<DamageType> damageTypeRegistry) {
         this.scriptParser = scriptParser;
+        this.scriptRuntime = scriptRuntime;
         this.sceneLoader = sceneLoader;
         this.lootTableLoader = lootTableLoader;
         this.actionRegistry = actionRegistry;
         this.lootTableRegistry = lootTableRegistry;
+        this.damageTypeRegistry = damageTypeRegistry;
     }
 
     public Map<String, ObjectTemplate> load(Element element) {
@@ -42,10 +48,12 @@ public class ObjectTemplateLoader {
         boolean isProperName = LoadUtils.attributeBool(nameElement, "proper", false);
         Scene description = sceneLoader.parseScene(LoadUtils.singleChildWithName(element, "description"));
         int maxHP = LoadUtils.attributeInt(element, "maxHP", 0);
-        Map<String, Integer> damageResistances = new HashMap<>();
-        Map<String, Float> damageMults = new HashMap<>();
+        Map<DamageType, Integer> damageResistances = new HashMap<>();
+        Map<DamageType, Float> damageMults = new HashMap<>();
         for (Element damageElement : LoadUtils.directChildrenWithName(element, "damage")) {
-            String damageType = LoadUtils.attribute(damageElement, "type", null);
+            String damageTypeID = LoadUtils.attribute(damageElement, "type", null);
+            DamageType damageType = damageTypeRegistry.getFromID(damageTypeID);
+            if (damageType == null) throw new GameDataException("ObjectTemplate has invalid damage type: " + damageTypeID);
             Integer damageResistance = LoadUtils.attributeInt(damageElement, "resistance", null);
             Float damageMult = LoadUtils.attributeFloat(damageElement, "mult", null);
             if (damageResistance != null) {
@@ -72,7 +80,7 @@ public class ObjectTemplateLoader {
         return new ObjectTemplate(ID, name, isProperName, description, maxHP, damageResistances, damageMults, scripts, customActions, networkActions, components, localVarsDefault);
     }
 
-    private ObjectComponentTemplate parseObjectComponentTemplate(Element element, String objectID) throws GameDataException {
+    private ObjectComponentTemplate parseObjectComponentTemplate(Element element, String objectID) {
         String type = LoadUtils.attribute(element, "type", null);
         boolean startEnabled = LoadUtils.attributeBool(element, "startEnabled", true);
         boolean actionsRestricted = LoadUtils.attributeBool(element, "restricted", false);
@@ -95,8 +103,10 @@ public class ObjectTemplateLoader {
                 Map<String, LinkObjectComponentTemplate.ObjectLinkData> linkData = new HashMap<>();
                 for (Element linkDataElement : LoadUtils.directChildrenWithName(element, "link")) {
                     String linkID = LoadUtils.attribute(linkDataElement, "id", null);
-                    String moveAction = LoadUtils.attribute(linkDataElement, "moveAction", null);
-                    Condition conditionVisible = LoadUtils.loadCondition(LoadUtils.singleChildWithName(linkDataElement, "conditionVisible"), scriptParser, "ObjectComponentLink(" + objectID + ") - link visible condition");
+                    String moveActionID = LoadUtils.attribute(linkDataElement, "moveAction", null);
+                    ActionTemplate moveAction = actionRegistry.getFromID(moveActionID);
+                    if (moveAction == null) throw new GameDataException("ObjectComponentTemplate has invalid move action reference: " + moveActionID);
+                    Condition conditionVisible = LoadUtils.loadCondition(LoadUtils.singleChildWithName(linkDataElement, "conditionVisible"), scriptParser, "ObjectComponentLink(" + objectID + ") - link visible condition", scriptRuntime);
                     boolean isVisible = LoadUtils.attributeBool(linkDataElement, "visible", false);
                     linkData.put(linkID, new LinkObjectComponentTemplate.ObjectLinkData(moveAction, conditionVisible, isVisible));
                 }

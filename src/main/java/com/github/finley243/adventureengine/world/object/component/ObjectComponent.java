@@ -3,9 +3,9 @@ package com.github.finley243.adventureengine.world.object.component;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionDependencies;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.script.ScriptValueHolder;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -30,14 +30,14 @@ public abstract class ObjectComponent implements ScriptValueHolder {
         return template;
     }
 
-    public List<Action> getActions(Actor subject) {
+    public List<Action> getActions(Actor subject, ActionDependencies dependencies) {
         if (isEnabled && !actionsRestricted()) {
-            return getPossibleActions(subject, );
+            return getPossibleActions(subject, dependencies);
         }
         return new ArrayList<>();
     }
 
-    protected abstract List<Action> getPossibleActions(Actor subject, ScriptRuntime scriptRuntime);
+    protected abstract List<Action> getPossibleActions(Actor subject, ActionDependencies dependencies);
 
     private boolean actionsRestricted() {
         return getTemplate().actionsRestricted();

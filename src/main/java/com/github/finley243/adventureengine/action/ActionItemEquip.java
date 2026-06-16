@@ -4,7 +4,6 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.component.EquippableItemComponent;
@@ -12,7 +11,6 @@ import com.github.finley243.adventureengine.item.component.WeaponItemComponent;
 import com.github.finley243.adventureengine.item.template.EquippableItemComponentTemplate;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
-import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 
@@ -24,8 +22,8 @@ public class ActionItemEquip extends Action {
     private final Item item;
     private final EquippableItemComponentTemplate.EquippableSlotsData slotsData;
 
-    public ActionItemEquip(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Item item, EquippableItemComponentTemplate.EquippableSlotsData slotsData) {
-        super(scriptRuntime, sensoryEventDispatcher);
+    public ActionItemEquip(ActionDependencies dependencies, Item item, EquippableItemComponentTemplate.EquippableSlotsData slotsData) {
+        super(dependencies);
         this.item = item;
         this.slotsData = slotsData;
     }

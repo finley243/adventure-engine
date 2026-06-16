@@ -7,8 +7,8 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.effect.Effectable;
 import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.item.component.ItemComponent;
 import com.github.finley243.adventureengine.item.component.EffectableItemComponent;
+import com.github.finley243.adventureengine.item.component.ItemComponent;
 import com.github.finley243.adventureengine.item.component.ItemComponentFactory;
 import com.github.finley243.adventureengine.item.template.ItemComponentTemplate;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
@@ -17,11 +17,15 @@ import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.script.ScriptValueHolder;
-import com.github.finley243.adventureengine.stat.*;
+import com.github.finley243.adventureengine.stat.Stat;
+import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.TextContext;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Item extends GameInstanced implements Noun, ScriptValueHolder, StatHolder, Effectable {
 
@@ -30,7 +34,7 @@ public class Item extends GameInstanced implements Noun, ScriptValueHolder, Stat
 	private final ItemTemplate template;
 	private final Map<Class<? extends ItemComponent>, ItemComponent> components;
 
-	public Item(String ID, ItemTemplate template, ItemComponentFactory itemComponentFactory) {
+	Item(String ID, ItemTemplate template, ItemComponentFactory itemComponentFactory) {
 		super(ID);
 		this.template = template;
 		this.currentInventory = null;
@@ -80,6 +84,7 @@ public class Item extends GameInstanced implements Noun, ScriptValueHolder, Stat
 		return getTemplate().getDescription();
 	}
 
+	// TODO - Remove (move Item round processing to game loop, using item registry)
 	public void onStartRound() {
 		for (ItemComponent component : components.values()) {
 			component.onStartRound();
@@ -121,21 +126,21 @@ public class Item extends GameInstanced implements Noun, ScriptValueHolder, Stat
 		return false;
     }
 	
-	public List<Action> inventoryActions(Actor subject, ScriptRuntime scriptRuntime) {
+	public List<Action> inventoryActions(Actor subject, ActionDependencies dependencies) {
 		List<Action> actions = new ArrayList<>();
-		actions.add(new ActionItemDrop(this));
+		actions.add(new ActionItemDrop(dependencies, this));
 		if (subject.getInventory().itemCount(this) > 1) {
-			actions.add(new ActionItemDropAll(this));
+			actions.add(new ActionItemDropAll(dependencies, this));
 		}
 		if (this.getDescription() != null) {
-			actions.add(new ActionInspectItem(this));
+			actions.add(new ActionInspectItem(dependencies, this));
 		}
 		for (ItemComponent component : components.values()) {
-			actions.addAll(component.getInventoryActions(scriptRuntime, subject));
+			actions.addAll(component.getInventoryActions(dependencies, subject));
 		}
 		for (ActionCustom.CustomActionHolder customAction : getTemplate().getCustomActions()) {
 			ActionTemplate customActionTemplate = customAction.action();
-			actions.add(new ActionCustom(scriptRuntime, null, null, this, null, customActionTemplate, customAction.parameters(), new MenuDataInventory(this, subject.getInventory()), false));
+			actions.add(new ActionCustom(dependencies, null, null, this, null, customActionTemplate, customAction.parameters(), new MenuDataInventory(this, subject.getInventory()), false));
 		}
 		return actions;
 	}

@@ -1,17 +1,16 @@
 package com.github.finley243.adventureengine.action.attack;
 
+import com.github.finley243.adventureengine.action.ActionDependencies;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.combat.DamageType;
 import com.github.finley243.adventureengine.combat.AttackType;
+import com.github.finley243.adventureengine.combat.DamageType;
 import com.github.finley243.adventureengine.effect.Effect;
-import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.component.AmmoItemComponent;
 import com.github.finley243.adventureengine.item.component.MagazineItemComponent;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataAttackArea;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 
@@ -22,8 +21,8 @@ public class ActionAttackArea extends ActionAttack {
 
     private final Item weapon;
 
-    public ActionAttackArea(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, AttackType attackType, Item weapon, Area area, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, AttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, Script damage, DamageType damageType, float armorMult, List<Effect> targetEffects, Script hitChanceExpression, Script hitChanceOverallExpression, float hitChanceMult, boolean isLoud, AreaLink.DistanceCategory targetDistance) {
-        super(scriptRuntime, sensoryEventDispatcher, attackType, weapon, area.getAttackTargets(), null, area, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffects, hitChanceExpression, hitChanceOverallExpression, hitChanceMult, isLoud, targetDistance);
+    public ActionAttackArea(ActionDependencies dependencies, AttackType attackType, Item weapon, Area area, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, AttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, Script damage, DamageType damageType, float armorMult, List<Effect> targetEffects, Script hitChanceExpression, Script hitChanceOverallExpression, float hitChanceMult, boolean isLoud, AreaLink.DistanceCategory targetDistance) {
+        super(dependencies, attackType, weapon, area.getAttackTargets(), null, area, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffects, hitChanceExpression, hitChanceOverallExpression, hitChanceMult, isLoud, targetDistance);
         this.weapon = weapon;
     }
 

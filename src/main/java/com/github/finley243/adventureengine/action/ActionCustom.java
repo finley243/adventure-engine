@@ -3,14 +3,11 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
-import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.LangUtils;
-import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
@@ -28,8 +25,8 @@ public class ActionCustom extends Action {
     private final MenuData menuData;
     private final boolean isMove;
 
-    public ActionCustom(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Actor actor, WorldObject object, Item item, Area area, ActionTemplate template, Map<String, Script> parameters, MenuData menuData, boolean isMove) {
-        super(scriptRuntime, sensoryEventDispatcher);
+    public ActionCustom(ActionDependencies dependencies, Actor actor, WorldObject object, Item item, Area area, ActionTemplate template, Map<String, Script> parameters, MenuData menuData, boolean isMove) {
+        super(dependencies);
         this.actor = actor;
         this.object = object;
         this.item = item;
@@ -62,7 +59,7 @@ public class ActionCustom extends Action {
     @Override
     public String getPrompt(Actor subject) {
         Map<String, String> contextVars = getParameterStrings(subject);
-        return LangUtils.capitalize(TextGen.generateVarsOnly(getTemplate().getPrompt(), contextVars));
+        return LangUtils.capitalize(textGen.generateVarsOnly(getTemplate().getPrompt(), contextVars));
     }
 
     @Override
@@ -94,7 +91,7 @@ public class ActionCustom extends Action {
             return resultSuper;
         }
         for (ActionTemplate.ConditionWithMessage customCondition : getTemplate().getSelectConditions()) {
-            if (!customCondition.condition().isMet(scriptRuntime, getContextWithParameters(subject))) {
+            if (!customCondition.condition().isMet(getContextWithParameters(subject))) {
                 return new CanChooseResult(false, customCondition.message());
             }
         }
@@ -140,7 +137,7 @@ public class ActionCustom extends Action {
 
     @Override
     public boolean canShow(Actor subject) {
-        return getTemplate().getShowCondition() == null || getTemplate().getShowCondition().isMet(scriptRuntime, getContextWithParameters(subject));
+        return getTemplate().getShowCondition() == null || getTemplate().getShowCondition().isMet(getContextWithParameters(subject));
     }
 
     private Context getContextWithParameters(Actor subject) {

@@ -25,7 +25,7 @@ public abstract class Stat {
     }
 
     protected boolean shouldApplyMod(Condition condition, Context context) {
-        return condition == null || condition.isMet(scriptRuntime, context);
+        return condition == null || condition.isMet(context);
     }
 
 }

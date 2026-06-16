@@ -1,18 +1,18 @@
 package com.github.finley243.adventureengine.network;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionDependencies;
 import com.github.finley243.adventureengine.action.network.ActionNetworkBreach;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.script.ScriptValueHolder;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public abstract class NetworkNode extends GameInstanced implements ScriptValueHolder {
 
@@ -25,9 +25,7 @@ public abstract class NetworkNode extends GameInstanced implements ScriptValueHo
         this.name = name;
     }
 
-    public void init(Game game, Map<String, WorldObject> objects) {
-
-    }
+    public void resolveReferences(Registry<WorldObject> objectRegistry) {}
 
     public String getName() {
         return name;
@@ -41,17 +39,17 @@ public abstract class NetworkNode extends GameInstanced implements ScriptValueHo
         this.isBreached = state;
     }
 
-    public List<Action> actions(Game game, Actor subject, WorldObject object) {
+    public List<Action> actions(Actor subject, ActionDependencies dependencies, WorldObject object) {
         List<Action> actions = new ArrayList<>();
         if (isBreached()) {
-            actions.addAll(breachedActions(game, subject, object));
+            actions.addAll(breachedActions(subject, dependencies, object));
         } else {
-            actions.add(new ActionNetworkBreach(this, object));
+            actions.add(new ActionNetworkBreach(dependencies, this, object));
         }
         return actions;
     }
 
-    protected abstract List<Action> breachedActions(Game game, Actor subject, WorldObject object);
+    protected abstract List<Action> breachedActions(Actor subject, ActionDependencies dependencies, WorldObject object);
 
     @Override
     public Expression getScriptValue(String name, Context context) {

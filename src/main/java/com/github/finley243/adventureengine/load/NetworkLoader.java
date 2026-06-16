@@ -1,9 +1,9 @@
 package com.github.finley243.adventureengine.load;
 
-import com.github.finley243.adventureengine.network.NetworkNode;
 import com.github.finley243.adventureengine.network.ControlNetworkNode;
 import com.github.finley243.adventureengine.network.DataNetworkNode;
 import com.github.finley243.adventureengine.network.GroupNetworkNode;
+import com.github.finley243.adventureengine.network.NetworkNode;
 import org.w3c.dom.Element;
 
 import java.util.HashSet;

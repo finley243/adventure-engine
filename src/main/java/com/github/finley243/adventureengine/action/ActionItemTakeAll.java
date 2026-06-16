@@ -3,12 +3,10 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataItemWorld;
-import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
 
@@ -17,8 +15,8 @@ public class ActionItemTakeAll extends Action {
 	private final Area area;
 	private final Item item;
 
-	public ActionItemTakeAll(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Area area, Item item) {
-        super(scriptRuntime, sensoryEventDispatcher);
+	public ActionItemTakeAll(ActionDependencies dependencies, Area area, Item item) {
+        super(dependencies);
         if (item.hasState()) throw new IllegalArgumentException("Cannot perform ActionItemTakeAll on item with state");
 		this.area = area;
 		this.item = item;

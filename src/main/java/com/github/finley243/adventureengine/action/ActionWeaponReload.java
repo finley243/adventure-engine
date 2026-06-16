@@ -3,15 +3,12 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.expression.StringExpression;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.component.AmmoItemComponent;
 import com.github.finley243.adventureengine.item.component.MagazineItemComponent;
+import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventoryCombine;
-import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.Phrases;
 
 public class ActionWeaponReload extends Action {
@@ -21,10 +18,10 @@ public class ActionWeaponReload extends Action {
 	public static final float RELOAD_UTILITY_COMBAT_EMPTY = 0.8f;
 
 	private final Item weapon;
-	private final Item ammoType;
+	private final ItemTemplate ammoType;
 	
-	public ActionWeaponReload(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Item weapon, Item ammoType) {
-        super(scriptRuntime, sensoryEventDispatcher);
+	public ActionWeaponReload(ActionDependencies dependencies, Item weapon, ItemTemplate ammoType) {
+        super(dependencies);
         this.weapon = weapon;
 		this.ammoType = ammoType;
 	}
@@ -46,15 +43,14 @@ public class ActionWeaponReload extends Action {
 		subject.triggerScript("on_reload", Context.builder().subject(subject).target(subject).parentItem(weapon).build());
 		if (subject.isPlayer()) {
 			if (!ammoType.equals(weapon.getComponentOfType(MagazineItemComponent.class).getLoadedAmmoType()) && weapon.getComponentOfType(MagazineItemComponent.class).getAmmoRemaining() > 0) {
-				subject.getInventory().addItems(ammoType.getTemplateID(), weapon.getComponentOfType(MagazineItemComponent.class).getAmmoRemaining());
+				subject.getInventory().addItems(ammoType.getID(), weapon.getComponentOfType(MagazineItemComponent.class).getAmmoRemaining());
 				weapon.getComponentOfType(MagazineItemComponent.class).emptyAmmo();
 			}
-			int ammoInInventory = subject.getInventory().itemCount(ammoType);
+			int ammoInInventory = subject.getInventory().itemCount(ammoType.getID());
 			int reloadAmount = Math.min(weapon.getComponentOfType(MagazineItemComponent.class).reloadCapacity(), ammoInInventory);
 			weapon.getComponentOfType(MagazineItemComponent.class).loadAmmo(reloadAmount);
 			weapon.getComponentOfType(MagazineItemComponent.class).setLoadedAmmoType(ammoType);
-			ammoType.getComponentOfType(AmmoItemComponent.class).onLoad(weapon);
-			subject.getInventory().removeItems(ammoType.getTemplateID(), reloadAmount);
+			subject.getInventory().removeItems(ammoType.getID(), reloadAmount);
 		} else {
 			weapon.getComponentOfType(MagazineItemComponent.class).loadAmmo(weapon.getComponentOfType(MagazineItemComponent.class).reloadCapacity());
 			weapon.getComponentOfType(MagazineItemComponent.class).setLoadedAmmoType(ammoType);
@@ -69,10 +65,10 @@ public class ActionWeaponReload extends Action {
 		if (!resultSuper.canChoose()) {
 			return resultSuper;
 		}
-		if (weapon.getComponentOfType(MagazineItemComponent.class).getAmmoFraction() >= 1.0f && weapon.getComponentOfType(MagazineItemComponent.class).getLoadedAmmoType() != null && weapon.getComponentOfType(MagazineItemComponent.class).getLoadedAmmoType().getTemplateID().equals(ammoType.getTemplateID())) {
+		if (weapon.getComponentOfType(MagazineItemComponent.class).getAmmoFraction() >= 1.0f && weapon.getComponentOfType(MagazineItemComponent.class).getLoadedAmmoType() != null && weapon.getComponentOfType(MagazineItemComponent.class).getLoadedAmmoType().equals(ammoType)) {
 			return new CanChooseResult(false, "Ammo already loaded");
 		}
-		if (subject.isPlayer() && !subject.getInventory().hasItem(ammoType.getTemplateID())) {
+		if (subject.isPlayer() && !subject.getInventory().hasItem(ammoType.getID())) {
 			return new CanChooseResult(false, "No ammo in inventory");
 		}
 		return new CanChooseResult(true, null);
@@ -80,7 +76,7 @@ public class ActionWeaponReload extends Action {
 
 	@Override
 	public int actionPoints(Actor subject) {
-		Context context = Context.builder().subject(subject).target(subject).parentItem(weapon).parentAction(this).addVariable("ammo_type", new StringExpression(ammoType.getTemplateID())).build();
+		Context context = Context.builder().subject(subject).target(subject).parentItem(weapon).parentAction(this).addVariable("ammo_type", Expression.valueHolder(ammoType)).build();
 		return weapon.getComponentOfType(MagazineItemComponent.class).getReloadActionPoints(context);
 	}
 
@@ -99,7 +95,7 @@ public class ActionWeaponReload extends Action {
 
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataInventoryCombine(weapon, subject.getInventory(), ammoType, subject.getInventory());
+		return new MenuDataInventoryCombine(weapon, subject.getInventory(), null, ammoType, subject.getInventory());
 	}
 
 	@Override

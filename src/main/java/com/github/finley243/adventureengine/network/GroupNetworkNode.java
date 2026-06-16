@@ -1,8 +1,8 @@
 package com.github.finley243.adventureengine.network;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionDependencies;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -22,10 +22,10 @@ public class GroupNetworkNode extends NetworkNode {
     }
 
     @Override
-    protected List<Action> breachedActions(Game game, Actor subject, WorldObject object) {
+    protected List<Action> breachedActions(Actor subject, ActionDependencies dependencies, WorldObject object) {
         List<Action> actions = new ArrayList<>();
         for (NetworkNode childNode : childNodes) {
-            actions.addAll(childNode.actions(game, subject, object));
+            actions.addAll(childNode.actions(subject, dependencies, object));
         }
         return actions;
     }

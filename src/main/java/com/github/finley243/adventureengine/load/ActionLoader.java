@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.load;
 import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import org.w3c.dom.Element;
 
 import java.util.ArrayList;
@@ -15,9 +16,11 @@ public class ActionLoader {
     private static final String NAME_ACTION = "action";
 
     private final ScriptParser scriptParser;
+    private final ScriptRuntime scriptRuntime;
 
-    public ActionLoader(ScriptParser scriptParser) {
+    public ActionLoader(ScriptParser scriptParser, ScriptRuntime scriptRuntime) {
         this.scriptParser = scriptParser;
+        this.scriptRuntime = scriptRuntime;
     }
 
     public Map<String, ActionTemplate> load(Element element) {
@@ -37,12 +40,12 @@ public class ActionLoader {
         List<ActionTemplate.ConditionWithMessage> selectConditions = new ArrayList<>();
         int conditionNum = 1;
         for (Element conditionElement : LoadUtils.directChildrenWithName(element, "condition")) {
-            Condition condition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(conditionElement, "script"), scriptParser, "ActionTemplate(" + ID + ") - condition " + conditionNum);
+            Condition condition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(conditionElement, "script"), scriptParser, "ActionTemplate(" + ID + ") - condition " + conditionNum, scriptRuntime);
             String blockMessage = LoadUtils.singleTag(conditionElement, "blockMessage", null);
             selectConditions.add(new ActionTemplate.ConditionWithMessage(condition, blockMessage));
             conditionNum += 1;
         }
-        Condition showCondition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, "conditionShow"), scriptParser, "ActionTemplate(" + ID + ") - show condition");
+        Condition showCondition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, "conditionShow"), scriptParser, "ActionTemplate(" + ID + ") - show condition", scriptRuntime);
         Script script = LoadUtils.loadScript(LoadUtils.singleChildWithName(element, "script"), scriptParser, "ActionTemplate(" + ID + ") - script");
         return new ActionTemplate(ID, prompt, parameters, actionPoints, selectConditions, showCondition, script);
     }

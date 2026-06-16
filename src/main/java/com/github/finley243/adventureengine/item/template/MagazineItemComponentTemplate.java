@@ -4,18 +4,18 @@ import java.util.Set;
 
 public class MagazineItemComponentTemplate extends ItemComponentTemplate {
 
-    private final Set<String> ammoTypes;
+    private final Set<ItemTemplate> ammoTypes;
     private final int magazineSize;
     private final int reloadActionPoints;
 
-    public MagazineItemComponentTemplate(boolean actionsRestricted, Set<String> ammoTypes, int magazineSize, int reloadActionPoints) {
+    public MagazineItemComponentTemplate(boolean actionsRestricted, Set<ItemTemplate> ammoTypes, int magazineSize, int reloadActionPoints) {
         super(actionsRestricted);
         this.ammoTypes = ammoTypes;
         this.magazineSize = magazineSize;
         this.reloadActionPoints = reloadActionPoints;
     }
 
-    public Set<String> getAmmoTypes() {
+    public Set<ItemTemplate> getAmmoTypes() {
         return ammoTypes;
     }
 

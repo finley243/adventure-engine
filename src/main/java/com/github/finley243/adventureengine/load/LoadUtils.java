@@ -6,6 +6,7 @@ import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -171,10 +172,10 @@ public class LoadUtils {
 		return value.equalsIgnoreCase("t") || value.equalsIgnoreCase("f") || value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false");
 	}
 
-	public static Condition loadCondition(Element element, ScriptParser scriptParser, String sourceName) {
+	public static Condition loadCondition(Element element, ScriptParser scriptParser, String sourceName, ScriptRuntime scriptRuntime) {
 		if (element == null) return null;
 		Script conditionScript = loadScriptExpression(element, scriptParser, sourceName);
-		return new Condition(conditionScript);
+		return new Condition(scriptRuntime, conditionScript);
 	}
 
 	public static Script loadScript(Element element, ScriptParser scriptParser, String sourceName) {

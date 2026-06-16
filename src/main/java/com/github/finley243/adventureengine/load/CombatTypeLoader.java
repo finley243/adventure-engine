@@ -2,8 +2,8 @@ package com.github.finley243.adventureengine.load;
 
 import com.github.finley243.adventureengine.actor.Skill;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
-import com.github.finley243.adventureengine.combat.DamageType;
 import com.github.finley243.adventureengine.combat.AttackType;
+import com.github.finley243.adventureengine.combat.DamageType;
 import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.gamedata.Registry;

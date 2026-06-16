@@ -1,8 +1,8 @@
 package com.github.finley243.adventureengine.world.object.component;
 
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionDependencies;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 import com.github.finley243.adventureengine.world.object.template.VehicleObjectComponentTemplate;
@@ -28,7 +28,7 @@ public class VehicleObjectComponent extends ObjectComponent {
     }
 
     @Override
-    protected List<Action> getPossibleActions(Actor subject, ScriptRuntime scriptRuntime) {
+    protected List<Action> getPossibleActions(Actor subject, ActionDependencies dependencies) {
         List<Action> actions = new ArrayList<>();
         if (objectOverride != null) {
             actions.addAll(objectOverride.getArea().getMoveActions(subject, getTemplateVehicle().getVehicleType(), objectOverride));

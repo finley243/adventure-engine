@@ -6,7 +6,6 @@ import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.stat.Stat;
 import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.stat.StringSetStat;
-import com.github.finley243.adventureengine.stat.StringStat;
 
 import java.util.Set;
 

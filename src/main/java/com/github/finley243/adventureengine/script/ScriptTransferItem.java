@@ -1,8 +1,8 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.item.Inventory;
 import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.item.Inventory;
 import com.github.finley243.adventureengine.item.Item;
 
 import java.util.Map;

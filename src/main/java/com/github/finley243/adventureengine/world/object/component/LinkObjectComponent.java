@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
+import com.github.finley243.adventureengine.action.ActionDependencies;
 import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.menu.action.MenuDataMove;
@@ -12,8 +13,8 @@ import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.object.WorldObject;
-import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 import com.github.finley243.adventureengine.world.object.template.LinkObjectComponentTemplate;
+import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 
 import java.util.*;
 
@@ -46,7 +47,7 @@ public class LinkObjectComponent extends ObjectComponent {
     public boolean isLinkedAreaVisible(ScriptRuntime scriptRuntime, String linkID, Actor actor) {
         LinkObjectComponentTemplate.ObjectLinkData linkData = getTemplateLink().getLinkData().get(linkID);
         Context context = Context.builder().subject(actor).target(actor).parentObject(getObject()).build();
-        return linkData.isVisible() && (linkData.conditionVisible() == null || linkData.conditionVisible().isMet(scriptRuntime, context));
+        return linkData.isVisible() && (linkData.conditionVisible() == null || linkData.conditionVisible().isMet(context));
     }
 
     public Set<Area> getLinkedLineOfSightAreas() {
@@ -63,7 +64,7 @@ public class LinkObjectComponent extends ObjectComponent {
         Map<Area, AreaLink.CompassDirection> linkedAreas = new HashMap<>();
         Context context = Context.builder().parentObject(getObject()).build();
         for (Map.Entry<String, LinkObjectComponentTemplate.ObjectLinkData> linkEntry : getTemplateLink().getLinkData().entrySet()) {
-            if (linkEntry.getValue().isVisible() && (linkEntry.getValue().conditionVisible() == null || linkEntry.getValue().conditionVisible().isMet(scriptRuntime, context))) {
+            if (linkEntry.getValue().isVisible() && (linkEntry.getValue().conditionVisible() == null || linkEntry.getValue().conditionVisible().isMet(context))) {
                 linkedAreas.put(getLinkedObject(linkEntry.getKey()).getArea(), getDirection(linkEntry.getKey()));
             }
         }
@@ -104,13 +105,13 @@ public class LinkObjectComponent extends ObjectComponent {
     }*/
 
     @Override
-    protected List<Action> getPossibleActions(Actor subject, ScriptRuntime scriptRuntime) {
+    protected List<Action> getPossibleActions(Actor subject, ActionDependencies dependencies) {
         List<Action> actions = new ArrayList<>();
         for (String linkID : getTemplateLink().getLinkData().keySet()) {
             LinkObjectComponentTemplate.ObjectLinkData linkData = getTemplateLink().getLinkData().get(linkID);
             if (linkData.moveAction() != null) {
                 ActionTemplate linkMoveActionTemplate = linkData.moveAction();
-                actions.add(new ActionCustom(scriptRuntime, null, getObject(), null, getLinkedObject(linkID).getArea(), linkMoveActionTemplate, new MapBuilder<String, Script>().put("dir", Script.constant(getDirection(linkID).toString())).build(), new MenuDataMove(getLinkedObject(linkID).getArea(), getDirection(linkID)), true));
+                actions.add(new ActionCustom(dependencies, null, getObject(), null, getLinkedObject(linkID).getArea(), linkMoveActionTemplate, new MapBuilder<String, Script>().put("dir", Script.constant(getDirection(linkID).toString())).build(), new MenuDataMove(getLinkedObject(linkID).getArea(), getDirection(linkID)), true));
             }
         }
         return actions;

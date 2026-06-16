@@ -1,11 +1,12 @@
 package com.github.finley243.adventureengine.actor.controller;
 
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionDependencies;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.ai.BehaviorComponent;
 import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
-import com.github.finley243.adventureengine.actor.ai.BehaviorComponent;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
@@ -16,8 +17,8 @@ public class NPCTurnController extends TurnController {
 
     private final BehaviorComponent behaviorComponent;
 
-    public NPCTurnController(Actor actor, SensoryEventDispatcher sensoryEventDispatcher, MenuManager menuManager) {
-        super(actor, sensoryEventDispatcher, menuManager);
+    public NPCTurnController(Actor actor, ActionDependencies actionDependencies, SensoryEventDispatcher sensoryEventDispatcher, MenuManager menuManager) {
+        super(actor, actionDependencies, sensoryEventDispatcher, menuManager);
         this.behaviorComponent = new BehaviorComponent(actor);
     }
 

@@ -2,17 +2,13 @@ package com.github.finley243.adventureengine.world.object;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.load.GameDataException;
 import com.github.finley243.adventureengine.GameInstanced;
-import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionCustom;
-import com.github.finley243.adventureengine.action.ActionInspectObject;
-import com.github.finley243.adventureengine.action.ActionTemplate;
+import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.combat.Damage;
-import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
-import com.github.finley243.adventureengine.expression.*;
+import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.gamedata.Registry;
+import com.github.finley243.adventureengine.load.GameDataException;
 import com.github.finley243.adventureengine.menu.action.MenuDataNetwork;
 import com.github.finley243.adventureengine.menu.action.MenuDataObject;
 import com.github.finley243.adventureengine.network.NetworkNode;
@@ -45,20 +41,22 @@ public class WorldObject extends GameInstanced implements Noun, Physical, Script
 	private final Map<Class<? extends ObjectComponent>, ObjectComponent> components;
 	private Set<LinkObjectComponent.LinkDataIntermediate> objectLinks;
 	private String vehicleObjectOverrideID;
+	private String networkNodeID;
 	private final Map<String, Expression> localVars;
 	private final Set<Actor> activeGuards;
 
-	public WorldObject(String ID, ObjectTemplate template, boolean startDisabled, boolean startHidden, Set<LinkObjectComponent.LinkDataIntermediate> objectLinks, String vehicleObjectOverrideID, Map<String, Expression> localVarsDefault) {
+	public WorldObject(String ID, ObjectTemplate template, boolean startDisabled, boolean startHidden, Set<LinkObjectComponent.LinkDataIntermediate> objectLinks, String vehicleObjectOverrideID, String networkNodeID, Map<String, Expression> localVarsDefault, ObjectComponentFactory objectComponentFactory) {
 		super(ID);
 		this.template = template;
 		this.isHidden = startHidden;
 		this.components = new HashMap<>();
 		this.objectLinks = objectLinks;
 		this.vehicleObjectOverrideID = vehicleObjectOverrideID;
+		this.networkNodeID = networkNodeID;
 		this.localVars = localVarsDefault;
 		this.activeGuards = new HashSet<>();
 		for (ObjectComponentTemplate componentTemplate : getTemplate().getComponents()) {
-			ObjectComponent component = ObjectComponentFactory.create(componentTemplate, this);
+			ObjectComponent component = objectComponentFactory.create(componentTemplate, this);
             if (components.containsKey(component.getClass())) {
 				throw new UnsupportedOperationException("Object " + this + " already contains a component of type " + component.getClass());
 			}
@@ -73,7 +71,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, Script
 		return template;
 	}
 
-	public void resolveComponentReferences(Registry<WorldObject> objectRegistry) {
+	public void resolveComponentReferences(Registry<WorldObject> objectRegistry, Registry<NetworkNode> networkRegistry) {
 		if (components.containsKey(LinkObjectComponent.class)) {
 			Map<String, LinkObjectComponent.LinkData> linkDataMap = new HashMap<>();
 			for (LinkObjectComponent.LinkDataIntermediate unresolvedLinkData : objectLinks) {
@@ -91,6 +89,13 @@ public class WorldObject extends GameInstanced implements Noun, Physical, Script
 			VehicleObjectComponent vehicleComponent = (VehicleObjectComponent) components.get(VehicleObjectComponent.class);
 			vehicleComponent.resolveObjectOverride(vehicleObjectOverride);
 			this.vehicleObjectOverrideID = null;
+		}
+		if (components.containsKey(NetworkObjectComponent.class)) {
+			NetworkNode networkNode = networkRegistry.getFromID(networkNodeID);
+			if (networkNode == null) throw new GameDataException("WorldObject has invalid network node reference");
+			NetworkObjectComponent networkObjectComponent = (NetworkObjectComponent) components.get(NetworkObjectComponent.class);
+			networkObjectComponent.resolveNetwork(networkNode);
+			this.networkNodeID = null;
 		}
 	}
 	
@@ -202,34 +207,34 @@ public class WorldObject extends GameInstanced implements Noun, Physical, Script
 	}
 
 	@Override
-	public List<Action> localActions(Actor subject, ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher) {
+	public List<Action> localActions(Actor subject, ActionDependencies dependencies) {
 		List<Action> actions = new ArrayList<>();
 		if (!isGuarded()) {
 			for (ObjectComponent component : components.values()) {
-				actions.addAll(component.getActions(subject));
+				actions.addAll(component.getActions(subject, dependencies));
 			}
 			for (ActionCustom.CustomActionHolder customAction : getTemplate().getCustomActions()) {
 				ActionTemplate customActionTemplate = customAction.action();
-				actions.add(new ActionCustom(scriptRuntime, sensoryEventDispatcher, null, this, null, null, customActionTemplate, customAction.parameters(), new MenuDataObject(this), false));
+				actions.add(new ActionCustom(dependencies, null, this, null, null, customActionTemplate, customAction.parameters(), new MenuDataObject(this), false));
 			}
 		}
 		return actions;
 	}
 
 	@Override
-	public List<Action> visibleActions(Actor subject, ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher) {
+	public List<Action> visibleActions(Actor subject, ActionDependencies dependencies) {
 		List<Action> actions = new ArrayList<>();
 		if (getDescription() != null) {
-			actions.add(new ActionInspectObject(scriptRuntime, sensoryEventDispatcher, this));
+			actions.add(new ActionInspectObject(dependencies, this));
 		}
 		return actions;
 	}
 
-	public List<Action> networkActions(Actor subject, NetworkNode node, ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher) {
+	public List<Action> networkActions(Actor subject, ActionDependencies dependencies, NetworkNode node) {
 		List<Action> actions = new ArrayList<>();
 		for (ActionCustom.CustomActionHolder networkAction : getTemplate().getNetworkActions()) {
 			ActionTemplate customNetworkActionTemplate =  networkAction.action();
-			actions.add(new ActionCustom(scriptRuntime, sensoryEventDispatcher, null, this, null, null, customNetworkActionTemplate, networkAction.parameters(), new MenuDataNetwork(node), false));
+			actions.add(new ActionCustom(dependencies, null, this, null, null, customNetworkActionTemplate, networkAction.parameters(), new MenuDataNetwork(node), false));
 		}
 		return actions;
 	}
@@ -275,17 +280,17 @@ public class WorldObject extends GameInstanced implements Noun, Physical, Script
 			if (componentValue != null) return componentValue;
 		}
 		return switch (name) {
-			case "inventory" -> (hasComponentOfType(InventoryObjectComponent.class) ? new InventoryExpression(getComponentOfType(InventoryObjectComponent.class).getInventory()) : null);
-			case "noun" -> new NounExpression(this);
-			case "enabled" -> new BooleanExpression(isEnabled);
-			case "hidden" -> new BooleanExpression(isHidden);
-			case "guarded" -> new BooleanExpression(isGuarded());
-			case "broken" -> new BooleanExpression(isBroken());
-			case "id" -> new StringExpression(getID());
-			case "name" -> new StringExpression(getName());
-			case "template_id" -> new StringExpression(template.getID());
-			case "area" -> new StringExpression(getArea().getID());
-			case "room" -> new StringExpression(getArea().getRoom() != null ? getArea().getRoom().getID() : null);
+			case "inventory" -> (hasComponentOfType(InventoryObjectComponent.class) ? Expression.inventory(getComponentOfType(InventoryObjectComponent.class).getInventory()) : null);
+			case "noun" -> Expression.noun(this);
+			case "enabled" -> Expression.bool(isEnabled);
+			case "hidden" -> Expression.bool(isHidden);
+			case "guarded" -> Expression.bool(isGuarded());
+			case "broken" -> Expression.bool(isBroken());
+			case "id" -> Expression.string(getID());
+			case "name" -> Expression.string(getName());
+			case "template_id" -> Expression.string(template.getID());
+			case "area" -> Expression.string(getArea().getID());
+			case "room" -> Expression.string(getArea().getRoom() != null ? getArea().getRoom().getID() : null);
 			default -> getLocalVariable(name);
 		};
 	}

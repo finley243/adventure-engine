@@ -6,7 +6,6 @@ import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.template.EquippableItemComponentTemplate;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
-import com.github.finley243.adventureengine.script.ScriptRuntime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,10 +30,10 @@ public class EquippableItemComponent extends ItemComponent {
     }
 
     @Override
-    protected List<Action> getPossibleInventoryActions(ScriptRuntime scriptRuntime, Actor subject) {
-        List<Action> actions = super.getPossibleInventoryActions(scriptRuntime, subject);
+    protected List<Action> getPossibleInventoryActions(ActionDependencies dependencies, Actor subject) {
+        List<Action> actions = super.getPossibleInventoryActions(dependencies, subject);
         for (EquippableItemComponentTemplate.EquippableSlotsData slots : getEquippableTemplate().getSlots()) {
-            actions.add(new ActionItemEquip(getItem(), slots));
+            actions.add(new ActionItemEquip(dependencies, getItem(), slots));
         }
         return actions;
     }
@@ -79,15 +78,15 @@ public class EquippableItemComponent extends ItemComponent {
         setEquippedSlots(null);
     }
 
-    public List<Action> equippedActions(Actor subject, ScriptRuntime scriptRuntime) {
+    public List<Action> equippedActions(Actor subject, ActionDependencies dependencies) {
         List<Action> actions = new ArrayList<>();
-        actions.add(new ActionItemUnequip(getItem()));
+        actions.add(new ActionItemUnequip(dependencies, getItem()));
         for (String exposedComponent : equippedSlotsData.componentsExposed()) {
-            actions.addAll(getItem().getComponentOfType(ItemComponentFactory.getClassFromName(exposedComponent)).getPossibleInventoryActions(scriptRuntime, subject));
+            actions.addAll(getItem().getComponentOfType(ItemComponentFactory.getClassFromName(exposedComponent)).getPossibleInventoryActions(dependencies, subject));
         }
         for (ActionCustom.CustomActionHolder equippedAction : equippedSlotsData.equippedActions()) {
             ActionTemplate customActionTemplate = equippedAction.action();
-            actions.add(new ActionCustom(scriptRuntime, null, null, getItem(), null, customActionTemplate, equippedAction.parameters(), new MenuDataInventory(getItem(), subject.getInventory()), false));
+            actions.add(new ActionCustom(dependencies, null, null, getItem(), null, customActionTemplate, equippedAction.parameters(), new MenuDataInventory(getItem(), subject.getInventory()), false));
         }
         return actions;
     }

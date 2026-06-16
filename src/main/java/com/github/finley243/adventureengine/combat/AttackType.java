@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.combat;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionDependencies;
 import com.github.finley243.adventureengine.action.attack.ActionAttackArea;
 import com.github.finley243.adventureengine.action.attack.ActionAttackBasic;
 import com.github.finley243.adventureengine.action.attack.ActionAttackLimb;
@@ -9,11 +10,9 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.effect.Effect;
-import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.component.WeaponItemComponent;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
@@ -88,15 +87,15 @@ public class AttackType {
         return ID;
     }
 
-    public List<Action> generateActions(Actor subject, Item weapon, ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher) {
+    public List<Action> generateActions(Actor subject, ActionDependencies dependencies, Item weapon) {
         if (weapon != null) {
-            return generateActionsWeapon(subject, weapon, scriptRuntime, sensoryEventDispatcher);
+            return generateActionsWeapon(subject, dependencies, weapon);
         } else {
-            return generateActionsUnarmed(subject, scriptRuntime, sensoryEventDispatcher);
+            return generateActionsUnarmed(subject, dependencies);
         }
     }
 
-    private List<Action> generateActionsWeapon(Actor subject, Item weapon, ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher) {
+    private List<Action> generateActionsWeapon(Actor subject, ActionDependencies dependencies, Item weapon) {
         if (weapon == null) throw new IllegalArgumentException("Weapon cannot be null");
         Context context = Context.builder().subject(subject).target(subject).parentItem(weapon).build();
         List<Action> actions = new ArrayList<>();
@@ -116,7 +115,7 @@ public class AttackType {
                     AreaLink.DistanceCategory targetDistance = entry.getValue().distance();
                     for (AttackTarget target : entry.getKey().getAttackTargets()) {
                         if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
-                            actions.add(new ActionAttackBasic(scriptRuntime, sensoryEventDispatcher, this, weapon, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud, targetDistance));
+                            actions.add(new ActionAttackBasic(dependencies, this, weapon, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud, targetDistance));
                         }
                     }
                 }
@@ -127,7 +126,7 @@ public class AttackType {
                     for (Actor target : entry.getKey().getActors()) {
                         if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
                             for (Limb limb : target.getLimbs()) {
-                                actions.add(new ActionAttackLimb(scriptRuntime, sensoryEventDispatcher, this, weapon, target, limb, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud, targetDistance));
+                                actions.add(new ActionAttackLimb(dependencies, this, weapon, target, limb, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud, targetDistance));
                             }
                         }
                     }
@@ -137,14 +136,14 @@ public class AttackType {
                 for (Map.Entry<Area, Pathfinder.VisibleAreaData> entry : subject.getVisibleAreas(pathfinder).entrySet()) {
                     Area target = entry.getKey();
                     AreaLink.DistanceCategory targetDistance = entry.getValue().distance();
-                    actions.add(new ActionAttackArea(scriptRuntime, sensoryEventDispatcher, this, weapon, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud, targetDistance));
+                    actions.add(new ActionAttackArea(dependencies, this, weapon, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud, targetDistance));
                 }
             }
         }
         return actions;
     }
 
-    private List<Action> generateActionsUnarmed(Actor subject, ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher) {
+    private List<Action> generateActionsUnarmed(Actor subject, ActionDependencies dependencies) {
         Set<AreaLink.DistanceCategory> ranges = rangeOverride;
         int rate = rateOverride;
         Script damage = damageOverride;
@@ -159,7 +158,7 @@ public class AttackType {
                     AreaLink.DistanceCategory targetDistance = entry.getValue().distance();
                     for (AttackTarget target : entry.getKey().getAttackTargets()) {
                         if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
-                            actions.add(new ActionAttackBasic(scriptRuntime, sensoryEventDispatcher, this, null, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud, targetDistance));
+                            actions.add(new ActionAttackBasic(dependencies, this, null, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud, targetDistance));
                         }
                     }
                 }
@@ -170,7 +169,7 @@ public class AttackType {
                     for (Actor target : entry.getKey().getActors()) {
                         if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
                             for (Limb limb : target.getLimbs()) {
-                                actions.add(new ActionAttackLimb(scriptRuntime, sensoryEventDispatcher, this, null, target, limb, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud, targetDistance));
+                                actions.add(new ActionAttackLimb(dependencies, this, null, target, limb, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud, targetDistance));
                             }
                         }
                     }
@@ -180,7 +179,7 @@ public class AttackType {
                 for (Map.Entry<Area, Pathfinder.VisibleAreaData> entry : subject.getVisibleAreas(pathfinder).entrySet()) {
                     Area target = entry.getKey();
                     AreaLink.DistanceCategory targetDistance = entry.getValue().distance();
-                    actions.add(new ActionAttackArea(scriptRuntime, sensoryEventDispatcher, this, null, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud, targetDistance));
+                    actions.add(new ActionAttackArea(dependencies, this, null, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud, targetDistance));
                 }
             }
         }

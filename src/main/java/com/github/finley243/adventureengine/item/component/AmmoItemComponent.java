@@ -1,9 +1,8 @@
 package com.github.finley243.adventureengine.item.component;
 
-import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.template.ItemComponentTemplate;
 import com.github.finley243.adventureengine.item.template.AmmoItemComponentTemplate;
+import com.github.finley243.adventureengine.item.template.ItemComponentTemplate;
 
 public class AmmoItemComponent extends ItemComponent {
 
@@ -18,22 +17,6 @@ public class AmmoItemComponent extends ItemComponent {
 
     private AmmoItemComponentTemplate getAmmoTemplate() {
         return (AmmoItemComponentTemplate) getTemplate();
-    }
-
-    public boolean isReusable() {
-        return getAmmoTemplate().isReusable();
-    }
-
-    public void onLoad(Item weapon) {
-        for (Effect effect : getAmmoTemplate().getWeaponEffects()) {
-            weapon.getComponentOfType(EffectableItemComponent.class).addEffect(effect);
-        }
-    }
-
-    public void onUnload(Item weapon) {
-        for (Effect effect : getAmmoTemplate().getWeaponEffects()) {
-            weapon.getComponentOfType(EffectableItemComponent.class).removeEffect(effect);
-        }
     }
 
 }

@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.actor.controller;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionDependencies;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.event.UIEventBus;
@@ -22,8 +23,8 @@ public class PlayerTurnController extends TurnController {
 
     private Area lastKnownArea;
 
-    public PlayerTurnController(Actor actor, SensoryEventDispatcher sensoryEventDispatcher, MenuManager menuManager, UIEventBus eventBus, AreaRegistry areaRegistry, Runnable onGameEnd) {
-        super(actor, sensoryEventDispatcher, menuManager);
+    public PlayerTurnController(Actor actor, ActionDependencies actionDependencies, SensoryEventDispatcher sensoryEventDispatcher, MenuManager menuManager, UIEventBus eventBus, AreaRegistry areaRegistry, Runnable onGameEnd) {
+        super(actor, actionDependencies, sensoryEventDispatcher, menuManager);
         this.eventBus = eventBus;
         this.areaRegistry = areaRegistry;
         this.onGameEnd = onGameEnd;

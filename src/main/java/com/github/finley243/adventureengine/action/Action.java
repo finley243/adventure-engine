@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
+import com.github.finley243.adventureengine.textgen.TextGen;
 
 /**
  * An action that an actor can take
@@ -17,13 +18,15 @@ public abstract class Action {
 
 	protected final ScriptRuntime scriptRuntime;
 	protected final SensoryEventDispatcher sensoryEventDispatcher;
+	protected final TextGen textGen;
 
 	private boolean disabled;
 	private String disabledReason;
 
-	public Action(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher) {
-		this.scriptRuntime = scriptRuntime;
-		this.sensoryEventDispatcher = sensoryEventDispatcher;
+	public Action(ActionDependencies dependencies) {
+		this.scriptRuntime = dependencies.scriptRuntime();
+		this.sensoryEventDispatcher = dependencies.sensoryEventDispatcher();
+		this.textGen = dependencies.textGen();
 	}
 
 	public abstract String getID();

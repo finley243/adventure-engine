@@ -3,20 +3,18 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
-import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.Phrases;
 
 public class ActionItemDropAll extends Action {
 
 	private final Item item;
 
-	public ActionItemDropAll(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Item item) {
-        super(scriptRuntime, sensoryEventDispatcher);
+	public ActionItemDropAll(ActionDependencies dependencies, Item item) {
+        super(dependencies);
         if (item.hasState()) throw new IllegalArgumentException("Cannot perform ActionItemDropAll on item with state");
 		this.item = item;
 	}

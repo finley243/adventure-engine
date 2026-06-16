@@ -1,8 +1,8 @@
 package com.github.finley243.adventureengine.item.component;
 
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.template.ItemComponentTemplate;
 import com.github.finley243.adventureengine.item.template.ArmorItemComponentTemplate;
+import com.github.finley243.adventureengine.item.template.ItemComponentTemplate;
 
 import java.util.Set;
 

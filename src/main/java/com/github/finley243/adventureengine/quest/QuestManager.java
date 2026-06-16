@@ -1,7 +1,5 @@
 package com.github.finley243.adventureengine.quest;
 
-import com.github.finley243.adventureengine.Game;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

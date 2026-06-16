@@ -1,13 +1,13 @@
 package com.github.finley243.adventureengine.actor.ai.behavior;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
@@ -31,9 +31,9 @@ public class ActionBehavior extends Behavior {
     public void resolveReferences(Registry<Area> areaRegistry, Registry<WorldObject> objectRegistry, Registry<Actor> actorRegistry) {}
 
     @Override
-    public void onStart(Context scriptContext) {
+    public void onStart(Actor actor, ScriptRuntime scriptRuntime, Context scriptContext) {
         hasPerformedAction = false;
-        super.onStart(scriptContext);
+        super.onStart(actor, scriptRuntime, scriptContext);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class ActionBehavior extends Behavior {
 
     @Override
     public void onPerformAction(Actor subject, Action action) {
-        if (actionIsMatch(game, subject, action)) {
+        if (actionIsMatch(subject, action)) {
             hasPerformedAction = true;
         }
         super.onPerformAction(subject, action);
@@ -56,13 +56,13 @@ public class ActionBehavior extends Behavior {
 
     @Override
     public Float actionUtilityOverride(Actor subject, Action action) {
-        if (actionIsMatch(game, subject, action)) {
+        if (actionIsMatch(subject, action)) {
             return subject.isInCombat() ? BEHAVIOR_ACTION_UTILITY_COMBAT : BEHAVIOR_ACTION_UTILITY;
         }
         return super.actionUtilityOverride(subject, action);
     }
 
-    private boolean actionIsMatch(Game game, Actor subject, Action action) {
+    private boolean actionIsMatch(Actor subject, Action action) {
         if (!action.getID().equals(actionID)) {
             return false;
         }

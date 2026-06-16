@@ -3,8 +3,8 @@ package com.github.finley243.adventureengine.scene;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.condition.Condition;
-import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.expression.BooleanExpression;
+import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.expression.StringExpression;
 import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
@@ -50,7 +50,7 @@ public class Scene extends GameInstanced implements ScriptValueHolder {
 	}
 
 	public boolean canChoose(ScriptRuntime scriptRuntime, Context context) {
-		return (condition == null || condition.isMet(scriptRuntime, context)) && !(once && hasTriggered);
+		return (condition == null || condition.isMet(context)) && !(once && hasTriggered);
 	}
 	
 	public List<SceneLine> getLines() {

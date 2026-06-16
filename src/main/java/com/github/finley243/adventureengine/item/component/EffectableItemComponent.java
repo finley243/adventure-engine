@@ -1,8 +1,8 @@
 package com.github.finley243.adventureengine.item.component;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.effect.EffectComponent;
 import com.github.finley243.adventureengine.effect.Effect;
+import com.github.finley243.adventureengine.effect.EffectComponent;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.template.ItemComponentTemplate;
 import com.github.finley243.adventureengine.script.ScriptRuntime;

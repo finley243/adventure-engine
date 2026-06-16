@@ -2,15 +2,13 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataSelf;
-import com.github.finley243.adventureengine.script.ScriptRuntime;
 
 public class ActionSneakStart extends Action {
 
-    public ActionSneakStart(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher) {
-        super(scriptRuntime, sensoryEventDispatcher);
+    public ActionSneakStart(ActionDependencies dependencies) {
+        super(dependencies);
     }
 
     @Override

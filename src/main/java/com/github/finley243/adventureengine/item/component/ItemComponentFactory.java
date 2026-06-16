@@ -1,8 +1,8 @@
 package com.github.finley243.adventureengine.item.component;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.combat.DamageType;
 import com.github.finley243.adventureengine.combat.AttackType;
+import com.github.finley243.adventureengine.combat.DamageType;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.item.Item;
@@ -30,7 +30,7 @@ public class ItemComponentFactory {
             case ConsumableItemComponentTemplate typeTemplate -> new ConsumableItemComponent(item, typeTemplate);
             case EffectableItemComponentTemplate typeTemplate -> new EffectableItemComponent(item, typeTemplate, scriptRuntime, Context.builder().parentItem(item).build());
             case EquippableItemComponentTemplate typeTemplate -> new EquippableItemComponent(item, typeTemplate);
-            case MagazineItemComponentTemplate typeTemplate -> new MagazineItemComponent(item, typeTemplate);
+            case MagazineItemComponentTemplate typeTemplate -> new MagazineItemComponent(item, typeTemplate, scriptRuntime);
             case ModItemComponentTemplate typeTemplate -> new ModItemComponent(item, typeTemplate);
             case ModdableItemComponentTemplate typeTemplate -> new ModdableItemComponent(item, typeTemplate);
             case WeaponItemComponentTemplate typeTemplate -> new WeaponItemComponent(item, typeTemplate, scriptRuntime, attackTypeRegistry, effectRegistry, damageTypeRegistry);

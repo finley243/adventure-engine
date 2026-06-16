@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.item;
 import com.github.finley243.adventureengine.gamedata.MutableRegistry;
 import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.item.component.ItemComponentFactory;
-import com.github.finley243.adventureengine.item.template.*;
+import com.github.finley243.adventureengine.item.template.ItemTemplate;
 
 public class ItemFactory {
 

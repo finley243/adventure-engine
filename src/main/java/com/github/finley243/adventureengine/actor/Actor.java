@@ -5,15 +5,17 @@ import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.ai.AreaTarget;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.actor.ai.behavior.Behavior;
-import com.github.finley243.adventureengine.actor.component.*;
+import com.github.finley243.adventureengine.actor.component.EquipmentComponent;
+import com.github.finley243.adventureengine.actor.component.TargetingComponent;
+import com.github.finley243.adventureengine.combat.AttackType;
 import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.combat.DamageType;
-import com.github.finley243.adventureengine.combat.AttackType;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.effect.EffectComponent;
 import com.github.finley243.adventureengine.effect.Effectable;
-import com.github.finley243.adventureengine.event.*;
-import com.github.finley243.adventureengine.expression.*;
+import com.github.finley243.adventureengine.event.SensoryEvent;
+import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
+import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.gamedata.MutableRegistry;
 import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.item.Inventory;
@@ -25,7 +27,9 @@ import com.github.finley243.adventureengine.load.LoadUtils;
 import com.github.finley243.adventureengine.menu.action.MenuDataActor;
 import com.github.finley243.adventureengine.menu.action.MenuDataActorInventory;
 import com.github.finley243.adventureengine.scene.Scene;
-import com.github.finley243.adventureengine.script.*;
+import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
+import com.github.finley243.adventureengine.script.ScriptValueHolder;
 import com.github.finley243.adventureengine.stat.*;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -111,7 +115,7 @@ public class Actor extends GameInstanced implements Noun, Physical, ScriptValueH
 	private final Map<String, List<Script>> scripts;
 	private final Context defaultContext;
 
-	public Actor(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, ItemFactory itemFactory, Registry<SenseType> senseTypeRegistry, Registry<Effect> effectRegistry, Collection<DamageType> allDamageTypes, Collection<Attribute> allAttributes, Collection<Skill> allSkills, String ID, String nameDescriptor, Area area, ActorTemplate template, boolean isPlayer, List<Behavior> behaviors, boolean startDead, boolean startDisabled, boolean isPlayerControlled) {
+	public Actor(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, ItemFactory itemFactory, Pathfinder pathfinder, Registry<SenseType> senseTypeRegistry, Registry<Effect> effectRegistry, Collection<DamageType> allDamageTypes, Collection<Attribute> allAttributes, Collection<Skill> allSkills, String ID, String nameDescriptor, Area area, ActorTemplate template, boolean isPlayer, List<Behavior> behaviors, boolean startDead, boolean startDisabled, boolean isPlayerControlled) {
 		super(ID);
 		this.scriptRuntime = scriptRuntime;
         this.sensoryEventDispatcher = sensoryEventDispatcher;
@@ -121,19 +125,19 @@ public class Actor extends GameInstanced implements Noun, Physical, ScriptValueH
 		this.template = template;
 		this.isPlayer = isPlayer;
 		this.areaTargets = new HashSet<>();
-		this.senseTypes = new StringSetRegistryStat<>("sense_types", this, senseTypeRegistry, SenseType::ID);
+		this.senseTypes = new StringSetRegistryStat<>("sense_types", this, scriptRuntime, senseTypeRegistry, SenseType::ID);
 		this.startDead = startDead;
 		this.isDead = startDead;
-		this.maxHP = new IntStat("max_hp", this);
-		this.actionPoints = new IntStat("action_points", this);
-		this.movePoints = new IntStat("move_points", this);
-		this.canPerformActions = new BooleanStat("can_perform_actions", this, false);
-		this.canMove = new BooleanStat("can_move", this, false);
-		this.canDodge = new BooleanStat("can_dodge", this, false);
+		this.maxHP = new IntStat("max_hp", this, scriptRuntime);
+		this.actionPoints = new IntStat("action_points", this, scriptRuntime);
+		this.movePoints = new IntStat("move_points", this, scriptRuntime);
+		this.canPerformActions = new BooleanStat("can_perform_actions", this, scriptRuntime, false);
+		this.canMove = new BooleanStat("can_move", this, scriptRuntime, false);
+		this.canDodge = new BooleanStat("can_dodge", this, scriptRuntime, false);
 		this.inventory = new Inventory(itemFactory, this);
 		this.equipmentComponent = new EquipmentComponent(this);
-		this.targetingComponent = new TargetingComponent(this);
-		this.equipmentEffects = new StringSetRegistryStat<>("equipment_effects", this, effectRegistry, Effect::getID);
+		this.targetingComponent = new TargetingComponent(pathfinder, this);
+		this.equipmentEffects = new StringSetRegistryStat<>("equipment_effects", this, scriptRuntime, effectRegistry, Effect::getID);
 		this.effectComponent = new EffectComponent(this, scriptRuntime, Context.builder().subject(this).build());
 		this.behaviors = behaviors;
 		this.startDisabled = startDisabled;
@@ -144,22 +148,22 @@ public class Actor extends GameInstanced implements Noun, Physical, ScriptValueH
 		this.damageMult = new HashMap<>();
 		for (DamageType damageType : allDamageTypes) {
 			String damageTypeID = damageType.ID();
-			this.damageResistance.put(damageTypeID, new IntStat("damage_resist_" + damageTypeID, this));
-			this.damageMult.put(damageTypeID, new FloatStat("damage_mult_" + damageTypeID, this));
+			this.damageResistance.put(damageTypeID, new IntStat("damage_resist_" + damageTypeID, this, scriptRuntime));
+			this.damageMult.put(damageTypeID, new FloatStat("damage_mult_" + damageTypeID, this, scriptRuntime));
 		}
 		this.attributesBase = new HashMap<>();
 		this.attributes = new HashMap<>();
 		for (Attribute attribute : allAttributes) {
 			String attributeID = attribute.ID();
 			this.attributesBase.put(attributeID, getTemplate().getAttribute(attributeID));
-			this.attributes.put(attributeID, new IntStat("attribute_" + attributeID, this));
+			this.attributes.put(attributeID, new IntStat("attribute_" + attributeID, this, scriptRuntime));
 		}
 		this.skillsBase = new HashMap<>();
 		this.skills = new HashMap<>();
 		for (Skill skill : allSkills) {
 			String skillID = skill.ID();
 			this.skillsBase.put(skillID, getTemplate().getSkill(skillID));
-			this.skills.put(skillID, new IntStat("skill_" + skillID, this));
+			this.skills.put(skillID, new IntStat("skill_" + skillID, this, scriptRuntime));
 		}
 		this.level = template.getStartingLevel();
 		if (!startDead) {
@@ -578,92 +582,92 @@ public class Actor extends GameInstanced implements Noun, Physical, ScriptValueH
 	}
 
 	@Override
-	public List<Action> localActions(Actor subject, ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher) {
+	public List<Action> localActions(Actor subject, ActionDependencies dependencies) {
 		List<Action> actions = new ArrayList<>();
 		if (isActive()) {
 			if (getTemplate().getDialogueStart() != null) {
-				actions.add(new ActionTalk(scriptRuntime, sensoryEventDispatcher, this));
+				actions.add(new ActionTalk(dependencies, this));
 			}
 		} else if (isDead()) {
-			actions.addAll(inventory.getExternalActions(scriptRuntime, sensoryEventDispatcher, this, subject, "Take", "takeFrom", null, null, true, false));
-			actions.add(new ActionCarryActorStart(scriptRuntime, sensoryEventDispatcher, this));
+			actions.addAll(inventory.getExternalActions(dependencies, this, subject, "Take", "takeFrom", null, null, true, false));
+			actions.add(new ActionCarryActorStart(dependencies, this));
 		}
 		for (ActionCustom.CustomActionHolder actionHolder : getTemplate().getCustomActions()) {
 			ActionTemplate customActionTemplate = actionHolder.action();
-			actions.add(new ActionCustom(scriptRuntime, sensoryEventDispatcher, this, null, null, null, customActionTemplate, actionHolder.parameters(), new MenuDataActor(this), false));
+			actions.add(new ActionCustom(dependencies, this, null, null, null, customActionTemplate, actionHolder.parameters(), new MenuDataActor(this), false));
 		}
 		for (ActionCustom.CustomActionHolder inventoryActionHolder : getTemplate().getCustomInventoryActions()) {
 			for (Item item : inventory.getItems()) {
 				ActionTemplate customInventoryActionTemplate = inventoryActionHolder.action();
-				actions.add(new ActionCustom(scriptRuntime, sensoryEventDispatcher, this, null, item, null, customInventoryActionTemplate, inventoryActionHolder.parameters(), new MenuDataActorInventory(this, item, false, false), false));
+				actions.add(new ActionCustom(dependencies, this, null, item, null, customInventoryActionTemplate, inventoryActionHolder.parameters(), new MenuDataActorInventory(this, item, false, false), false));
 			}
 		}
 		return actions;
 	}
 
-	public List<Action> carriedActions(Actor subject, ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher) {
+	public List<Action> carriedActions(Actor subject, ActionDependencies dependencies) {
 		List<Action> actions = new ArrayList<>();
-		actions.add(new ActionCarryActorEnd(scriptRuntime, sensoryEventDispatcher, this));
+		actions.add(new ActionCarryActorEnd(dependencies, this));
 		return actions;
 	}
 
 	@Override
-	public List<Action> visibleActions(Actor subject, ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher) {
+	public List<Action> visibleActions(Actor subject, ActionDependencies dependencies) {
 		return new ArrayList<>();
 	}
 
-	public List<Action> availableActions(Pathfinder pathfinder, Runnable onEndTurnAction) {
+	public List<Action> availableActions(ActionDependencies dependencies, Pathfinder pathfinder, Runnable onEndTurnAction) {
 		if (!canPerformActions(Context.from(defaultContext).build())) {
 			return new ArrayList<>();
 		}
 		List<Action> actions = new ArrayList<>();
 		if (canPerformLocalActions()) {
 			for (Actor actor : getArea().getActors()) {
-				actions.addAll(actor.localActions(this, scriptRuntime, sensoryEventDispatcher));
+				actions.addAll(actor.localActions(this, dependencies));
 			}
 			actions.addAll(getArea().getItemActions(scriptRuntime, sensoryEventDispatcher));
 			for (WorldObject object : getArea().getObjects()) {
 				if (!object.isHidden() && (!isUsingObject() || !object.equals(getUsingObject().object()))) {
-					actions.addAll(object.localActions(this, scriptRuntime, sensoryEventDispatcher));
+					actions.addAll(object.localActions(this, dependencies));
 				}
 			}
 		}
 		if (isUsingObject()) {
-			actions.addAll(getUsingObject().object().getComponentOfType(UsableObjectComponent.class).getUsingActions(getUsingObject().slot(), this, scriptRuntime));
+			actions.addAll(getUsingObject().object().getComponentOfType(UsableObjectComponent.class).getUsingActions(getUsingObject().slot(), this, dependencies));
 			if (getUsingObject().object().getComponentOfType(UsableObjectComponent.class).userCanPerformParentActions(getUsingObject().slot())) {
-				actions.addAll(getUsingObject().object().localActions(this, scriptRuntime, sensoryEventDispatcher));
+				actions.addAll(getUsingObject().object().localActions(this, dependencies));
 			}
 		}
 		if (isCarryingActor()) {
-			actions.addAll(getCarriedActor().carriedActions(this, scriptRuntime, sensoryEventDispatcher));
+			actions.addAll(getCarriedActor().carriedActions(this, dependencies));
 		}
 		for (Actor visibleActor : getLineOfSightActors(pathfinder)) {
 			if (visibleActor.isVisible(this)) {
-				actions.addAll(visibleActor.visibleActions(this, scriptRuntime, sensoryEventDispatcher));
+				actions.addAll(visibleActor.visibleActions(this, dependencies));
 			}
 		}
 		for (WorldObject visibleObject : getLineOfSightObjects(pathfinder)) {
 			if (visibleObject.isVisible(this)) {
-				actions.addAll(visibleObject.visibleActions(this, scriptRuntime, sensoryEventDispatcher));
+				actions.addAll(visibleObject.visibleActions(this, dependencies));
 			}
 		}
 		if (canMove(Context.from(defaultContext).build())) {
-			actions.addAll(getArea().getMoveActions(scriptRuntime, sensoryEventDispatcher, this, null, null));
+			actions.addAll(getArea().getMoveActions(this, dependencies, null, null));
 		}
-		actions.addAll(getArea().getAreaActions(this));
+		actions.addAll(getArea().getAreaActions(this, dependencies));
 		for (Item item : inventory.getItems()) {
-			actions.addAll(item.inventoryActions(this, scriptRuntime));
+			actions.addAll(item.inventoryActions(this, dependencies));
 		}
 		actions.addAll(equipmentComponent.getEquippedActions(scriptRuntime));
 		for (AttackType unarmedAttackType : getTemplate().getUnarmedAttackTypes()) {
-			actions.addAll(unarmedAttackType.generateActions(this, null, scriptRuntime));
+			actions.addAll(unarmedAttackType.generateActions(this, dependencies, null));
 		}
 		if (isSneaking()) {
-			actions.add(new ActionSneakEnd(scriptRuntime, sensoryEventDispatcher));
+			actions.add(new ActionSneakEnd(dependencies));
 		} else {
-			actions.add(new ActionSneakStart(scriptRuntime, sensoryEventDispatcher));
+			actions.add(new ActionSneakStart(dependencies));
 		}
-		actions.add(new ActionEnd(scriptRuntime, sensoryEventDispatcher, onEndTurnAction));
+		actions.add(new ActionEnd(dependencies, onEndTurnAction));
 		return actions;
 	}
 
@@ -731,12 +735,6 @@ public class Actor extends GameInstanced implements Noun, Physical, ScriptValueH
 			}
 		}
 		return visibleObjects;
-	}
-
-	public Set<AttackTarget> getLineOfSightAttackTargets(Pathfinder pathfinder) {
-		Set<AttackTarget> attackTargets = new HashSet<>(getLineOfSightActors(pathfinder));
-		attackTargets.addAll(getLineOfSightObjects(pathfinder));
-		return attackTargets;
 	}
 
 	public Set<SenseType> getSenseTypes() {

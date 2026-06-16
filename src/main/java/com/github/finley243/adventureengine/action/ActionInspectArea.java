@@ -3,18 +3,15 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
-import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.event.ui.RenderGeneratedTextEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataArea;
-import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.MultiNoun;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.PluralNoun;
-import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 import java.util.ArrayList;
@@ -26,15 +23,13 @@ public class ActionInspectArea extends Action {
 
     private final Area area;
     private final UIEventBus eventBus;
-    private final TextGen textGen;
     private final MenuManager menuManager;
     private final Pathfinder pathfinder;
 
-    public ActionInspectArea(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Area area, UIEventBus eventBus, TextGen textGen, MenuManager menuManager, Pathfinder pathfinder) {
-        super(scriptRuntime, sensoryEventDispatcher);
+    public ActionInspectArea(ActionDependencies dependencies, Area area, UIEventBus eventBus, MenuManager menuManager, Pathfinder pathfinder) {
+        super(dependencies);
         this.area = area;
         this.eventBus = eventBus;
-        this.textGen = textGen;
         this.menuManager = menuManager;
         this.pathfinder = pathfinder;
     }

@@ -1,9 +1,9 @@
 package com.github.finley243.adventureengine.scene;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.load.GameDataException;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.gamedata.Registry;
+import com.github.finley243.adventureengine.load.GameDataException;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
 
@@ -81,7 +81,7 @@ public class SceneLine {
     }
     
     public boolean shouldShow(ScriptRuntime scriptRuntime, Context context, Scene lastScene) {
-    	return (condition == null || condition.isMet(scriptRuntime, context))
+    	return (condition == null || condition.isMet(context))
                 && !(once && hasTriggered)
                 && !(fromSceneID != null && !getFromScene().equals(lastScene));
     }

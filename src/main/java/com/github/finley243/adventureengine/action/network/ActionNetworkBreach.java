@@ -1,13 +1,12 @@
 package com.github.finley243.adventureengine.action.network;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.action.ActionDependencies;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataNetwork;
 import com.github.finley243.adventureengine.network.NetworkNode;
-import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class ActionNetworkBreach extends NetworkAction {
@@ -15,8 +14,8 @@ public class ActionNetworkBreach extends NetworkAction {
     private final NetworkNode node;
     private final WorldObject object;
 
-    public ActionNetworkBreach(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, NetworkNode node, WorldObject object) {
-        super(scriptRuntime, sensoryEventDispatcher);
+    public ActionNetworkBreach(ActionDependencies dependencies, NetworkNode node, WorldObject object) {
+        super(dependencies);
         this.node = node;
         this.object = object;
     }

@@ -97,15 +97,15 @@ public abstract class Behavior {
         return null;
     }
 
-    public boolean isValid(Actor subject, ScriptRuntime scriptRuntime) {
-        return condition == null || condition.isMet(scriptRuntime, Context.builder().subject(subject).build());
+    public boolean isValid(Actor subject) {
+        return condition == null || condition.isMet(Context.builder().subject(subject).build());
     }
 
-    public Idle getIdle(Actor subject, ScriptRuntime scriptRuntime) {
+    public Idle getIdle(Actor subject) {
         if (idles == null) return null;
         List<Idle> validIdles = new ArrayList<>();
         for (Idle idle : idles) {
-            if (idle.canPlay(subject, scriptRuntime)) {
+            if (idle.canPlay(subject)) {
                 validIdles.add(idle);
             }
         }

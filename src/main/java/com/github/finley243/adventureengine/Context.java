@@ -2,8 +2,8 @@ package com.github.finley243.adventureengine;
 
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.world.AttackTarget;

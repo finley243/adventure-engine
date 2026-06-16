@@ -2,15 +2,13 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.item.Inventory;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.item.Inventory;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataActorInventory;
 import com.github.finley243.adventureengine.menu.action.MenuDataObjectInventory;
-import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -23,8 +21,8 @@ public class ActionInventoryTake extends Action {
     private final String prompt;
     private final String phrase;
 
-    public ActionInventoryTake(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Noun owner, Inventory inventory, Item item, String prompt, String phrase) {
-        super(scriptRuntime, sensoryEventDispatcher);
+    public ActionInventoryTake(ActionDependencies dependencies, Noun owner, Inventory inventory, Item item, String prompt, String phrase) {
+        super(dependencies);
         this.owner = owner;
         this.inventory = inventory;
         this.item = item;

@@ -1,10 +1,11 @@
 package com.github.finley243.adventureengine;
 
+import com.github.finley243.adventureengine.action.ActionDependencies;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.actor.controller.NPCTurnController;
 import com.github.finley243.adventureengine.actor.controller.PlayerTurnController;
 import com.github.finley243.adventureengine.actor.controller.TurnController;
-import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.event.ui.TextClearEvent;
@@ -27,8 +28,6 @@ import java.util.Map;
 public class Game {
 
 	private final UIEventBus eventBus;
-
-    //private final Data data;
 	private final QuestManager questManager;
 	private final DateTimeController dateTimeController;
 	private final TimerManager timerManager;
@@ -41,7 +40,7 @@ public class Game {
 
 	private boolean continueGame;
 
-    public Game(UIEventBus eventBus, MenuManager menuManager, QuestManager questManager, DateTimeController dateTimeController, ScriptRuntime scriptRuntime, ActorRegistry actorRegistry, Registry<WorldObject> objectRegistry, AreaRegistry areaRegistry, TimerManager timerManager, Pathfinder pathfinder, SensoryEventDispatcher sensoryEventDispatcher) {
+    public Game(UIEventBus eventBus, MenuManager menuManager, QuestManager questManager, DateTimeController dateTimeController, ScriptRuntime scriptRuntime, ActionDependencies actionDependencies, ActorRegistry actorRegistry, Registry<WorldObject> objectRegistry, AreaRegistry areaRegistry, TimerManager timerManager, Pathfinder pathfinder, SensoryEventDispatcher sensoryEventDispatcher) {
 		this.eventBus = eventBus;
         this.questManager = questManager;
 		this.dateTimeController = dateTimeController;
@@ -55,9 +54,9 @@ public class Game {
 		for (Actor actor : actorRegistry.getAll()) {
 			TurnController controller;
 			if (actor.isPlayer()) {
-				controller = new PlayerTurnController(actor, sensoryEventDispatcher, menuManager, eventBus, areaRegistry, () -> continueGame = false);
+				controller = new PlayerTurnController(actor, actionDependencies, sensoryEventDispatcher, menuManager, eventBus, areaRegistry, () -> continueGame = false);
 			} else {
-				controller = new NPCTurnController(actor, sensoryEventDispatcher, menuManager);
+				controller = new NPCTurnController(actor, actionDependencies, sensoryEventDispatcher, menuManager);
 			}
 			actorControllers.put(actor, controller);
 		}

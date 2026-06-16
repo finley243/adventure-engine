@@ -2,8 +2,6 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
-import com.github.finley243.adventureengine.script.ScriptRuntime;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,9 +11,9 @@ public abstract class ActionRandomEach<T> extends Action {
 
     private final Collection<T> collection;
 
-    public ActionRandomEach(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Collection<T> collection) {
+    public ActionRandomEach(ActionDependencies dependencies, Collection<T> collection) {
         //if (collection.isEmpty()) throw new IllegalArgumentException("ActionRandomEach collection cannot be empty");
-        super(scriptRuntime, sensoryEventDispatcher);
+        super(dependencies);
         this.collection = collection;
     }
 

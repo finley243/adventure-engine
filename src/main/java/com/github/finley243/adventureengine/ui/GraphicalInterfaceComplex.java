@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.ui;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.event.ui.RenderChoiceMenuEvent;
 import com.github.finley243.adventureengine.event.ui.RenderNumericMenuEvent;
@@ -8,7 +7,6 @@ import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.event.ui.TextClearEvent;
 import com.github.finley243.adventureengine.ui.component.JGameTextPanel;
 import com.github.finley243.adventureengine.ui.component.JSwitchPanel;
-import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
 import javax.swing.*;

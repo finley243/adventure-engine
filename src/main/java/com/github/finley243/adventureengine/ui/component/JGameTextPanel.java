@@ -3,7 +3,10 @@ package com.github.finley243.adventureengine.ui.component;
 import com.github.finley243.adventureengine.ui.GraphicalInterfaceComplex;
 
 import javax.swing.*;
-import javax.swing.text.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import java.awt.*;
 
 public class JGameTextPanel extends JPanel {

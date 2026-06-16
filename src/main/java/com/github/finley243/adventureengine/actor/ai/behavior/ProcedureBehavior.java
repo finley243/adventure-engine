@@ -95,8 +95,8 @@ public class ProcedureBehavior extends Behavior {
     }
 
     @Override
-    public Idle getIdle(Actor subject, ScriptRuntime scriptRuntime) {
-        return stages.get(currentStage).getIdle(subject, scriptRuntime);
+    public Idle getIdle(Actor subject) {
+        return stages.get(currentStage).getIdle(subject);
     }
 
     private void resetStageContext(Context parentContext) {

@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine;
 
+import com.github.finley243.adventureengine.action.ActionDependencies;
 import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.event.UIEventBusImpl;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -57,6 +58,8 @@ public class Main {
 		GameData gameData = gameDataLoader.loadData(dataDirectory);
 		scriptRuntime.setGameData(gameData);
 
+		ActionDependencies actionDependencies = new ActionDependencies(scriptRuntime, gameData.sensoryEventDispatcher(), textGen);
+
 		UserInterface userInterface = switch (configHandler.get(ConfigOption.INTERFACE_TYPE)) {
 			case "graphicalChoice" -> new GraphicalInterfaceComplex(eventBus, configHandler.get(ConfigOption.GAME_NAME));
 			case "consoleParser" -> new ConsoleParserInterface(eventBus);
@@ -65,7 +68,7 @@ public class Main {
 		};
 		eventBus.register(userInterface);
 
-		Game game = new Game(eventBus, menuManager, questManager, dateTimeController, scriptRuntime, gameData.actorRegistry(), gameData.objectRegistry(), gameData.areaRegistry(), timerManager, gameData.pathfinder(), gameData.sensoryEventDispatcher());
+		Game game = new Game(eventBus, menuManager, questManager, dateTimeController, scriptRuntime, actionDependencies, gameData.actorRegistry(), gameData.objectRegistry(), gameData.areaRegistry(), timerManager, gameData.pathfinder(), gameData.sensoryEventDispatcher());
 		game.start();
 	}
 

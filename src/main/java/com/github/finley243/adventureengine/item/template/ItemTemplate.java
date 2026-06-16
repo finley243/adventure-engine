@@ -3,14 +3,17 @@ package com.github.finley243.adventureengine.item.template;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.ActionCustom;
-import com.github.finley243.adventureengine.expression.*;
+import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptValueHolder;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ItemTemplate extends GameInstanced implements Noun, ScriptValueHolder {
 
@@ -20,7 +23,7 @@ public class ItemTemplate extends GameInstanced implements Noun, ScriptValueHold
 	private final Scene description;
 	private final int price;
 	private final Map<String, List<Script>> scripts;
-	private final List<ItemComponentTemplate> components;
+	private final Map<Class<? extends ItemComponentTemplate>, ItemComponentTemplate> components;
 	private final List<ActionCustom.CustomActionHolder> customActions;
 
 	public ItemTemplate(String ID, String name, Scene description, Map<String, List<Script>> scripts, List<ItemComponentTemplate> components, List<ActionCustom.CustomActionHolder> customActions, int price) {
@@ -28,7 +31,10 @@ public class ItemTemplate extends GameInstanced implements Noun, ScriptValueHold
 		this.name = name;
 		this.description = description;
 		this.scripts = scripts;
-		this.components = components;
+		this.components = new HashMap<>();
+		for (ItemComponentTemplate componentTemplate : components) {
+			this.components.put(componentTemplate.getClass(), componentTemplate);
+		}
 		this.customActions = customActions;
 		this.price = price;
 		this.generatedCount = 1;
@@ -76,8 +82,13 @@ public class ItemTemplate extends GameInstanced implements Noun, ScriptValueHold
 		return price;
 	}
 
-	public List<ItemComponentTemplate> getComponents() {
-		return components;
+	public <T extends ItemComponentTemplate> T getComponentTemplate(Class<T> componentClass) {
+		ItemComponentTemplate component = components.get(componentClass);
+		return componentClass.cast(component);
+	}
+
+	public Collection<ItemComponentTemplate> getComponents() {
+		return components.values();
 	}
 
 	public Map<String, List<Script>> getScripts() {

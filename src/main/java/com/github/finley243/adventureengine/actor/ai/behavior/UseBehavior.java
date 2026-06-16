@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.actor.ai.behavior;
 
-import com.github.finley243.adventureengine.load.GameDataException;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionObjectUseEnd;
 import com.github.finley243.adventureengine.action.ActionObjectUseStart;
@@ -8,6 +7,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.gamedata.Registry;
+import com.github.finley243.adventureengine.load.GameDataException;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;

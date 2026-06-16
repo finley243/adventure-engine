@@ -1,21 +1,20 @@
 package com.github.finley243.adventureengine.world.environment;
 
-import com.github.finley243.adventureengine.*;
-import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionCustom;
-import com.github.finley243.adventureengine.action.ActionInspectArea;
-import com.github.finley243.adventureengine.action.ActionTemplate;
+import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.GameInstanced;
+import com.github.finley243.adventureengine.MapBuilder;
+import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Faction;
-import com.github.finley243.adventureengine.item.Inventory;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
-import com.github.finley243.adventureengine.effect.EffectComponent;
 import com.github.finley243.adventureengine.effect.Effect;
+import com.github.finley243.adventureengine.effect.EffectComponent;
 import com.github.finley243.adventureengine.effect.Effectable;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
-import com.github.finley243.adventureengine.expression.*;
+import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.gamedata.AreaRegistry;
 import com.github.finley243.adventureengine.gamedata.Registry;
+import com.github.finley243.adventureengine.item.Inventory;
 import com.github.finley243.adventureengine.item.ItemFactory;
 import com.github.finley243.adventureengine.load.GameDataException;
 import com.github.finley243.adventureengine.menu.action.MenuDataMove;
@@ -23,7 +22,10 @@ import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.script.ScriptValueHolder;
-import com.github.finley243.adventureengine.stat.*;
+import com.github.finley243.adventureengine.stat.Stat;
+import com.github.finley243.adventureengine.stat.StatHolder;
+import com.github.finley243.adventureengine.stat.StatUtils;
+import com.github.finley243.adventureengine.stat.StringSetRegistryStat;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 import com.github.finley243.adventureengine.world.AttackTarget;
@@ -263,12 +265,12 @@ public class Area extends GameInstanced implements Noun, ScriptValueHolder, Stat
 		return itemInventory.getAreaActions(scriptRuntime, sensoryEventDispatcher, this);
 	}
 
-	public List<Action> getMoveActions(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Actor subject, String vehicleType, WorldObject vehicleObject) {
+	public List<Action> getMoveActions(Actor subject, ActionDependencies dependencies, String vehicleType, WorldObject vehicleObject) {
 		List<Action> moveActions = new ArrayList<>();
 		for (AreaLink link : linkedAreas.values()) {
 			if (vehicleType != null && link.isVehicleMovable(vehicleType) || vehicleType == null && link.isMovable()) {
 				ActionTemplate actionTemplate = vehicleType == null ? link.getType().getActorMoveAction() : link.getType().getVehicleMoveAction(vehicleType);
-				moveActions.add(new ActionCustom(scriptRuntime, sensoryEventDispatcher, null, vehicleObject, null, link.getArea(), actionTemplate, new MapBuilder<String, Script>().put("dir", Script.constant(link.getDirection().toString())).put("dirName", Script.constant(link.getDirection().name)).build(), new MenuDataMove(link.getArea(), link.getDirection()), true));
+				moveActions.add(new ActionCustom(dependencies, null, vehicleObject, null, link.getArea(), actionTemplate, new MapBuilder<String, Script>().put("dir", Script.constant(link.getDirection().toString())).put("dirName", Script.constant(link.getDirection().name)).build(), new MenuDataMove(link.getArea(), link.getDirection()), true));
 			}
 		}
 		return moveActions;
@@ -423,9 +425,9 @@ public class Area extends GameInstanced implements Noun, ScriptValueHolder, Stat
         return room;
 	}
 
-	public List<Action> getAreaActions(Actor subject) {
+	public List<Action> getAreaActions(Actor subject, ActionDependencies dependencies) {
 		List<Action> actions = new ArrayList<>();
-		actions.add(new ActionInspectArea(this));
+		actions.add(new ActionInspectArea(dependencies, this));
 		return actions;
 	}
 

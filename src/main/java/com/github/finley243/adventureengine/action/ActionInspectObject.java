@@ -2,18 +2,16 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataObject;
-import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class ActionInspectObject extends Action {
 
 	private final WorldObject object;
 
-	public ActionInspectObject(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, WorldObject object) {
-        super(scriptRuntime, sensoryEventDispatcher);
+	public ActionInspectObject(ActionDependencies dependencies, WorldObject object) {
+        super(dependencies);
         this.object = object;
 	}
 

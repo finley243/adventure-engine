@@ -2,8 +2,8 @@ package com.github.finley243.adventureengine.ui;
 
 import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.event.ui.ChoiceMenuInputEvent;
-import com.github.finley243.adventureengine.event.ui.RenderNumericMenuEvent;
 import com.github.finley243.adventureengine.event.ui.RenderChoiceMenuEvent;
+import com.github.finley243.adventureengine.event.ui.RenderNumericMenuEvent;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.menu.ConsoleUtils;
 import com.github.finley243.adventureengine.menu.MenuChoice;

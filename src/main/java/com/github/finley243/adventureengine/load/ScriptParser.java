@@ -1,8 +1,7 @@
 package com.github.finley243.adventureengine.load;
 
-import com.github.finley243.adventureengine.expression.*;
+import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.script.*;
-import com.github.finley243.adventureengine.script.ScriptValueHolderReference;
 import com.google.common.collect.Sets;
 
 import java.util.*;

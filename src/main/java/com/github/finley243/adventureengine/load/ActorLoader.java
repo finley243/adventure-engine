@@ -2,12 +2,12 @@ package com.github.finley243.adventureengine.load;
 
 import com.github.finley243.adventureengine.actor.*;
 import com.github.finley243.adventureengine.actor.ai.Idle;
+import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.actor.ai.behavior.*;
 import com.github.finley243.adventureengine.combat.DamageType;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
-import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.gamedata.AreaRegistry;
 import com.github.finley243.adventureengine.gamedata.ConfigHandler;
 import com.github.finley243.adventureengine.gamedata.ConfigOption;
@@ -26,22 +26,22 @@ public class ActorLoader {
     private final ScriptParser scriptParser;
     private final Registry<ActorTemplate> actorTemplateRegistry;
     private final ScriptRuntime scriptRuntime;
-    private final UIEventBus eventBus;
     private final SensoryEventDispatcher sensoryEventDispatcher;
     private final ItemFactory itemFactory;
+    private final Pathfinder pathfinder;
     private final Registry<SenseType> senseTypeRegistry;
     private final Registry<Effect> effectRegistry;
     private final Registry<DamageType> damageTypeRegistry;
     private final Registry<Attribute> attributeRegistry;
     private final Registry<Skill> skillRegistry;
 
-    public ActorLoader(ScriptParser scriptParser, Registry<ActorTemplate> actorTemplateRegistry, ScriptRuntime scriptRuntime, UIEventBus eventBus, SensoryEventDispatcher sensoryEventDispatcher, ItemFactory itemFactory, Registry<SenseType> senseTypeRegistry, Registry<Effect> effectRegistry, Registry<DamageType> damageTypeRegistry, Registry<Attribute> attributeRegistry, Registry<Skill> skillRegistry) {
+    public ActorLoader(ScriptParser scriptParser, Registry<ActorTemplate> actorTemplateRegistry, ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, ItemFactory itemFactory, Pathfinder pathfinder, Registry<SenseType> senseTypeRegistry, Registry<Effect> effectRegistry, Registry<DamageType> damageTypeRegistry, Registry<Attribute> attributeRegistry, Registry<Skill> skillRegistry) {
         this.scriptParser = scriptParser;
         this.actorTemplateRegistry = actorTemplateRegistry;
         this.scriptRuntime = scriptRuntime;
-        this.eventBus = eventBus;
         this.sensoryEventDispatcher = sensoryEventDispatcher;
         this.itemFactory = itemFactory;
+        this.pathfinder = pathfinder;
         this.senseTypeRegistry = senseTypeRegistry;
         this.effectRegistry = effectRegistry;
         this.damageTypeRegistry = damageTypeRegistry;
@@ -57,7 +57,7 @@ public class ActorLoader {
         String areaID = configHandler.get(ConfigOption.PLAYER_START_AREA);
         Area area = areaRegistry.getFromID(areaID);
         if (area == null) throw new GameDataException("Player actor has invalid area");
-        return new Actor(scriptRuntime, sensoryEventDispatcher, itemFactory, senseTypeRegistry, effectRegistry, damageTypeRegistry.getAll(), attributeRegistry.getAll(), skillRegistry.getAll(), ID, null, area, template, true, null, false, false, true);
+        return new Actor(scriptRuntime, sensoryEventDispatcher, itemFactory, pathfinder, senseTypeRegistry, effectRegistry, damageTypeRegistry.getAll(), attributeRegistry.getAll(), skillRegistry.getAll(), ID, null, area, template, true, null, false, false, true);
     }
 
     Actor parseActor(Element element, Area area) throws GameDataException {
@@ -69,7 +69,7 @@ public class ActorLoader {
         List<Behavior> behaviors = parseBehaviors(LoadUtils.singleChildWithName(element, "behaviors"), ID);
         boolean startDead = LoadUtils.attributeBool(element, "startDead", false);
         boolean startDisabled = LoadUtils.attributeBool(element, "startDisabled", false);
-        return new Actor(scriptRuntime, sensoryEventDispatcher, itemFactory, senseTypeRegistry, effectRegistry, damageTypeRegistry.getAll(), attributeRegistry.getAll(), skillRegistry.getAll(), ID, nameDescriptor, area, template, false, behaviors, startDead, startDisabled, false);
+        return new Actor(scriptRuntime, sensoryEventDispatcher, itemFactory, pathfinder, senseTypeRegistry, effectRegistry, damageTypeRegistry.getAll(), attributeRegistry.getAll(), skillRegistry.getAll(), ID, nameDescriptor, area, template, false, behaviors, startDead, startDisabled, false);
     }
 
     private List<Behavior> parseBehaviors(Element behaviorsElement, String actorID) throws GameDataException {
@@ -82,9 +82,9 @@ public class ActorLoader {
         return behaviors;
     }
 
-    private Behavior parseBehavior(Element behaviorElement, String actorID) throws GameDataException {
+    private Behavior parseBehavior(Element behaviorElement, String actorID) {
         String type = LoadUtils.attribute(behaviorElement, "type", null);
-        Condition condition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(behaviorElement, "condition"), scriptParser, "Behavior(" + actorID + ") - condition");
+        Condition condition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(behaviorElement, "condition"), scriptParser, "Behavior(" + actorID + ") - condition", scriptRuntime);
         Script startScript = LoadUtils.loadScript(LoadUtils.singleChildWithName(behaviorElement, "scriptStart"), scriptParser, "Behavior(" + actorID + ") - start script");
         Script eachRoundScript = LoadUtils.loadScript(LoadUtils.singleChildWithName(behaviorElement, "scriptEachRound"), scriptParser, "Behavior(" + actorID + ") - round script");
         int duration = LoadUtils.attributeInt(behaviorElement, "duration", 0);
@@ -114,7 +114,7 @@ public class ActorLoader {
             }
             case "action" -> {
                 String actionID = LoadUtils.attribute(behaviorElement, "action", null);
-                Condition actionCondition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(behaviorElement, "actionCondition"), scriptParser, "Behavior(" + actorID + ") - action condition");
+                Condition actionCondition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(behaviorElement, "actionCondition"), scriptParser, "Behavior(" + actorID + ") - action condition", scriptRuntime);
                 return new ActionBehavior(condition, startScript, eachRoundScript, duration, idles, actionID, actionCondition);
             }
             case "procedure" -> {
@@ -126,10 +126,10 @@ public class ActorLoader {
         }
     }
 
-    private Idle parseIdle(Element idleElement, String actorID) throws GameDataException {
-        Condition condition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(idleElement, "condition"), scriptParser, "Idle(" + actorID + ") - condition");
+    private Idle parseIdle(Element idleElement, String actorID) {
+        Condition condition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(idleElement, "condition"), scriptParser, "Idle(" + actorID + ") - condition", scriptRuntime);
         String phrase = LoadUtils.singleTag(idleElement, "phrase", null);
-        return new Idle(condition, phrase);
+        return new Idle(sensoryEventDispatcher, condition, phrase);
     }
 
 }

@@ -52,7 +52,7 @@ public class LootTableEntry {
 				for (int i = 0; i < count; i++) {
 					Item itemInstance = itemFactory.createWithGenID(itemReference);
 					if (modTable != null && itemInstance.hasComponentOfType(ModdableItemComponent.class) && MathUtils.randomCheck(modChance)) {
-						Inventory modInventory = new Inventory(null);
+						Inventory modInventory = new Inventory(itemFactory, null);
 						modTable.generateItems(inventory, itemFactory, itemMutableRegistry);
 						for (Map.Entry<Item, Integer> entry : modInventory.getItemMap().entrySet()) {
 							Item modItem = entry.getKey();
@@ -67,7 +67,7 @@ public class LootTableEntry {
 						}
 						modInventory.clear();
 					}
-					inventory.addItem(itemInstance, itemMutableRegistry);
+					inventory.addItem(itemInstance);
 				}
 			} else {
 				throw new IllegalStateException("LootTableEntry has no valid LootTable or ItemTemplate reference (should be impossible)");

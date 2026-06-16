@@ -4,11 +4,9 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
-import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.Phrases;
 
 import java.util.List;
@@ -20,8 +18,8 @@ public class ActionItemConsume extends Action {
 	private final String consumePhrase;
 	private final List<Effect> effects;
 	
-	public ActionItemConsume(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Item item, String consumePrompt, String consumePhrase, List<Effect> effects) {
-        super(scriptRuntime, sensoryEventDispatcher);
+	public ActionItemConsume(ActionDependencies dependencies, Item item, String consumePrompt, String consumePhrase, List<Effect> effects) {
+        super(dependencies);
         this.item = item;
 		this.consumePrompt = consumePrompt;
 		this.consumePhrase = consumePhrase;

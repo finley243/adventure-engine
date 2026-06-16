@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.actor.controller;
 
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionDependencies;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
@@ -15,14 +16,16 @@ import java.util.Map;
 public abstract class TurnController {
 
     protected final Actor actor;
+    private final ActionDependencies actionDependencies;
     protected final SensoryEventDispatcher sensoryEventDispatcher;
     protected final MenuManager menuManager;
 
     private final Map<Action, Integer> repeatActions;
     private int actionPointsUsed;
 
-    public TurnController(Actor actor, SensoryEventDispatcher sensoryEventDispatcher, MenuManager menuManager) {
+    public TurnController(Actor actor, ActionDependencies actionDependencies, SensoryEventDispatcher sensoryEventDispatcher, MenuManager menuManager) {
         this.actor = actor;
+        this.actionDependencies = actionDependencies;
         this.sensoryEventDispatcher = sensoryEventDispatcher;
         this.menuManager = menuManager;
         this.repeatActions = new HashMap<>();
@@ -49,7 +52,7 @@ public abstract class TurnController {
         while (canContinueTurn()) {
             questManager.update();
             onPreAction(scriptRuntime, pathfinder);
-            List<Action> actionChoices = actor.availableActions(pathfinder, () -> onEndTurnAction(scriptRuntime));
+            List<Action> actionChoices = actor.availableActions(actionDependencies, pathfinder, () -> onEndTurnAction(scriptRuntime));
             applyActionConstraints(actionChoices);
             if (actionChoices.isEmpty()) {
                 actor.endTurn();

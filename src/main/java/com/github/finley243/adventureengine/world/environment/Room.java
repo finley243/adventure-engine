@@ -12,7 +12,9 @@ import com.github.finley243.adventureengine.script.ScriptValueHolder;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Represents a self-contained space (e.g. an actual room) that contains smaller areas
@@ -103,22 +105,6 @@ public class Room extends GameInstanced implements Noun, ScriptValueHolder {
 	public boolean allowAllies() {
 		return allowAllies;
 	}
-	
-	/*public Set<WorldObject> getObjects() {
-		Set<WorldObject> objects = new HashSet<>();
-		for (Area area : areas) {
-			objects.addAll(area.getObjects());
-		}
-		return objects;
-	}
-	
-	public Set<Actor> getActors() {
-		Set<Actor> actors = new HashSet<>();
-		for (Area area : areas) {
-			actors.addAll(area.getActors());
-		}
-		return actors;
-	}*/
 
 	@Override
 	public String getName() {

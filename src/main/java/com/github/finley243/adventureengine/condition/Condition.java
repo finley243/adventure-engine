@@ -11,14 +11,16 @@ import com.github.finley243.adventureengine.script.ScriptRuntime;
  */
 public class Condition {
 
+	private final ScriptRuntime scriptRuntime;
 	private final Script expression;
 
-	public Condition(Script expression) {
+	public Condition(ScriptRuntime scriptRuntime, Script expression) {
 		if (expression == null) throw new IllegalArgumentException("Condition expression is null");
+		this.scriptRuntime = scriptRuntime;
 		this.expression = expression;
 	}
 	
-	public boolean isMet(ScriptRuntime scriptRuntime, Context context) {
+	public boolean isMet(Context context) {
 		Expression conditionValue = expression.run(scriptRuntime, context);
 		if (conditionValue == null) {
 			throw new ScriptExecutionException("Condition expression returned a null value");

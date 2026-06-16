@@ -1,17 +1,18 @@
 package com.github.finley243.adventureengine.network;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionDependencies;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.gamedata.Registry;
+import com.github.finley243.adventureengine.load.GameDataException;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ControlNetworkNode extends NetworkNode {
 
-    private final String objectID;
+    private String objectID;
     private WorldObject object;
 
     public ControlNetworkNode(String ID, String name, String objectID) {
@@ -20,17 +21,22 @@ public class ControlNetworkNode extends NetworkNode {
     }
 
     @Override
-    public void init(Game game, Map<String, WorldObject> objects) {
-        super.init(game, objects);
-        this.object = objects.get(objectID);
+    public void resolveReferences(Registry<WorldObject> objectRegistry) {
+        if (this.object != null) throw new IllegalStateException("ControlNetworkNode object has already been resolved");
+        WorldObject object = objectRegistry.getFromID(objectID);
+        if (object == null) throw new GameDataException("ControlNetworkNode has invalid object reference: " + objectID);
+        this.object = object;
+        this.objectID = null;
+        super.resolveReferences(objectRegistry);
     }
 
     @Override
-    protected List<Action> breachedActions(Game game, Actor subject, WorldObject object) {
-        return new ArrayList<>(game.data().getObject(objectID).networkActions(game, subject, this));
+    protected List<Action> breachedActions(Actor subject, ActionDependencies dependencies, WorldObject object) {
+        return new ArrayList<>(getObject().networkActions(subject, dependencies, this));
     }
 
-    public WorldObject getObject() {
+    WorldObject getObject() {
+        if (object == null) throw new IllegalStateException("ControlNetworkNode object has not been resolved");
         return object;
     }
 

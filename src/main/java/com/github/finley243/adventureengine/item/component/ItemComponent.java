@@ -2,13 +2,14 @@ package com.github.finley243.adventureengine.item.component;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionDependencies;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.template.ItemComponentTemplate;
-import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.script.ScriptValueHolder;
-import com.github.finley243.adventureengine.stat.*;
+import com.github.finley243.adventureengine.stat.Stat;
+import com.github.finley243.adventureengine.stat.StatHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,14 +42,14 @@ public abstract class ItemComponent implements ScriptValueHolder, StatHolder {
 
     public void onStartRound() {}
 
-    public List<Action> getInventoryActions(ScriptRuntime scriptRuntime, Actor subject) {
+    public List<Action> getInventoryActions(ActionDependencies dependencies, Actor subject) {
         if (!actionsRestricted()) {
-            return getPossibleInventoryActions(scriptRuntime, subject);
+            return getPossibleInventoryActions(dependencies, subject);
         }
         return new ArrayList<>();
     }
 
-    protected List<Action> getPossibleInventoryActions(ScriptRuntime scriptRuntime, Actor subject) {
+    protected List<Action> getPossibleInventoryActions(ActionDependencies dependencies, Actor subject) {
         return new ArrayList<>();
     }
 

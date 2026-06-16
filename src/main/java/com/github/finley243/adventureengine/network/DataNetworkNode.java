@@ -1,7 +1,7 @@
 package com.github.finley243.adventureengine.network;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionDependencies;
 import com.github.finley243.adventureengine.action.network.ActionNetworkReadData;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.scene.Scene;
@@ -24,9 +24,9 @@ public class DataNetworkNode extends NetworkNode {
     }
 
     @Override
-    protected List<Action> breachedActions(Game game, Actor subject, WorldObject object) {
+    protected List<Action> breachedActions(Actor subject, ActionDependencies dependencies, WorldObject object) {
         List<Action> actions = new ArrayList<>();
-        actions.add(new ActionNetworkReadData(this, object));
+        actions.add(new ActionNetworkReadData(dependencies, this, object));
         return actions;
     }
 

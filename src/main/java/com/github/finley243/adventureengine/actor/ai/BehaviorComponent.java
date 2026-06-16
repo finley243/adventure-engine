@@ -35,7 +35,7 @@ public class BehaviorComponent {
         if (current == null) {
             return null;
         } else {
-            return current.getIdle(actor, scriptRuntime);
+            return current.getIdle(actor);
         }
     }
 
@@ -69,14 +69,14 @@ public class BehaviorComponent {
         if (currentBehavior != null) {
             currentBehavior.update(actor, scriptRuntime, scriptContext);
         }
-        endCurrentBehaviorIfInvalid(scriptRuntime);
+        endCurrentBehaviorIfInvalid();
         selectNextBehavior(scriptRuntime);
         updateAreaTarget(pathfinder);
     }
 
-    private void endCurrentBehaviorIfInvalid(ScriptRuntime scriptRuntime) {
+    private void endCurrentBehaviorIfInvalid() {
         Behavior currentBehavior = currentBehavior();
-        if (currentBehavior != null && !currentBehavior.isValid(actor, scriptRuntime)) {
+        if (currentBehavior != null && !currentBehavior.isValid(actor)) {
             currentIndex = -1;
             areaTarget.markForRemoval();
             areaTarget = null;
@@ -111,10 +111,10 @@ public class BehaviorComponent {
         Behavior currentBehavior = currentBehavior();
         boolean onlyHigherPriorities = currentBehavior != null && !currentBehavior.hasCompleted(actor);
         for (int i = 0; i < (onlyHigherPriorities ? currentIndex : behaviors.size()); i++) {
-            if (behaviors.get(i).isValid(actor, scriptRuntime)) {
+            if (behaviors.get(i).isValid(actor)) {
                 currentIndex = i;
                 resetContext();
-                behaviors.get(i).onStart(actor, scriptRuntime, );
+                behaviors.get(i).onStart(actor, scriptRuntime, scriptContext);
                 if (areaTarget != null) {
                     if (behaviors.get(i).getTargetArea(actor) != null) {
                         areaTarget.setTargetArea(behaviors.get(i).getTargetArea(actor));

@@ -2,12 +2,15 @@ package com.github.finley243.adventureengine.item.component;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionDependencies;
 import com.github.finley243.adventureengine.action.ActionWeaponReload;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.ItemFactory;
+import com.github.finley243.adventureengine.item.template.AmmoItemComponentTemplate;
 import com.github.finley243.adventureengine.item.template.ItemComponentTemplate;
+import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.item.template.MagazineItemComponentTemplate;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.script.ScriptValueHolder;
@@ -15,19 +18,20 @@ import com.github.finley243.adventureengine.stat.IntStat;
 import com.github.finley243.adventureengine.stat.Stat;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MagazineItemComponent extends ItemComponent {
 
     private final IntStat clipSize;
     private final IntStat reloadActionPoints;
 
-    private Item ammoType;
+    private ItemTemplate ammoType;
     private int ammoCount;
 
-    public MagazineItemComponent(Item item, ItemComponentTemplate template) {
+    public MagazineItemComponent(Item item, ItemComponentTemplate template, ScriptRuntime scriptRuntime) {
         super(item, template);
-        this.clipSize = new IntStat("clip_size", item);
-        this.reloadActionPoints = new IntStat("reload_action_points", item);
+        this.clipSize = new IntStat("clip_size", item, scriptRuntime);
+        this.reloadActionPoints = new IntStat("reload_action_points", item, scriptRuntime);
         this.ammoType = null;
         this.ammoCount = 0;
     }
@@ -42,10 +46,10 @@ public class MagazineItemComponent extends ItemComponent {
     }
 
     @Override
-    protected List<Action> getPossibleInventoryActions(ScriptRuntime scriptRuntime, Actor subject) {
-        List<Action> actions = super.getPossibleInventoryActions(scriptRuntime, subject);
-        for (String current : getMagazineTemplate().getAmmoTypes()) {
-            actions.add(new ActionWeaponReload(getItem(), ItemFactory.createWithGenID(current)));
+    protected List<Action> getPossibleInventoryActions(ActionDependencies dependencies, Actor subject) {
+        List<Action> actions = super.getPossibleInventoryActions(dependencies, subject);
+        for (ItemTemplate current : getMagazineTemplate().getAmmoTypes()) {
+            actions.add(new ActionWeaponReload(dependencies, getItem(), current));
         }
         return actions;
     }
@@ -72,17 +76,22 @@ public class MagazineItemComponent extends ItemComponent {
         return getMagazineSize() - getAmmoRemaining();
     }
 
-    public void setLoadedAmmoType(Item type) {
+    public void setLoadedAmmoType(ItemTemplate type) {
+        if (Objects.equals(type, ammoType)) return;
         if (ammoType != null) {
-            ammoType.getComponentOfType(AmmoItemComponent.class).onUnload(getItem());
+            for (Effect effect : ammoType.getComponentTemplate(AmmoItemComponentTemplate.class).getWeaponEffects()) {
+                getItem().getComponentOfType(EffectableItemComponent.class).removeEffect(effect);
+            }
         }
         this.ammoType = type;
         if (type != null) {
-            type.getComponentOfType(AmmoItemComponent.class).onLoad(getItem());
+            for (Effect effect : type.getComponentTemplate(AmmoItemComponentTemplate.class).getWeaponEffects()) {
+                getItem().getComponentOfType(EffectableItemComponent.class).addEffect(effect);
+            }
         }
     }
 
-    public Item getLoadedAmmoType() {
+    public ItemTemplate getLoadedAmmoType() {
         return ammoType;
     }
 
@@ -128,7 +137,7 @@ public class MagazineItemComponent extends ItemComponent {
             int difference = ammoCount - getMagazineSize();
             ammoCount = getMagazineSize();
             if (getItem().getComponentOfType(EquippableItemComponent.class).getEquippedActor() != null) {
-                getItem().getComponentOfType(EquippableItemComponent.class).getEquippedActor().getInventory().addItems(ammoType.getTemplateID(), difference);
+                getItem().getComponentOfType(EquippableItemComponent.class).getEquippedActor().getInventory().addItems(ammoType.getID(), difference);
             }
         } else {
             super.onStatChange(name);

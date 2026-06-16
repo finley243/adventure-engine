@@ -3,18 +3,16 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataActor;
-import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.Phrases;
 
 public class ActionCarryActorEnd extends Action {
 
     private final Actor carriedActor;
 
-    public ActionCarryActorEnd(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Actor carriedActor) {
-        super(scriptRuntime, sensoryEventDispatcher);
+    public ActionCarryActorEnd(ActionDependencies dependencies, Actor carriedActor) {
+        super(dependencies);
         this.carriedActor = carriedActor;
     }
 

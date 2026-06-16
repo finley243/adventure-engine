@@ -2,10 +2,11 @@ package com.github.finley243.adventureengine.item.component;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionDependencies;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Skill;
-import com.github.finley243.adventureengine.combat.DamageType;
 import com.github.finley243.adventureengine.combat.AttackType;
+import com.github.finley243.adventureengine.combat.DamageType;
 import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -63,10 +64,10 @@ public class WeaponItemComponent extends ItemComponent {
     }
 
     @Override
-    protected List<Action> getPossibleInventoryActions(ScriptRuntime scriptRuntime, Actor subject) {
-        List<Action> actions = super.getPossibleInventoryActions(scriptRuntime, subject);
+    protected List<Action> getPossibleInventoryActions(ActionDependencies dependencies, Actor subject) {
+        List<Action> actions = super.getPossibleInventoryActions(dependencies, subject);
         for (AttackType attackType : getAttackTypes(Context.builder().subject(subject).parentItem(getItem()).build())) {
-            actions.addAll(attackType.generateActions(subject, getItem(), scriptRuntime, sensoryEventDispatcher));
+            actions.addAll(attackType.generateActions(subject, dependencies, getItem()));
         }
         return actions;
     }

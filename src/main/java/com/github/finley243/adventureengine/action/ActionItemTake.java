@@ -4,12 +4,10 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.component.WeaponItemComponent;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataItemWorld;
-import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
 
@@ -18,8 +16,8 @@ public class ActionItemTake extends Action {
 	private final Area area;
 	private final Item item;
 	
-	public ActionItemTake(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Area area, Item item) {
-        super(scriptRuntime, sensoryEventDispatcher);
+	public ActionItemTake(ActionDependencies dependencies, Area area, Item item) {
+        super(dependencies);
         this.area = area;
 		this.item = item;
 	}

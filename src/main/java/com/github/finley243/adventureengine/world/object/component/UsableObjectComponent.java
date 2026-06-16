@@ -5,7 +5,6 @@ import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.menu.action.MenuDataObject;
-import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.script.ScriptValueHolder;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -104,17 +103,17 @@ public class UsableObjectComponent extends ObjectComponent {
     }
 
     @Override
-    protected List<Action> getPossibleActions(Actor subject, ScriptRuntime scriptRuntime) {
+    protected List<Action> getPossibleActions(Actor subject, ActionDependencies dependencies) {
         List<Action> actions = new ArrayList<>();
         for (String slotID : getTemplateUsable().getUsableSlotData().keySet()) {
-            if (!users.containsKey(slotID) && (!subject.isUsingObject() || !subject.getUsingObject().equals(this))) {
+            if (!users.containsKey(slotID) && (!subject.isUsingObject() || !subject.getUsingObject()..equals(this))) {
                 actions.add(new ActionObjectUseStart(this, slotID));
             }
         }
         return actions;
     }
 
-    public List<Action> getUsingActions(String slotID, Actor subject, ScriptRuntime scriptRuntime) {
+    public List<Action> getUsingActions(String slotID, Actor subject, ActionDependencies dependencies) {
         List<Action> actions = new ArrayList<>();
         actions.add(new ActionObjectUseEnd(this, slotID));
         for (String exposedComponentName : getTemplateUsable().getUsableSlotData().get(slotID).componentsExposed()) {
@@ -125,7 +124,7 @@ public class UsableObjectComponent extends ObjectComponent {
         }
         for (ActionCustom.CustomActionHolder usingAction : getTemplateUsable().getUsableSlotData().get(slotID).usingActions()) {
             ActionTemplate usingActionTemplate = usingAction.action();
-            actions.add(new ActionCustom(scriptRuntime, null, getObject(), null, null, usingActionTemplate, usingAction.parameters(), new MenuDataObject(getObject()), false));
+            actions.add(new ActionCustom(dependencies, null, getObject(), null, null, usingActionTemplate, usingAction.parameters(), new MenuDataObject(getObject()), false));
         }
         return actions;
     }

@@ -4,11 +4,9 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataObject;
-import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.object.component.UsableObjectComponent;
 
@@ -17,8 +15,8 @@ public class ActionObjectUseStart extends Action {
 	private final UsableObjectComponent component;
 	private final String slotID;
 
-	public ActionObjectUseStart(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, UsableObjectComponent component, String slotID) {
-        super(scriptRuntime, sensoryEventDispatcher);
+	public ActionObjectUseStart(ActionDependencies dependencies, UsableObjectComponent component, String slotID) {
+        super(dependencies);
         this.component = component;
 		this.slotID = slotID;
 	}

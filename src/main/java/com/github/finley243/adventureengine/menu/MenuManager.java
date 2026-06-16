@@ -127,8 +127,8 @@ public class MenuManager {
 				case MenuDataInventoryCombine data -> {
 					String itemName = LangUtils.titleCase(data.item.getName());
 					int itemCount = data.inv.itemCount(data.item);
-					String combinedItemName = LangUtils.titleCase(data.combinedItem.getName());
-					int combinedItemCount = data.combinedInv.itemCount(data.combinedItem);
+					String combinedItemName = data.combinedItem != null ? LangUtils.titleCase(data.combinedItem.getName()) : LangUtils.titleCase(data.combinedItemTemplate.getName());
+					int combinedItemCount = data.combinedItem != null ? data.combinedInv.itemCount(data.combinedItem) : data.combinedInv.itemCount(data.combinedItemTemplate.getID());
 					if (!categoryMap.containsKey("inventory")) {
 						categoryMap.put("inventory", new MenuCategory(MenuCategory.CategoryType.INVENTORY, "inventory", null, true, false, "Inventory", null));
 					}

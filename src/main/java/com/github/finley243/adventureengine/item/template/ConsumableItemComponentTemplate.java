@@ -1,14 +1,16 @@
 package com.github.finley243.adventureengine.item.template;
 
+import com.github.finley243.adventureengine.effect.Effect;
+
 import java.util.List;
 
 public class ConsumableItemComponentTemplate extends ItemComponentTemplate {
 
     private final String consumePrompt;
     private final String consumePhrase;
-    private final List<String> effects;
+    private final List<Effect> effects;
 
-    public ConsumableItemComponentTemplate(boolean actionsRestricted, String consumePrompt, String consumePhrase, List<String> effects) {
+    public ConsumableItemComponentTemplate(boolean actionsRestricted, String consumePrompt, String consumePhrase, List<Effect> effects) {
         super(actionsRestricted);
         this.consumePrompt = consumePrompt;
         this.consumePhrase = consumePhrase;
@@ -23,7 +25,7 @@ public class ConsumableItemComponentTemplate extends ItemComponentTemplate {
         return consumePhrase;
     }
 
-    public List<String> getEffects() {
+    public List<Effect> getEffects() {
         return effects;
     }
 

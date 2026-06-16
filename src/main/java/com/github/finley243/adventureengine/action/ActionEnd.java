@@ -2,17 +2,15 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataSelf;
-import com.github.finley243.adventureengine.script.ScriptRuntime;
 
 public class ActionEnd extends Action {
 
 	private final Runnable onEndTurn;
 
-	public ActionEnd(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Runnable onEndTurn) {
-        super(scriptRuntime, sensoryEventDispatcher);
+	public ActionEnd(ActionDependencies dependencies, Runnable onEndTurn) {
+        super(dependencies);
 		this.onEndTurn = onEndTurn;
     }
 

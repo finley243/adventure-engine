@@ -64,9 +64,9 @@ public class QuestObjective extends GameInstanced implements ScriptValueHolder {
 
     public void update() {
         if (isActive && state == State.OPEN) {
-            if (completionCondition != null && completionCondition.isMet(scriptRuntime, Context.builder().build())) {
+            if (completionCondition != null && completionCondition.isMet(Context.builder().build())) {
                 setCompleted(true);
-            } else if (failureCondition != null && failureCondition.isMet(scriptRuntime, Context.builder().build())) {
+            } else if (failureCondition != null && failureCondition.isMet(Context.builder().build())) {
                 setFailed(true);
             }
         }
