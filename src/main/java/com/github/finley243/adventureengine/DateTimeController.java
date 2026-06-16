@@ -1,5 +1,8 @@
 package com.github.finley243.adventureengine;
 
+import com.github.finley243.adventureengine.gamedata.ConfigHandler;
+import com.github.finley243.adventureengine.gamedata.ConfigOption;
+
 public class DateTimeController {
 
     public static final int MINUTES_PER_ROUND = 2;
@@ -34,13 +37,13 @@ public class DateTimeController {
         }
     }
 
-    public void reset(Data data) {
-        int hoursComponent = Integer.parseInt(data.getConfig("startTimeHours"));
-        int minutesComponent = Integer.parseInt(data.getConfig("startTimeMinutes"));
-        int startDateYear = Integer.parseInt(data.getConfig("startDateYear"));
-        int startDateMonth = Integer.parseInt(data.getConfig("startDateMonth"));
-        int startDateDay = Integer.parseInt(data.getConfig("startDateDay"));
-        int startDateWeekday = DateTimeController.getWeekdayIndex(data.getConfig("startDateWeekday"));
+    public void reset(ConfigHandler configHandler) {
+        int hoursComponent = Integer.parseInt(configHandler.get(ConfigOption.START_TIME_HOURS));
+        int minutesComponent = Integer.parseInt(configHandler.get(ConfigOption.START_TIME_MINUTES));
+        int startDateYear = Integer.parseInt(configHandler.get(ConfigOption.START_DATE_YEAR));
+        int startDateMonth = Integer.parseInt(configHandler.get(ConfigOption.START_DATE_MONTH));
+        int startDateDay = Integer.parseInt(configHandler.get(ConfigOption.START_DATE_DAY));
+        int startDateWeekday = DateTimeController.getWeekdayIndex(configHandler.get(ConfigOption.START_DATE_WEEKDAY));
         this.minutes = (hoursComponent * 60) + minutesComponent;
         this.year = startDateYear;
         this.month = startDateMonth;
