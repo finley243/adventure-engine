@@ -1,7 +1,9 @@
 package com.github.finley243.adventureengine.action.attack;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.combat.DamageType;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
+import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.component.AmmoItemComponent;
@@ -21,8 +23,8 @@ public class ActionAttackBasic extends ActionAttack {
 	private final AttackTarget target;
 	private final Item weapon;
 
-	public ActionAttackBasic(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, WeaponAttackType attackType, Item weapon, AttackTarget target, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, Script damage, String damageType, float armorMult, List<String> targetEffects, Script hitChanceExpression, Script hitChanceOverallExpression, float hitChanceMult, boolean isLoud) {
-		super(scriptRuntime, sensoryEventDispatcher, attackType, weapon, Set.of(target), null, null, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffects, hitChanceExpression, hitChanceOverallExpression, hitChanceMult, isLoud);
+	public ActionAttackBasic(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, WeaponAttackType attackType, Item weapon, AttackTarget target, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, Script damage, DamageType damageType, float armorMult, List<Effect> targetEffects, Script hitChanceExpression, Script hitChanceOverallExpression, float hitChanceMult, boolean isLoud, AreaLink.DistanceCategory targetDistance) {
+		super(scriptRuntime, sensoryEventDispatcher, attackType, weapon, Set.of(target), null, null, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffects, hitChanceExpression, hitChanceOverallExpression, hitChanceMult, isLoud, targetDistance);
 		this.target = target;
 		this.weapon = weapon;
 	}
@@ -36,7 +38,7 @@ public class ActionAttackBasic extends ActionAttack {
 			if (weapon.getComponentOfType(MagazineItemComponent.class).getLoadedAmmoType() != null && weapon.getComponentOfType(MagazineItemComponent.class).getLoadedAmmoType().getComponentOfType(AmmoItemComponent.class).isReusable()) {
 				target.getArea().getInventory().addItems(weapon.getComponentOfType(MagazineItemComponent.class).getLoadedAmmoType().getTemplateID(), getAmmoConsumed());
 			}
-			weapon.getComponentOfType(MagazineItemComponent.class).consumeAmmo();
+			weapon.getComponentOfType(MagazineItemComponent.class).consumeAmmo(getAmmoConsumed());
 		}
 		switch (getWeaponConsumeType()) {
 			case PLACE -> {
@@ -56,7 +58,7 @@ public class ActionAttackBasic extends ActionAttack {
 		if (weapon != null && weapon.hasComponentOfType(MagazineItemComponent.class) && weapon.getComponentOfType(MagazineItemComponent.class).getAmmoRemaining() < getAmmoConsumed()) {
 			return new CanChooseResult(false, "Not enough ammo");
 		}
-		if (!getRanges().contains(subject.getArea().getLinearDistanceTo(target.getArea()))) {
+		if (!getRanges().contains(getTargetDistance())) {
 			return new CanChooseResult(false, "Target outside range");
 		}
 		if (!target.isVisible(subject)) {

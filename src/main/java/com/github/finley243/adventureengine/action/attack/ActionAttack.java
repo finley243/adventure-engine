@@ -56,8 +56,9 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final Script hitChanceOverallExpression;
     private final float hitChanceMult;
     private final boolean isLoud;
+    private final AreaLink.DistanceCategory targetDistance;
 
-    public ActionAttack(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, WeaponAttackType attackType, Item weapon, Set<AttackTarget> targets, Limb limb, Area area, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, Script damage, DamageType damageType, float armorMult, List<Effect> targetEffects, Script hitChanceExpression, Script hitChanceOverallExpression, float hitChanceMult, boolean isLoud) {
+    public ActionAttack(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, WeaponAttackType attackType, Item weapon, Set<AttackTarget> targets, Limb limb, Area area, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, Script damage, DamageType damageType, float armorMult, List<Effect> targetEffects, Script hitChanceExpression, Script hitChanceOverallExpression, float hitChanceMult, boolean isLoud, AreaLink.DistanceCategory targetDistance) {
         super(scriptRuntime, sensoryEventDispatcher, targets);
         this.attackType = attackType;
         this.weapon = weapon;
@@ -82,6 +83,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         this.hitChanceOverallExpression = hitChanceOverallExpression;
         this.hitChanceMult = hitChanceMult;
         this.isLoud = isLoud;
+        this.targetDistance = targetDistance;
     }
 
     @Override
@@ -148,6 +150,10 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     public WeaponAttackType.WeaponConsumeType getWeaponConsumeType() {
         return weaponConsumeType;
+    }
+
+    protected AreaLink.DistanceCategory getTargetDistance() {
+        return targetDistance;
     }
 
     @Override

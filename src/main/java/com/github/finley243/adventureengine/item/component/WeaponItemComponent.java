@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.item.component;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.combat.DamageType;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.effect.Effect;
@@ -113,11 +114,11 @@ public class WeaponItemComponent extends ItemComponent {
         return armorMult.value(getWeaponTemplate().getArmorMult(), 0.0f, 2.0f, context);
     }
 
-    public Set<String> getTargetEffects(ScriptRuntime scriptRuntime, Context context) {
+    public Set<Effect> getTargetEffects(ScriptRuntime scriptRuntime, Context context) {
         return targetEffects.value(getWeaponTemplate().getTargetEffects(), scriptRuntime, context);
     }
 
-    public String getDamageType(Context context) {
+    public DamageType getDamageType(Context context) {
         return damageType.value(getWeaponTemplate().getDamageType(), context);
     }
 
