@@ -93,13 +93,15 @@ public class GameDataLoader {
         }
 
         File scriptDir = new File(dir, SCRIPTS_PATH);
+        ScriptLoader scriptLoader = new ScriptLoader(scriptParser);
+        Map<String, ScriptParser.ScriptData> nativeFunctions = scriptLoader.generateNativeFunctions();
         Map<String, ScriptParser.ScriptData> scriptMap;
         if (!scriptDir.exists()) {
             scriptMap = new HashMap<>();
         } else {
-            ScriptLoader scriptLoader = new ScriptLoader(scriptParser);
-            scriptMap = scriptLoader.loadFromDir(scriptDir);
+            scriptMap = scriptLoader.loadFromDir(scriptDir, nativeFunctions.keySet());
         }
+        scriptMap.putAll(nativeFunctions);
         Registry<ScriptParser.ScriptData> scriptRegistry = new Registry<>(scriptMap);
 
         PhraseLoader phraseLoader = new PhraseLoader();
