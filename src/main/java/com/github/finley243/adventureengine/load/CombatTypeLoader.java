@@ -96,13 +96,13 @@ public class CombatTypeLoader {
         boolean isLoud = LoadUtils.attributeBool(element, NAME_WEAPON_CLASS_IS_LOUD, DEFAULT_WEAPON_CLASS_IS_LOUD);
         String skillID = LoadUtils.attribute(element, NAME_WEAPON_CLASS_SKILL, null);
         Skill skill = skillRegistry.getFromID(skillID);
-        if (skill == null) throw new GameDataException("WeaponClass has invalid skill");
+        if (skill == null) throw new GameDataException("WeaponClass has invalid skill: " + skillID);
         Set<AreaLink.DistanceCategory> primaryRanges = LoadUtils.setOfEnumTags(element, NAME_WEAPON_CLASS_RANGE, AreaLink.DistanceCategory.class);
         Set<String> attackTypeIDs = LoadUtils.setOfTags(element, NAME_WEAPON_CLASS_ATTACK_TYPE);
         Set<AttackType> attackTypes = new HashSet<>();
         for (String attackTypeID : attackTypeIDs) {
             AttackType attackType = attackTypeRegistry.getFromID(attackTypeID);
-            if (attackType == null) throw new GameDataException("WeaponClass has invalid attack type");
+            if (attackType == null) throw new GameDataException("WeaponClass has invalid attack type: " + attackTypeID);
             attackTypes.add(attackType);
         }
         return new WeaponClass(ID, name, isRanged, isLoud, skill, primaryRanges, attackTypes);
@@ -136,13 +136,13 @@ public class CombatTypeLoader {
         float damageMult = LoadUtils.attributeFloat(element, NAME_ATTACK_TYPE_DAMAGE_MULT, DEFAULT_ATTACK_TYPE_DAMAGE_MULT);
         String damageTypeOverrideID = LoadUtils.attribute(element, NAME_ATTACK_TYPE_DAMAGE_TYPE, null);
         DamageType damageTypeOverride = damageTypeRegistry.getFromID(damageTypeOverrideID);
-        if (damageTypeOverride == null) throw new GameDataException("AttackType has invalid damage type override");
+        if (damageTypeOverrideID != null && damageTypeOverride == null) throw new GameDataException("AttackType has invalid damage type override: " + damageTypeOverrideID);
         Float armorMultOverride = LoadUtils.attributeFloat(element, NAME_ATTACK_TYPE_ARMOR_MULT, null);
         List<String> targetEffectIDs = LoadUtils.listOfTags(element, NAME_ATTACK_TYPE_TARGET_EFFECT);
         List<Effect> targetEffects = new ArrayList<>();
         for (String effectID : targetEffectIDs) {
             Effect effect = effectRegistry.getFromID(effectID);
-            if (effect == null) throw new GameDataException("AttackType has invalid target effect");
+            if (effect == null) throw new GameDataException("AttackType has invalid target effect: " + effectID);
             targetEffects.add(effect);
         }
         boolean overrideTargetEffects = LoadUtils.attributeBool(element, NAME_ATTACK_TYPE_OVERRIDE_EFFECTS, DEFAULT_ATTACK_TYPE_OVERRIDE_EFFECTS);

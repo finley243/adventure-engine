@@ -41,6 +41,7 @@ public class ScriptLoader {
                 }
                 for (ScriptParser.ScriptData function : functions) {
                     scriptDataMap.put(function.name(), function);
+                    System.out.println("Loaded function: " + function.name());
                 }
             }
         }

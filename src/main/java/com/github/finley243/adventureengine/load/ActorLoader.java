@@ -53,10 +53,10 @@ public class ActorLoader {
         String ID = configHandler.get(ConfigOption.PLAYER_ID);
         String templateID = configHandler.get(ConfigOption.PLAYER_STATS);
         ActorTemplate template = actorTemplateRegistry.getFromID(templateID);
-        if (template == null) throw new GameDataException("Player actor has invalid template");
+        if (template == null) throw new GameDataException("Player actor has invalid template: " + templateID);
         String areaID = configHandler.get(ConfigOption.PLAYER_START_AREA);
         Area area = areaRegistry.getFromID(areaID);
-        if (area == null) throw new GameDataException("Player actor has invalid area");
+        if (area == null) throw new GameDataException("Player actor has invalid area: " + areaID);
         return new Actor(scriptRuntime, sensoryEventDispatcher, itemFactory, pathfinder, senseTypeRegistry, effectRegistry, damageTypeRegistry.getAll(), attributeRegistry.getAll(), skillRegistry.getAll(), ID, null, area, template, true, null, false, false, true);
     }
 
@@ -64,7 +64,7 @@ public class ActorLoader {
         String ID = LoadUtils.attribute(element, "id", null);
         String templateID = LoadUtils.attribute(element, "template", null);
         ActorTemplate template = actorTemplateRegistry.getFromID(templateID);
-        if (template == null) throw new GameDataException("Actor has invalid template");
+        if (template == null) throw new GameDataException("Actor has invalid template: " + templateID);
         String nameDescriptor = LoadUtils.singleTag(element, "descriptor", null);
         List<Behavior> behaviors = parseBehaviors(LoadUtils.singleChildWithName(element, "behaviors"), ID);
         boolean startDead = LoadUtils.attributeBool(element, "startDead", false);

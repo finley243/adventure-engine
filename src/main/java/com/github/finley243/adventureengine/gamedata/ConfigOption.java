@@ -4,7 +4,7 @@ public enum ConfigOption {
     INTERFACE_TYPE("interfaceType"),
     ENABLE_DEBUG_LOG("enableDebugLog"),
     PLAYER_STATS("playerStats"),
-    PLAYER_ID("playerId"),
+    PLAYER_ID("playerID"),
     PLAYER_START_AREA("playerStartArea"),
     GAME_NAME("gameName"),
     DEFAULT_DAMAGE_TYPE("defaultDamageType"),

@@ -1,9 +1,0 @@
-<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/actions.xsd">
-    <action id="vending_machine_hack_price">
-        <prompt>Hack Price</prompt>
-        <condition>
-            <script>!stat.parentObject.price_hacked</script>
-        </condition>
-        <script>stat.parentObject.price_hacked = true;</script>
-    </action>
-</data>

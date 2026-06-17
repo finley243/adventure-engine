@@ -19,7 +19,7 @@ public class PhraseLoader {
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             String[] split = line.split(":");
-            if (split.length != 2) throw new UnsupportedOperationException("Invalid phrase file format - line: " + line);
+            if (split.length != 2) throw new GameDataException("Invalid phrase file format - line: " + line);
             phrases.put(split[0].trim(), split[1].trim());
         }
         scanner.close();

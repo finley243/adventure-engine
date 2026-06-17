@@ -67,7 +67,7 @@
 
     <xs:complexType name="EquipSlotGroup">
         <xs:sequence>
-            <xs:element name="slot" type="xs:string"/>
+            <xs:element name="slot" type="xs:string" maxOccurs="unbounded"/>
             <xs:element name="exposedComponent" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="effect" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="equippedAction" type="CustomAction" minOccurs="0" maxOccurs="unbounded"/>

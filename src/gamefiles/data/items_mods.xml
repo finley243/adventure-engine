@@ -1,8 +1,0 @@
-<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/items.xsd">
-    <item id="mag_extended_pistol">
-        <name>extended pistol magazine</name>
-        <component type="mod" modSlot="pistol_mag">
-            <effect>mag_extended_pistol_effect</effect>
-        </component>
-    </item>
-</data>

@@ -49,7 +49,7 @@ public class NetworkLoader {
                 }
                 return new GroupNetworkNode(ID, name, groupNodes);
             }
-            default -> throw new GameDataException("NetworkNode has invalid type");
+            default -> throw new GameDataException("NetworkNode has invalid type: " + type);
         }
     }
 

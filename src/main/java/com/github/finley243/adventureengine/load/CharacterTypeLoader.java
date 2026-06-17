@@ -56,7 +56,7 @@ public class CharacterTypeLoader {
         Set<ObstructionType> bypassedObstructionTypes = new HashSet<>();
         for (String obstructionTypeID : bypassedObstructionTypeIDs) {
             ObstructionType obstructionType = obstructionTypeRegistry.getFromID(obstructionTypeID);
-            if (obstructionType == null) throw new GameDataException("SenseType has invalid bypassed obstruction type");
+            if (obstructionType == null) throw new GameDataException("SenseType has invalid bypassed obstruction type: " + obstructionTypeID);
             bypassedObstructionTypes.add(obstructionType);
         }
         return new SenseType(ID, name, bypassedObstructionTypes);

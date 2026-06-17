@@ -37,7 +37,7 @@ public class WorldTypeLoader {
         boolean isVisible = LoadUtils.attributeBool(element, "visible", true);
         String actorMoveActionID = LoadUtils.attribute(element, "moveAction", null);
         ActionTemplate actorMoveAction = actionRegistry.getFromID(actorMoveActionID);
-        if (actorMoveAction == null) throw new GameDataException("LinkType has invalid move action");
+        if (actorMoveAction == null) throw new GameDataException("LinkType has invalid move action: " + actorMoveActionID);
         Set<AreaLink.DistanceCategory> actorMoveDistances = LoadUtils.setOfEnumTags(element, "moveDistance", AreaLink.DistanceCategory.class);
         Map<String, ActionTemplate> vehicleMoveActions = new HashMap<>();
         Map<String, Set<AreaLink.DistanceCategory>> vehicleMoveDistances = new HashMap<>();
@@ -45,7 +45,7 @@ public class WorldTypeLoader {
             String vehicleType = LoadUtils.attribute(vehicleTypeElement, "type", null);
             String vehicleMoveActionID = LoadUtils.attribute(vehicleTypeElement, "action", null);
             ActionTemplate vehicleMoveAction = actionRegistry.getFromID(vehicleMoveActionID);
-            if (vehicleMoveAction == null) throw new GameDataException("LinkType has invalid vehicle move action");
+            if (vehicleMoveAction == null) throw new GameDataException("LinkType has invalid vehicle move action: " + vehicleMoveActionID);
             Set<AreaLink.DistanceCategory> vehicleTypeMoveDistances = LoadUtils.setOfEnumTags(vehicleTypeElement, "moveDistance", AreaLink.DistanceCategory.class);
             vehicleMoveActions.put(vehicleType, vehicleMoveAction);
             vehicleMoveDistances.put(vehicleType, vehicleTypeMoveDistances);

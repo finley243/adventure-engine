@@ -18,9 +18,9 @@ public class ItemLoader {
 
     Item parseItem(Element element) throws GameDataException {
         String templateID = LoadUtils.attribute(element, "template", null);
-        if (templateID == null) throw new GameDataException("Item instance does not reference a template");
+        if (templateID == null) throw new GameDataException("Item has no specified template");
         ItemTemplate template = itemTemplateRegistry.getFromID(templateID);
-        if (template == null) throw new GameDataException("Item instance references a nonexistent template");
+        if (template == null) throw new GameDataException("Item has invalid template: " + templateID);
         String instanceID = LoadUtils.attribute(element, "id", null);
         Item itemInstance;
         if (instanceID == null) {

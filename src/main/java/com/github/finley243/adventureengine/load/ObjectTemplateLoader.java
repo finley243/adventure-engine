@@ -137,7 +137,7 @@ public class ObjectTemplateLoader {
                 String vehicleType = LoadUtils.attribute(element, "vehicleType", null);
                 return new VehicleObjectComponentTemplate(startEnabled, actionsRestricted, vehicleType);
             }
-            default -> throw new GameDataException("ObjectComponentTemplate has invalid or missing type");
+            default -> throw new GameDataException("ObjectComponentTemplate has invalid type: " + type);
         }
     }
 

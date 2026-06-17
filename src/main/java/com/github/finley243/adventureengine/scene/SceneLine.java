@@ -63,7 +63,7 @@ public class SceneLine {
             if (scene == null) throw new GameDataException("Scene has invalid from-scene reference");
             fromScene = scene;
         }
-        for (SceneLine line : subLines) {
+        for (SceneLine line : getSubLines()) {
             line.resolveLinkedScenes(sceneRegistry);
         }
     }
@@ -73,6 +73,7 @@ public class SceneLine {
     }
 
     public List<SceneLine> getSubLines() {
+        if (subLines == null) return List.of();
         return subLines;
     }
     

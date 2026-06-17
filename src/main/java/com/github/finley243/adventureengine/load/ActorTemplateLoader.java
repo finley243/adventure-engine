@@ -108,7 +108,7 @@ public class ActorTemplateLoader {
         LootTable lootTable = lootTableLoader.parseLootTable(LoadUtils.singleChildWithName(element, "inventory"), lootTableRegistry::getFromID, true);
         String dialogueStartID = LoadUtils.attribute(element, "dialogueStart", null);
         Scene dialogueStart = sceneRegistry.getFromID(dialogueStartID);
-        if (dialogueStart == null) throw new GameDataException("ActorTemplate has invalid dialogue start scene");
+        if (dialogueStartID != null && dialogueStart == null) throw new GameDataException("ActorTemplate has invalid dialogue start scene: " + dialogueStartID);
         Map<String, Integer> attributes = new HashMap<>();
         for (Element attributeElement : LoadUtils.directChildrenWithName(element, "attribute")) {
             String attribute = LoadUtils.attribute(attributeElement, "key", null);
@@ -125,14 +125,14 @@ public class ActorTemplateLoader {
         Set<SenseType> senseTypes = new HashSet<>();
         for (String senseTypeID : senseTypeIDs) {
             SenseType senseType = senseTypeRegistry.getFromID(senseTypeID);
-            if (senseType == null) throw new GameDataException("ActorTemplate has invalid senseType");
+            if (senseType == null) throw new GameDataException("ActorTemplate has invalid senseType: " + senseTypeID);
             senseTypes.add(senseType);
         }
         List<String> unarmedAttackTypeIDs = LoadUtils.listOfTags(element, "attackType");
         List<AttackType> unarmedAttackTypes = new ArrayList<>();
         for (String unarmedAttackTypeID : unarmedAttackTypeIDs) {
             AttackType unarmedAttackType = attackTypeRegistry.getFromID(unarmedAttackTypeID);
-            if (unarmedAttackType == null) throw new GameDataException("ActorTemplate has invalid unarmed attack type");
+            if (unarmedAttackType == null) throw new GameDataException("ActorTemplate has invalid unarmed attack type: " + unarmedAttackTypeID);
             unarmedAttackTypes.add(unarmedAttackType);
         }
         Map<String, List<Script>> scripts = LoadUtils.loadScriptsWithTriggers(element, scriptParser, "Actor(" + id + ")");

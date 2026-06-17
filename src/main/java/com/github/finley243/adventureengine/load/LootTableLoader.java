@@ -74,15 +74,15 @@ public class LootTableLoader {
         int countMax = LoadUtils.attributeInt(element, "countMax", count);
         String modTableID = LoadUtils.attribute(element, "modTable", null);
         LootTable modTable = lootTableLookup.apply(modTableID);
-        if (modTable == null) throw new GameDataException("LootTable has invalid mod table reference");
+        if (modTableID != null && modTable == null) throw new GameDataException("LootTable has invalid mod table reference: " + modTableID);
         float modChance = LoadUtils.attributeFloat(element, "modChance", 1.0f);
         if (isTable) {
             LootTable tableReference = lootTableLookup.apply(referenceID);
-            if (tableReference == null) throw new GameDataException("LootTable has invalid sub-table reference");
+            if (tableReference == null) throw new GameDataException("LootTable has invalid sub-table reference: " + referenceID);
             return new LootTableEntry(tableReference, chance, countMin, countMax, modTable, modChance);
         } else {
             ItemTemplate itemReference = itemTemplateRegistry.getFromID(referenceID);
-            if (itemReference == null) throw new GameDataException("LootTable has invalid item reference");
+            if (itemReference == null) throw new GameDataException("LootTable has invalid item reference: " + referenceID);
             return new LootTableEntry(itemReference, chance, countMin, countMax, modTable, modChance);
         }
     }

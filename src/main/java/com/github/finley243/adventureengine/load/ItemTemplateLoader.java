@@ -115,7 +115,7 @@ public class ItemTemplateLoader {
                     List<Effect> equippedEffects = new ArrayList<>();
                     for (String effectID : equippedEffectIDs) {
                         Effect effect = effectRegistry.getFromID(effectID);
-                        if (effect == null) throw new GameDataException("ItemComponentTemplateEquippable has invalid equipped effect");
+                        if (effect == null) throw new GameDataException("ItemComponentTemplateEquippable has invalid equipped effect: " + effectID);
                         equippedEffects.add(effect);
                     }
                     List<ActionCustom.CustomActionHolder> equippedActions = LoadUtils.loadCustomActions(componentElement, "equippedAction", scriptParser, actionRegistry, "ItemComponent(" + itemID + ")");
@@ -135,7 +135,7 @@ public class ItemTemplateLoader {
                 List<Effect> effects = new ArrayList<>();
                 for (String effectID : effectIDs) {
                     Effect effect = effectRegistry.getFromID(effectID);
-                    if (effect == null) throw new GameDataException("ItemComponentTemplateMod has invalid effect");
+                    if (effect == null) throw new GameDataException("ItemComponentTemplateMod has invalid effect: " + effectID);
                     effects.add(effect);
                 }
                 return new ModItemComponentTemplate(actionsRestricted, modSlot, effects);
@@ -152,7 +152,7 @@ public class ItemTemplateLoader {
             case "weapon" -> {
                 String weaponClassID = LoadUtils.attribute(componentElement, "class", null);
                 WeaponClass weaponClass = weaponClassRegistry.getFromID(weaponClassID);
-                if (weaponClass == null) throw new GameDataException("ItemComponentTemplateWeapon has invalid weapon class");
+                if (weaponClass == null) throw new GameDataException("ItemComponentTemplateWeapon has invalid weapon class: " + weaponClassID);
                 int weaponRate = LoadUtils.singleTagInt(componentElement, "rate", 1);
                 Element damageElement = LoadUtils.singleChildWithName(componentElement, "damage");
                 int weaponDamage = LoadUtils.attributeInt(damageElement, "base", 0);
@@ -160,19 +160,19 @@ public class ItemTemplateLoader {
                 float critChance = LoadUtils.attributeFloat(componentElement, "critChance", 0.0f);
                 String weaponDamageTypeID = LoadUtils.attribute(damageElement, "type", configHandler.get(ConfigOption.DEFAULT_DAMAGE_TYPE));
                 DamageType weaponDamageType = damageTypeRegistry.getFromID(weaponDamageTypeID);
-                if (weaponDamageType == null) throw new GameDataException("ItemComponentTemplateWeapon has invalid damage type");
+                if (weaponDamageType == null) throw new GameDataException("ItemComponentTemplateWeapon has invalid damage type: " + weaponDamageTypeID);
                 float weaponArmorMult = LoadUtils.singleTagFloat(componentElement, "armorMult", 1.0f);
                 boolean weaponSilenced = LoadUtils.singleTagBoolean(componentElement, "silenced", false);
                 Set<String> weaponTargetEffectIDs = LoadUtils.setOfTags(componentElement, "targetEffect");
                 Set<Effect> weaponTargetEffects = new HashSet<>();
                 for (String effectID : weaponTargetEffectIDs) {
                     Effect effect = effectRegistry.getFromID(effectID);
-                    if (effect == null) throw new GameDataException("ItemComponentTemplateWeapon has invalid target effect");
+                    if (effect == null) throw new GameDataException("ItemComponentTemplateWeapon has invalid target effect: " + effectID);
                     weaponTargetEffects.add(effect);
                 }
                 return new WeaponItemComponentTemplate(actionsRestricted, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects);
             }
-            default -> throw new GameDataException("ItemComponentTemplate has invalid or missing type");
+            default -> throw new GameDataException("ItemComponentTemplate has invalid type: " + type);
         }
     }
 

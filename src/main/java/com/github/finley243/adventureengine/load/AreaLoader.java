@@ -110,18 +110,18 @@ public class AreaLoader {
             String linkAreaID = LoadUtils.attribute(linkElement, "area", null);
             String linkTypeID = LoadUtils.attribute(linkElement, "type", linkTypeDefault);
             LinkType linkType = linkTypeRegistry.getFromID(linkTypeID);
-            if (linkType == null) throw new GameDataException("AreaLink has invalid link type");
+            if (linkType == null) throw new GameDataException("AreaLink has invalid link type: " + linkTypeID);
             AreaLink.CompassDirection linkDirection;
             try {
                 linkDirection = LoadUtils.attributeEnum(linkElement, "dir", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
             } catch (IllegalArgumentException e) {
-                throw new GameDataException("Area has invalid link direction");
+                throw new GameDataException("AreaLink has invalid link direction");
             }
             AreaLink.DistanceCategory linkDistance;
             try {
                 linkDistance = LoadUtils.attributeEnum(linkElement, "dist", AreaLink.DistanceCategory.class, AreaLink.DistanceCategory.CLOSE);
             } catch (IllegalArgumentException e) {
-                throw new GameDataException("Area has invalid link distance category");
+                throw new GameDataException("AreaLink has invalid link distance category");
             }
             AreaLink link = new AreaLink(linkType, linkDirection, linkDistance);
             linkSet.put(linkAreaID, link);
@@ -131,7 +131,7 @@ public class AreaLoader {
         Set<ObstructionType> defaultObstructionTypes = new HashSet<>();
         for (String obstructionTypeID : defaultObstructionTypeIDs) {
             ObstructionType obstructionType = obstructionTypeRegistry.getFromID(obstructionTypeID);
-            if (obstructionType == null) throw new GameDataException("Area has invalid obstruction type");
+            if (obstructionType == null) throw new GameDataException("Area has invalid obstruction type: " + obstructionTypeID);
             defaultObstructionTypes.add(obstructionType);
         }
 
@@ -146,7 +146,7 @@ public class AreaLoader {
         WorldObject landmarkObject = null;
         if (landmarkID != null) {
             landmarkObject = objectMap.get(landmarkID);
-            if (landmarkObject == null) throw new GameDataException("Area landmark object not found");
+            if (landmarkObject == null) throw new GameDataException("Area has invalid landmark object: " + landmarkID);
         }
 
         Area area = new Area(scriptRuntime, eventBus, menuManager, pathfinder, obstructionTypeRegistry, effectRegistry, itemFactory, areaID, landmarkObject, name, nameType, nameIsPlural, description, room, areaOwnerFaction, restrictionType, allowAllies, linkSet, defaultObstructionTypes, areaScripts);

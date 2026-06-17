@@ -86,7 +86,7 @@ public class EffectLoader {
             case null -> { // "basic"
                 return new Effect(ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound);
             }
-            default -> throw new GameDataException("Effect has invalid type");
+            default -> throw new GameDataException("Effect has invalid type: " + effectType);
         }
     }
 

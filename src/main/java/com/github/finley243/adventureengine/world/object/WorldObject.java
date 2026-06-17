@@ -85,14 +85,14 @@ public class WorldObject extends GameInstanced implements Noun, Physical, Script
 		}
 		if (components.containsKey(VehicleObjectComponent.class)) {
 			WorldObject vehicleObjectOverride = objectRegistry.getFromID(vehicleObjectOverrideID);
-			if (vehicleObjectOverrideID != null && vehicleObjectOverride == null) throw new GameDataException("WorldObject has invalid vehicle object override reference");
+			if (vehicleObjectOverrideID != null && vehicleObjectOverride == null) throw new GameDataException("WorldObject has invalid vehicle object override reference: " + vehicleObjectOverrideID);
 			VehicleObjectComponent vehicleComponent = (VehicleObjectComponent) components.get(VehicleObjectComponent.class);
 			vehicleComponent.resolveObjectOverride(vehicleObjectOverride);
 			this.vehicleObjectOverrideID = null;
 		}
 		if (components.containsKey(NetworkObjectComponent.class)) {
 			NetworkNode networkNode = networkRegistry.getFromID(networkNodeID);
-			if (networkNode == null) throw new GameDataException("WorldObject has invalid network node reference");
+			if (networkNode == null) throw new GameDataException("WorldObject has invalid network node reference: " + networkNodeID);
 			NetworkObjectComponent networkObjectComponent = (NetworkObjectComponent) components.get(NetworkObjectComponent.class);
 			networkObjectComponent.resolveNetwork(networkNode);
 			this.networkNodeID = null;
