@@ -12,7 +12,7 @@
                                 <xs:complexType>
                                     <xs:simpleContent>
                                         <xs:extension base="xs:string">
-                                            <xs:attribute name="type" type="xs:string"/>
+                                            <xs:attribute name="type" type="AreaNameType"/>
                                             <xs:attribute name="plural" type="xs:boolean"/>
                                         </xs:extension>
                                     </xs:simpleContent>
@@ -76,6 +76,10 @@
                         </xs:sequence>
                         <xs:attribute name="id" type="xs:string" use="required"/>
                         <xs:attribute name="room" type="xs:string"/>
+                        <xs:attribute name="landmark" type="xs:string"/>
+                        <xs:attribute name="faction" type="xs:string"/>
+                        <xs:attribute name="restriction" type="RestrictionType"/>
+                        <xs:attribute name="allowAllies" type="xs:boolean"/>
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>

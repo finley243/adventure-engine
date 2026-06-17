@@ -1,5 +1,133 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
+    <xs:include schemaLocation="common.xsd"/>
 
+    <xs:element name="data">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="object" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="name">
+                                <xs:complexType>
+                                    <xs:simpleContent>
+                                        <xs:extension base="xs:string">
+                                            <xs:attribute name="proper" type="xs:boolean"/>
+                                        </xs:extension>
+                                    </xs:simpleContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="description" type="SceneLine"/>
+                            <xs:element name="damage" type="DamageResistance"/>
+                            <xs:element name="script" type="ScriptWithTrigger"/>
+                            <xs:element name="action" type="ObjectAction"/>
+                            <xs:element name="networkAction" type="ObjectAction"/>
+                            <xs:element name="component" type="ObjectComponent"/>
+                            <xs:element name="localVar" type="LocalVar"/>
+                        </xs:choice>
+                        <xs:attribute name="id" type="xs:string" use="required"/>
+                        <xs:attribute name="maxHP" type="xs:integer"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+        <xs:unique name="uniqueID">
+            <xs:selector xpath="object"/>
+            <xs:field xpath="@id"/>
+        </xs:unique>
+        <xs:unique name="uniqueDamageType">
+            <xs:selector xpath="object/damage"/>
+            <xs:field xpath="@type"/>
+        </xs:unique>
+    </xs:element>
+
+    <xs:complexType name="ObjectComponent">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <!-- inventory -->
+            <xs:element name="takePrompt" type="xs:string"/>
+            <xs:element name="takePhrase" type="xs:string"/>
+            <xs:element name="storePrompt" type="xs:string"/>
+            <xs:element name="storePhrase" type="xs:string"/>
+            <xs:element name="inventory" type="InlineLootTable"/>
+            <xs:element name="itemAction" type="ObjectAction"/>
+            <!-- link -->
+            <xs:element name="link" type="LinkEntry"/>
+            <!-- usable -->
+            <xs:element name="slot" type="UsableSlot"/>
+        </xs:choice>
+        <xs:attribute name="type" type="ComponentType" use="required"/>
+        <xs:attribute name="startEnabled" type="xs:boolean"/>
+        <xs:attribute name="restricted" type="xs:boolean"/>
+        <!-- inventory -->
+        <xs:attribute name="enableTake" type="xs:boolean"/>
+        <xs:attribute name="enableStore" type="xs:boolean"/>
+        <!-- vehicle -->
+        <xs:attribute name="vehicleType" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="ObjectAction">
+        <xs:sequence>
+            <xs:element name="parameter" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="name" type="xs:string" use="required"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="template" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="LinkEntry">
+        <xs:sequence>
+            <xs:element name="conditionMovable" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string"/>
+        <xs:attribute name="moveAction" type="xs:string"/>
+        <xs:attribute name="visible" type="xs:boolean"/>
+    </xs:complexType>
+
+    <xs:complexType name="UsableSlot">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="startPhrase" type="xs:string"/>
+            <xs:element name="endPhrase" type="xs:string"/>
+            <xs:element name="startPrompt" type="xs:string"/>
+            <xs:element name="endPrompt" type="xs:string"/>
+            <xs:element name="exposedComponent" type="xs:string"/>
+            <xs:element name="usingAction" type="ObjectAction"/>
+        </xs:choice>
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="cover" type="xs:boolean"/>
+        <xs:attribute name="hidden" type="xs:boolean"/>
+        <xs:attribute name="seeOtherAreas" type="xs:boolean"/>
+        <xs:attribute name="localActions" type="xs:boolean"/>
+        <xs:attribute name="parentActions" type="xs:boolean"/>
+    </xs:complexType>
+
+    <xs:complexType name="DamageResistance">
+        <xs:attribute name="type" type="xs:string" use="required"/>
+        <xs:attribute name="resistance" type="xs:integer"/>
+        <xs:attribute name="mult" type="xs:decimal"/>
+    </xs:complexType>
+
+    <xs:complexType name="LocalVar">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="name" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:simpleType name="ComponentType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="inventory"/>
+            <xs:enumeration value="link"/>
+            <xs:enumeration value="network"/>
+            <xs:enumeration value="usable"/>
+            <xs:enumeration value="vehicle"/>
+        </xs:restriction>
+    </xs:simpleType>
 
 </xs:schema>

@@ -1,5 +1,119 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
+    <xs:include schemaLocation="common.xsd"/>
 
+    <xs:element name="data">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="item" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="name" type="xs:string"/>
+                            <xs:element name="description" type="SceneLine"/>
+                            <xs:element name="script" type="ScriptWithTrigger"/>
+                            <xs:element name="action" type="ItemAction"/>
+                            <xs:element name="component" type="ItemComponent"/>
+                        </xs:choice>
+                        <xs:attribute name="id" type="xs:string" use="required"/>
+                        <xs:attribute name="price" type="xs:integer"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+        <xs:unique name="uniqueID">
+            <xs:selector xpath="item"/>
+            <xs:field xpath="@id"/>
+        </xs:unique>
+    </xs:element>
+
+    <xs:complexType name="ItemComponent">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <!-- ammo -->
+            <xs:element name="weaponEffect" type="xs:string"/>
+            <!-- armor -->
+            <xs:element name="coveredLimb" type="xs:string"/>
+            <!-- consumable -->
+            <xs:element name="consumePrompt" type="xs:string"/>
+            <xs:element name="consumePhrase" type="xs:string"/>
+            <!-- consumable, mod, equippable -->
+            <xs:element name="effect" type="xs:string"/>
+            <!-- equippable -->
+            <xs:element name="slotGroup" type="EquipSlotGroup"/>
+            <!-- magazine -->
+            <xs:element name="ammoType" type="xs:string"/>
+            <xs:element name="size" type="xs:integer"/>
+            <xs:element name="reloadActionPoints" type="xs:integer"/>
+            <!-- moddable -->
+            <xs:element name="modSlot" type="ModSlotEntry"/>
+            <!-- weapon -->
+            <xs:element name="damage" type="ComponentDamage"/>
+            <xs:element name="rate" type="xs:integer"/>
+            <xs:element name="armorMult" type="xs:decimal"/>
+            <xs:element name="silenced" type="xs:boolean"/>
+            <xs:element name="targetEffect" type="xs:string"/>
+        </xs:choice>
+        <xs:attribute name="type" type="ItemComponentType" use="required"/>
+        <xs:attribute name="restricted" type="xs:boolean"/>
+        <!-- ammo -->
+        <xs:attribute name="isReusable" type="xs:boolean"/>
+        <!-- armor -->
+        <xs:attribute name="coversMainBody" type="xs:boolean"/>
+        <!-- mod -->
+        <xs:attribute name="modSlot" type="xs:string"/>
+        <!-- weapon -->
+        <xs:attribute name="class" type="xs:string"/>
+        <xs:attribute name="critChance" type="xs:decimal"/>
+    </xs:complexType>
+
+    <xs:complexType name="EquipSlotGroup">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="slot" type="xs:string"/>
+            <xs:element name="exposedComponent" type="xs:string"/>
+            <xs:element name="effect" type="xs:string"/>
+            <xs:element name="equippedAction" type="ItemAction"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="ComponentDamage">
+        <xs:attribute name="type" type="xs:string"/>
+        <xs:attribute name="resistance" type="xs:integer"/>
+        <xs:attribute name="mult" type="xs:decimal"/>
+        <xs:attribute name="base" type="xs:integer"/>
+        <xs:attribute name="crit" type="xs:integer"/>
+    </xs:complexType>
+
+    <xs:complexType name="ModSlotEntry">
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="count" type="xs:integer"/>
+    </xs:complexType>
+
+    <xs:complexType name="ItemAction">
+        <xs:sequence>
+            <xs:element name="parameter" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="name" type="xs:string" use="required"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="template" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:simpleType name="ItemComponentType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ammo"/>
+            <xs:enumeration value="armor"/>
+            <xs:enumeration value="consumable"/>
+            <xs:enumeration value="effectable"/>
+            <xs:enumeration value="equippable"/>
+            <xs:enumeration value="magazine"/>
+            <xs:enumeration value="mod"/>
+            <xs:enumeration value="moddable"/>
+            <xs:enumeration value="weapon"/>
+        </xs:restriction>
+    </xs:simpleType>
 
 </xs:schema>

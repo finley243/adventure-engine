@@ -24,12 +24,4 @@
         </xs:unique>
     </xs:element>
 
-    <xs:complexType name="SceneChoice">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute name="link" type="xs:string" use="required"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-
 </xs:schema>

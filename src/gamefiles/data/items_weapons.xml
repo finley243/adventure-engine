@@ -5,7 +5,7 @@
             <damage base="10" crit="5"/>
             <rate>2</rate>
         </component>
-        <component type="effectible"/>
+        <component type="effectable"/>
         <component type="equippable">
             <slotGroup>
                 <slot>hand_main</slot>
@@ -23,7 +23,7 @@
             <damage base="20" crit="10"/>
             <rate>2</rate>
         </component>
-        <component type="effectible"/>
+        <component type="effectable"/>
         <component type="equippable">
             <slotGroup>
                 <slot>hand_main</slot>
@@ -43,7 +43,7 @@
             <size>12</size>
             <reloadActionPoints>1</reloadActionPoints>
         </component>
-        <component type="effectible"/>
+        <component type="effectable"/>
         <component type="moddable">
             <modSlot name="pistol_mag"/>
         </component>
@@ -71,7 +71,7 @@
             <size>6</size>
             <reloadActionPoints>1</reloadActionPoints>
         </component>
-        <component type="effectible"/>
+        <component type="effectable"/>
         <component type="moddable">
             <modSlot name="pistol_mag"/>
         </component>
@@ -102,7 +102,7 @@
             <size>16</size>
             <reloadActionPoints>1</reloadActionPoints>
         </component>
-        <component type="effectible"/>
+        <component type="effectable"/>
         <component type="equippable">
             <slotGroup>
                 <slot>hand_main</slot>
@@ -118,7 +118,7 @@
             <damage base="20" crit="5"/>
             <rate>1</rate>
         </component>
-        <component type="effectible"/>
+        <component type="effectable"/>
         <component type="equippable">
             <slotGroup>
                 <slot>hand_main</slot>

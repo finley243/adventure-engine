@@ -24,7 +24,7 @@
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
-                            <xs:element name="conditionShow" minOccurs="0"/>
+                            <xs:element name="conditionShow" type="xs:string" minOccurs="0"/>
                             <xs:element name="script" type="xs:string"/>
                         </xs:sequence>
                         <xs:attribute name="id" type="xs:string" use="required"/>

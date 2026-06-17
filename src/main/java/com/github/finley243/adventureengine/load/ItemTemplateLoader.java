@@ -103,7 +103,7 @@ public class ItemTemplateLoader {
                 }
                 return new ConsumableItemComponentTemplate(actionsRestricted, consumePrompt, consumePhrase, consumableEffects);
             }
-            case "effectible" -> {
+            case "effectable" -> {
                 return new EffectableItemComponentTemplate(actionsRestricted);
             }
             case "equippable" -> {

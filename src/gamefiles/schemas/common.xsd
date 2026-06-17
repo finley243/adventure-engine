@@ -36,6 +36,14 @@
         <xs:attribute name="exit" type="xs:boolean"/>
     </xs:complexType>
 
+    <xs:complexType name="SceneChoice">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="link" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
     <xs:complexType name="ScriptWithTrigger">
         <xs:simpleContent>
             <xs:extension base="xs:string">
@@ -45,7 +53,7 @@
     </xs:complexType>
 
     <xs:simpleType name="LineSelectorType">
-        <xs:restriction>
+        <xs:restriction base="xs:string">
             <xs:enumeration value="select"/>
             <xs:enumeration value="all"/>
             <xs:enumeration value="random"/>
@@ -53,7 +61,7 @@
     </xs:simpleType>
 
     <xs:simpleType name="RestrictionType">
-        <xs:restriction>
+        <xs:restriction base="xs:string">
             <xs:enumeration value="public"/>
             <xs:enumeration value="private"/>
             <xs:enumeration value="hostile"/>
@@ -61,7 +69,7 @@
     </xs:simpleType>
 
     <xs:simpleType name="AreaNameType">
-        <xs:restriction>
+        <xs:restriction base="xs:string">
             <xs:enumeration value="in"/>
             <xs:enumeration value="on"/>
             <xs:enumeration value="near"/>
@@ -72,10 +80,66 @@
     </xs:simpleType>
 
     <xs:simpleType name="FactionRelation">
-        <xs:restriction>
+        <xs:restriction base="xs:string">
             <xs:enumeration value="HOSTILE"/>
             <xs:enumeration value="NEUTRAL"/>
             <xs:enumeration value="ALLY"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="LootEntry">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="chance" type="xs:decimal"/>
+                <xs:attribute name="count" type="xs:integer"/>
+                <xs:attribute name="countMin" type="xs:integer"/>
+                <xs:attribute name="countMax" type="xs:integer"/>
+                <xs:attribute name="modTable" type="xs:string"/>
+                <xs:attribute name="modChance" type="xs:decimal"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="InlineLootTable">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="item" type="LootEntry"/>
+            <xs:element name="table" type="LootEntry"/>
+        </xs:choice>
+        <xs:attribute name="useAll" type="xs:boolean"/>
+    </xs:complexType>
+
+    <xs:complexType name="CustomAction">
+        <xs:sequence>
+            <xs:element name="parameter" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="name" type="xs:string" use="required"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="template" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:simpleType name="Pronoun">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="HE"/>
+            <xs:enumeration value="SHE"/>
+            <xs:enumeration value="THEY"/>
+            <xs:enumeration value="IT"/>
+            <xs:enumeration value="YOU"/>
+            <xs:enumeration value="I"/>
+            <xs:enumeration value="WE"/>
+            <xs:enumeration value="YOUALL"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="BarkResponseType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="NONE"/>
+            <xs:enumeration value="HOSTILE"/>
         </xs:restriction>
     </xs:simpleType>
 

@@ -1,5 +1,56 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
+    <xs:element name="data">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="effect" type="Effect" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+        <xs:unique name="uniqueID">
+            <xs:selector xpath="effect"/>
+            <xs:field xpath="@id"/>
+        </xs:unique>
+    </xs:element>
 
+    <xs:complexType name="EffectBase">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="conditionAdd" type="xs:string"/>
+            <xs:element name="conditionRemove" type="xs:string"/>
+            <xs:element name="conditionActive" type="xs:string"/>
+            <xs:element name="scriptAdd" type="xs:string"/>
+            <xs:element name="scriptRemove" type="xs:string"/>
+            <xs:element name="scriptRound" type="xs:string"/>
+            <xs:element name="statCondition" type="xs:string"/>
+            <xs:element name="add" type="xs:string"/>
+            <xs:element name="remove" type="xs:string"/>
+            <xs:element name="effect" type="EffectBase"/>
+        </xs:choice>
+        <xs:attribute name="type" type="EffectType"/>
+        <xs:attribute name="duration" type="xs:integer"/>
+        <xs:attribute name="permanent" type="xs:boolean"/>
+        <xs:attribute name="stack" type="xs:boolean"/>
+        <xs:attribute name="stat" type="xs:string"/>
+        <xs:attribute name="amount" type="xs:decimal"/>
+        <xs:attribute name="value" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="Effect">
+        <xs:complexContent>
+            <xs:extension base="EffectBase">
+                <xs:attribute name="id" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:simpleType name="EffectType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="add"/>
+            <xs:enumeration value="mult"/>
+            <xs:enumeration value="boolean"/>
+            <xs:enumeration value="string"/>
+            <xs:enumeration value="stringSet"/>
+            <xs:enumeration value="compound"/>
+        </xs:restriction>
+    </xs:simpleType>
 
 </xs:schema>

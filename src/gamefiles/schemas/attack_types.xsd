@@ -1,5 +1,65 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
+    <xs:include schemaLocation="common.xsd"/>
 
+    <xs:element name="data">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="attackType" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="prompt" type="xs:string"/>
+                            <xs:element name="attackPhrase" type="xs:string" minOccurs="0"/>
+                            <xs:element name="attackOverallPhrase" type="xs:string" minOccurs="0"/>
+                            <xs:element name="attackPhraseAudible" type="xs:string" minOccurs="0"/>
+                            <xs:element name="attackOverallPhraseAudible" type="xs:string" minOccurs="0"/>
+                            <xs:element name="damage" type="xs:string" minOccurs="0"/>
+                            <xs:element name="hitChance" type="xs:string" minOccurs="0"/>
+                            <xs:element name="hitChanceOverall" type="xs:string" minOccurs="0"/>
+                            <xs:element name="range" type="DistanceCategory" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="targetEffect" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                        <xs:attribute name="id" type="xs:string" use="required"/>
+                        <xs:attribute name="category" type="AttackCategory" use="required"/>
+                        <xs:attribute name="ammoConsumed" type="xs:integer"/>
+                        <xs:attribute name="actionPoints" type="xs:integer"/>
+                        <xs:attribute name="weaponConsumeType" type="WeaponConsumeType"/>
+                        <xs:attribute name="nonIdealRange" type="xs:boolean"/>
+                        <xs:attribute name="rate" type="xs:integer"/>
+                        <xs:attribute name="damageMult" type="xs:decimal"/>
+                        <xs:attribute name="damageType" type="xs:string"/>
+                        <xs:attribute name="armorMult" type="xs:decimal"/>
+                        <xs:attribute name="overrideEffects" type="xs:boolean"/>
+                        <xs:attribute name="hitChanceMult" type="xs:decimal"/>
+                        <xs:attribute name="isLoudOverride" type="xs:boolean"/>
+                    </xs:complexType>
+                    <xs:unique name="uniqueRange">
+                        <xs:selector xpath="range"/>
+                        <xs:field xpath="."/>
+                    </xs:unique>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+        <xs:unique name="uniqueID">
+            <xs:selector xpath="attackType"/>
+            <xs:field xpath="@id"/>
+        </xs:unique>
+    </xs:element>
+
+    <xs:simpleType name="AttackCategory">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="single"/>
+            <xs:enumeration value="targeted"/>
+            <xs:enumeration value="spread"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="WeaponConsumeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="none"/>
+            <xs:enumeration value="place"/>
+            <xs:enumeration value="destroy"/>
+        </xs:restriction>
+    </xs:simpleType>
 
 </xs:schema>
