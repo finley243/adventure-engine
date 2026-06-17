@@ -213,7 +213,6 @@ public class TextGen {
 			int start = tokenMatcher.start();
 			int end = tokenMatcher.end();
 			String name = tokenMatcher.group(1);
-			// TODO - Prevent infinite recursion
 			builder.append(line, lastEnd, start);
 			String phraseToInsert = getPhraseManager().get(name);
 			if (phraseToInsert != null) {
