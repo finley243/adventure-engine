@@ -10,7 +10,7 @@ import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataActorInventory;
 import com.github.finley243.adventureengine.menu.action.MenuDataObjectInventory;
 import com.github.finley243.adventureengine.textgen.Noun;
-import com.github.finley243.adventureengine.textgen.Phrases;
+import com.github.finley243.adventureengine.textgen.PluralNoun;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class ActionInventoryStoreAll extends Action {
@@ -38,9 +38,11 @@ public class ActionInventoryStoreAll extends Action {
 
     @Override
     public Context getContext() {
-        Context context = Context.builder().subject(subject).parentItem(item).build();
+        int count = subject.getInventory().itemCount(item);
+        Context context = Context.builder().subject(subject).build();
         context.setLocalVariable("inventory", Expression.noun(owner));
-        context.setLocalVariable("count", Expression.integer(subject.getInventory().itemCount(item)));
+        context.setLocalVariable("count", Expression.integer(count));
+        context.setLocalVariable("item", Expression.noun(new PluralNoun(item, count)));
         return context;
     }
 
@@ -50,8 +52,7 @@ public class ActionInventoryStoreAll extends Action {
         subject.getInventory().removeItems(item.getTemplateID(), count);
         inventory.addItems(item.getTemplateID(), count);
         Context context = getContext();
-        //TextContext textContext = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", new PluralNoun(item, count)).put("inventory", owner).build());
-        sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, true, this, null));
+        sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), phrase, context, true, this, null));
     }
 
     @Override

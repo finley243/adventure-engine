@@ -65,6 +65,7 @@ public class Main {
 		File dataDirectory = Path.of(GAMEFILES + DATA_DIRECTORY).toFile();
 		GameData gameData = gameDataLoader.loadData(dataDirectory);
 		scriptRuntime.setGameData(gameData);
+		textGen.setPhraseManager(gameData.phraseManager());
 
 		ActionDependencies actionDependencies = new ActionDependencies(scriptRuntime, gameData.sensoryEventDispatcher(), textGen, menuManager);
 
@@ -76,8 +77,8 @@ public class Main {
 		};
 		eventBus.register(userInterface);
 
-		Game game = new Game(eventBus, menuManager, questManager, dateTimeController, scriptRuntime, actionDependencies, gameData.actorRegistry(), gameData.objectRegistry(), gameData.areaRegistry(), timerManager, gameData.pathfinder(), gameData.sensoryEventDispatcher());
-		game.start();
+		Game game = new Game(eventBus, menuManager, questManager, dateTimeController, scriptRuntime, actionDependencies, gameData.actorRegistry(), gameData.objectRegistry(), gameData.itemFactory(), itemMutableRegistry, gameData.areaRegistry(), timerManager, gameData.pathfinder(), gameData.sensoryEventDispatcher());
+		game.newGame();
 	}
 
 }

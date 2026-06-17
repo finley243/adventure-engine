@@ -11,7 +11,7 @@
         </condition>
         <script>
             stat.parentObject.locked = false;
-            sendSensoryEvent(area=stat.subject.area.id, phrase="pickLock");
+            sendSensoryEvent(area=stat.subject.area.id, phrase="@pickLock");
         </script>
     </action>
     <action id="lock_key">
@@ -26,7 +26,7 @@
         </condition>
         <script>
             stat.parentObject.locked = false;
-            sendSensoryEvent(area=stat.subject.area.id, phrase="unlock");
+            sendSensoryEvent(area=stat.subject.area.id, phrase="@unlock");
         </script>
     </action>
     <action id="vending_machine">
@@ -43,7 +43,7 @@
                 stat.subject.money = stat.subject.money - stat.itemTemplate(itemID).price;
             }
             var item = stat.itemTemplate(itemID).noun;
-            sendSensoryEvent(area=stat.subject.area.id, phrase="vendingMachineBuy", item=item);
+            sendSensoryEvent(area=stat.subject.area.id, phrase="@vendingMachineBuy", item=item);
         </script>
     </action>
     <action id="move_basic">
@@ -53,7 +53,7 @@
             var originAreaID = stat.subject.area.id;
             var targetArea = stat.parentArea.noun;
             sendSensoryEvent(area=set(originAreaID, stat.parentArea.id), phrase=stat.parentArea.move_phrase, targetArea=targetArea, dirName=dirName);
-            stat.subject.area = stat.parentArea.id;
+            setArea(object=statHolder.subject, area=statHolder.parentArea);
         </script>
     </action>
     <action id="move_corner">
@@ -61,8 +61,8 @@
         <script>
             var originAreaID = stat.subject.area.id;
             var targetArea = stat.parentArea.noun;
-            sendSensoryEvent(area=originAreaID, phrase="moveCorner", targetArea=targetArea);
-            stat.subject.area = stat.parentArea.id;
+            sendSensoryEvent(area=originAreaID, phrase="@moveCorner", targetArea=targetArea);
+            setArea(object=statHolder.subject, area=statHolder.parentArea);
             sendSensoryEvent(area=stat.parentArea.id, phrase="moveCorner", detectSelf=false, targetArea=targetArea);
         </script>
     </action>
@@ -81,8 +81,8 @@
             var targetRoomID = statHolder.parentArea.room != null ? stat.parentArea.room.id : null;
             var originArea = originRoomID != null &amp;&amp; originRoomID != targetRoomID ? stat.subject.area.room.noun : stat.subject.area.noun;
             var door = stat.parentObject.noun;
-            sendSensoryEvent(area=originAreaID, phrase="moveThrough", targetArea=targetArea, originArea=originArea, door=door);
-            stat.subject.area = stat.parentArea.id;
+            sendSensoryEvent(area=originAreaID, phrase="@moveThrough", targetArea=targetArea, originArea=originArea, door=door);
+            setArea(object=statHolder.subject, area=statHolder.parentArea);
             sendSensoryEvent(area=stat.parentArea.id, phrase="moveThroughReverse", detectSelf=false, targetArea=targetArea, originArea=originArea, door=door);
         </script>
     </action>
@@ -92,8 +92,8 @@
         <script>
             var targetArea = stat.parentArea.noun;
             var vehicle = stat.parentObject.noun;
-            sendSensoryEvent(phrase="driveTo", area=set(stat.subject.area.id, stat.parentArea.id), targetArea=targetArea, vehicle=vehicle);
-            stat.parentObject.area = stat.parentArea.id;
+            sendSensoryEvent(phrase="@driveTo", area=set(stat.subject.area.id, stat.parentArea.id), targetArea=targetArea, vehicle=vehicle);
+            setArea(object=statHolder.parentObject, area=statHolder.parentArea);
         </script>
     </action>
     <action id="drive_corner">
@@ -101,8 +101,8 @@
         <script>
             var targetArea = stat.parentArea.noun;
             var vehicle = stat.parentObject.noun;
-            sendSensoryEvent(phrase="driveCorner", area=set(stat.subject.area.id, stat.parentArea.id), targetArea=targetArea, vehicle=vehicle);
-            stat.parentObject.area = stat.parentArea.id;
+            sendSensoryEvent(phrase="@driveCorner", area=set(stat.subject.area.id, stat.parentArea.id), targetArea=targetArea, vehicle=vehicle);
+            setArea(object=statHolder.parentObject, area=statHolder.parentArea);
         </script>
     </action>
     <action id="vending_machine_hack_price">

@@ -109,8 +109,15 @@ public class Context {
     private Map<String, String> getTextVarMap() {
         Map<String, String> textVarValues = new HashMap<>();
         for (Map.Entry<String, Context.Variable> entry : this.getLocalVariables().entrySet()) {
-            if (entry.getValue().getExpression() != null && entry.getValue().getExpression().getDataType() == Expression.DataType.STRING) {
+            if (entry.getValue().getExpression() == null) continue;
+            if (entry.getValue().getExpression().getDataType() == Expression.DataType.STRING) {
                 textVarValues.put(entry.getKey(), entry.getValue().getExpression().getValueString());
+            } else if (entry.getValue().getExpression().getDataType() == Expression.DataType.INTEGER) {
+                textVarValues.put(entry.getKey(), String.valueOf(entry.getValue().getExpression().getValueInteger()));
+            } else if (entry.getValue().getExpression().getDataType() == Expression.DataType.FLOAT) {
+                textVarValues.put(entry.getKey(), String.valueOf(entry.getValue().getExpression().getValueFloat()));
+            } else if (entry.getValue().getExpression().getDataType() == Expression.DataType.BOOLEAN) {
+                textVarValues.put(entry.getKey(), String.valueOf(entry.getValue().getExpression().getValueBoolean()));
             }
         }
         return textVarValues;

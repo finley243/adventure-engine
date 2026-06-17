@@ -20,10 +20,6 @@ public class SensoryEvent {
 		this(new Area[]{origin}, lineVisible, null, context, isDetectedBySelf, false, action, bark);
 	}
 
-	public SensoryEvent(Area[] origins, String lineVisible, Context context, boolean isDetectedBySelf, Action action, Bark bark) {
-		this(origins, lineVisible, null, context, isDetectedBySelf, false, action, bark);
-	}
-
 	public SensoryEvent(Area origin, String lineVisible, String lineAudible, Context context, boolean isDetectedBySelf, boolean isLoud, Action action, Bark bark) {
 		this(new Area[]{origin}, lineVisible, lineAudible, context, isDetectedBySelf, isLoud, action, bark);
 	}

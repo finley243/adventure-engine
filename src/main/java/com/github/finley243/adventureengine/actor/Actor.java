@@ -32,7 +32,6 @@ import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.script.ScriptValueHolder;
 import com.github.finley243.adventureengine.stat.*;
 import com.github.finley243.adventureengine.textgen.Noun;
-import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.Physical;
@@ -481,7 +480,7 @@ public class Actor extends GameInstanced implements Noun, Physical, ScriptValueH
 		if (context.getTarget() != null && context.getTarget() != this) {
 			context.getTarget().triggerScript("on_kill", Context.from(defaultContext).subject(context.getTarget()).target(context.getSubject()).build());
 		}
-		sensoryEventDispatcher.dispatch(new SensoryEvent(getArea(), Phrases.get("die"), context, true, null, null));
+		sensoryEventDispatcher.dispatch(new SensoryEvent(getArea(), "@die", context, true, null, null));
 		stopUsingObjectOnDeathIfPresent();
 		isDead = true;
 		HP = 0;
@@ -565,7 +564,7 @@ public class Actor extends GameInstanced implements Noun, Physical, ScriptValueH
 			usableComponent.removeUser(usingSlot);
 			setUsingObject(null);
 			Context context = Context.builder().subject(this).target(this).parentObject(object).build();
-			sensoryEventDispatcher.dispatch(new SensoryEvent(getArea(), Phrases.get(usableComponent.getEndDeathPhrase(usingSlot)), context, true, null, null));
+			sensoryEventDispatcher.dispatch(new SensoryEvent(getArea(), usableComponent.getEndDeathPhrase(usingSlot), context, true, null, null));
 		}
 	}
 	

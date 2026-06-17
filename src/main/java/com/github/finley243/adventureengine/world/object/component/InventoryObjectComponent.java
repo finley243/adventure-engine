@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.world.object.component;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionDependencies;
@@ -50,11 +49,6 @@ public class InventoryObjectComponent extends ObjectComponent {
             }
         }
         return actions;
-    }
-
-    @Override
-    public void onStartRound(Game game) {
-        inventory.onStartRound();
     }
 
     @Override

@@ -7,7 +7,6 @@ import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataObject;
-import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.object.component.UsableObjectComponent;
 
 public class ActionObjectUseStart extends Action {
@@ -55,7 +54,7 @@ public class ActionObjectUseStart extends Action {
 		}
 		component.setUser(slotID, subject);
 		subject.setUsingObject(new UsableObjectComponent.ObjectUserData(component.getObject(), slotID));
-		sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get(component.getStartPhrase(slotID)), context, true, this, null));
+		sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), component.getStartPhrase(slotID), context, true, this, null));
 	}
 
 	@Override

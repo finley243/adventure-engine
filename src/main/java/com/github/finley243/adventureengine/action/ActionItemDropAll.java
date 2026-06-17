@@ -7,7 +7,7 @@ import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
-import com.github.finley243.adventureengine.textgen.Phrases;
+import com.github.finley243.adventureengine.textgen.PluralNoun;
 
 public class ActionItemDropAll extends Action {
 
@@ -26,8 +26,10 @@ public class ActionItemDropAll extends Action {
 
 	@Override
 	public Context getContext() {
-		Context context = Context.builder().subject(subject).parentItem(item).build();
-		context.setLocalVariable("count", Expression.integer(subject.getInventory().itemCount(item)));
+		int count = subject.getInventory().itemCount(item);
+		Context context = Context.builder().subject(subject).build();
+		context.setLocalVariable("count", Expression.integer(count));
+		context.setLocalVariable("item", Expression.noun(new PluralNoun(item, count)));
 		return context;
 	}
 	
@@ -37,8 +39,7 @@ public class ActionItemDropAll extends Action {
 		subject.getInventory().removeItems(item.getTemplateID(), count);
 		subject.getArea().getInventory().addItems(item.getTemplateID(), count);
 		Context context = getContext();
-		//TextContext textContext = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", new PluralNoun(item, count)).build());
-		sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, true, this, null));
+		sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), "@drop", context, true, this, null));
 	}
 
 	@Override

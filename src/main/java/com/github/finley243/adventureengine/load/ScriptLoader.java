@@ -57,7 +57,7 @@ public class ScriptLoader {
 
     public Map<String, ScriptParser.ScriptData> generateNativeFunctions() {
         List<ScriptParser.ScriptData> functions = new ArrayList<>();
-        functions.add(Script.builder("setArea", ScriptSetArea::new).parameter("area").parameter("object").build());
+        functions.add(Script.builder("setArea", ScriptSetArea::new).parameter("object").parameter("area").build());
         functions.add(Script.builder("attributeMenu", ScriptAttributeMenu::new).parameter("actor").parameter("points").build());
         functions.add(Script.builder("skillMenu", ScriptSkillMenu::new).parameter("actor").parameter("points").build());
         functions.add(Script.builder("startTimer", ScriptTimerStart::new).parameter("timer").parameter("duration").optionalParameter("scriptExpire").optionalParameter("scriptUpdate").build());

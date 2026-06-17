@@ -12,7 +12,6 @@ import com.github.finley243.adventureengine.item.template.EquippableItemComponen
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
 import com.github.finley243.adventureengine.textgen.LangUtils;
-import com.github.finley243.adventureengine.textgen.Phrases;
 
 public class ActionItemEquip extends Action {
 
@@ -44,7 +43,7 @@ public class ActionItemEquip extends Action {
     public void choose(int repeatActionCount) {
         subject.getEquipmentComponent().equip(item, slotsData);
         Context context = getContext();
-        sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get("equip"), context, true, this, null));
+        sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), "@equip", context, true, this, null));
     }
 
     @Override

@@ -6,7 +6,6 @@ import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
-import com.github.finley243.adventureengine.textgen.Phrases;
 
 public class ActionItemDrop extends Action {
 
@@ -32,7 +31,7 @@ public class ActionItemDrop extends Action {
 		subject.getInventory().removeItem(item);
 		subject.getArea().getInventory().addItem(item);
 		Context context = getContext();
-		sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, true, this, null));
+		sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), "@drop", context, true, this, null));
 	}
 
 	@Override

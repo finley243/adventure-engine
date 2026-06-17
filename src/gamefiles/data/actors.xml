@@ -21,6 +21,8 @@
         <skill key="lockpick" value="4"/>
         <skill key="stealth" value="4"/>
         <skill key="dodge" value="4"/>
+        <attackType>punch</attackType>
+        <inventory/>
         <limb id="head" hitChance="0.5" damageMult="2.0" apparelSlot="head">
             <name>head</name>
         </limb>
@@ -44,8 +46,6 @@
         <damageResistance type="chemical" value="0"/>
         <damageResistance type="explosive" value="0"/>
         <damageResistance type="electrical" value="0"/>
-        <inventory/>
-        <attackType>punch</attackType>
     </actor>
     <actor id="player" parent="default" hp="70" faction="player">
         <name proper="true" pronoun="YOU">PLAYER</name>

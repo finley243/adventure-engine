@@ -3,7 +3,6 @@ package com.github.finley243.adventureengine.script;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 import java.util.HashSet;
@@ -29,7 +28,7 @@ public class ScriptSensoryEvent extends Script {
         Area[] originAreas = getOriginAreas(scriptRuntime, area);
         String phraseString = (phrase == null ? null : phrase.getValueString());
         String phraseAudibleString = (phraseAudible == null ? null : phraseAudible.getValueString());
-        SensoryEvent sensoryEvent = new SensoryEvent(originAreas, Phrases.get(phraseString), Phrases.get(phraseAudibleString), context, isDetectedBySelf, false, context.getParentAction(), null);
+        SensoryEvent sensoryEvent = new SensoryEvent(originAreas, phraseString, phraseAudibleString, context, isDetectedBySelf, false, context.getParentAction(), null);
         scriptRuntime.postSensoryEvent(sensoryEvent);
         return new ScriptReturnData(null, null, null);
     }

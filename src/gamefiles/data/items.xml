@@ -269,7 +269,6 @@
             <damage base="20" crit="5"/>
             <rate>1</rate>
         </component>
-        <component type="effectable"/>
         <component type="equippable">
             <slotGroup>
                 <slot>hand_main</slot>

@@ -25,8 +25,8 @@
         <name>plastic chair</name>
         <component type="usable">
             <slot id="seat">
-                <startPhrase>sit</startPhrase>
-                <endPhrase>getUp</endPhrase>
+                <startPhrase>@sit</startPhrase>
+                <endPhrase>@getUp</endPhrase>
                 <startPrompt>Sit</startPrompt>
                 <endPrompt>Stand</endPrompt>
             </slot>
@@ -47,9 +47,9 @@
         <name>garbage bin</name>
         <component type="inventory">
             <takePrompt>Take</takePrompt>
-            <takePhrase>takeFrom</takePhrase>
+            <takePhrase>@takeFrom</takePhrase>
             <storePrompt>Store</storePrompt>
-            <storePhrase>storeIn</storePhrase>
+            <storePhrase>@storeIn</storePhrase>
             <inventory>
                 <table countMin="0" countMax="3">junk_random</table>
             </inventory>
@@ -59,9 +59,9 @@
         <name>snacks shelf</name>
         <component type="inventory">
             <takePrompt>Take</takePrompt>
-            <takePhrase>takeFrom</takePhrase>
+            <takePhrase>@takeFrom</takePhrase>
             <storePrompt>Place</storePrompt>
-            <storePhrase>placeOn</storePhrase>
+            <storePhrase>@placeOn</storePhrase>
             <inventory>
                 <table>store_snacks</table>
             </inventory>
@@ -71,9 +71,9 @@
         <name>meal shelf</name>
         <component type="inventory">
             <takePrompt>Take</takePrompt>
-            <takePhrase>takeFrom</takePhrase>
+            <takePhrase>@takeFrom</takePhrase>
             <storePrompt>Place</storePrompt>
-            <storePhrase>placeOn</storePhrase>
+            <storePhrase>@placeOn</storePhrase>
             <inventory>
                 <table>store_snacks</table>
             </inventory>
@@ -83,9 +83,9 @@
         <name>alcohol shelf</name>
         <component type="inventory">
             <takePrompt>Take</takePrompt>
-            <takePhrase>takeFrom</takePhrase>
+            <takePhrase>@takeFrom</takePhrase>
             <storePrompt>Place</storePrompt>
-            <storePhrase>placeOn</storePhrase>
+            <storePhrase>@placeOn</storePhrase>
             <inventory>
                 <table>store_snacks</table>
             </inventory>
@@ -95,9 +95,9 @@
         <name>medicine shelf</name>
         <component type="inventory">
             <takePrompt>Take</takePrompt>
-            <takePhrase>takeFrom</takePhrase>
+            <takePhrase>@takeFrom</takePhrase>
             <storePrompt>Place</storePrompt>
-            <storePhrase>placeOn</storePhrase>
+            <storePhrase>@placeOn</storePhrase>
             <inventory>
                 <table>store_snacks</table>
             </inventory>
@@ -107,9 +107,9 @@
         <name>soft drinks cooler</name>
         <component type="inventory">
             <takePrompt>Take</takePrompt>
-            <takePhrase>takeFrom</takePhrase>
+            <takePhrase>@takeFrom</takePhrase>
             <storePrompt>Store</storePrompt>
-            <storePhrase>storeIn</storePhrase>
+            <storePhrase>@storeIn</storePhrase>
             <inventory>
                 <table>store_soft_drinks</table>
             </inventory>
@@ -119,9 +119,9 @@
         <name>alcohol cooler</name>
         <component type="inventory">
             <takePrompt>Take</takePrompt>
-            <takePhrase>takeFrom</takePhrase>
+            <takePhrase>@takeFrom</takePhrase>
             <storePrompt>Store</storePrompt>
-            <storePhrase>storeIn</storePhrase>
+            <storePhrase>@storeIn</storePhrase>
             <inventory>
                 <table>store_soft_drinks</table>
             </inventory>
@@ -143,8 +143,8 @@
         <component type="vehicle" restricted="true" vehicleType="motorcycle"/>
         <component type="usable">
             <slot id="seat">
-                <startPhrase>sit</startPhrase>
-                <endPhrase>getUp</endPhrase>
+                <startPhrase>@sit</startPhrase>
+                <endPhrase>@getUp</endPhrase>
                 <startPrompt>Sit</startPrompt>
                 <endPrompt>Stand</endPrompt>
                 <exposedComponent>vehicle</exposedComponent>
@@ -155,8 +155,8 @@
         <name>network port</name>
         <component type="usable">
             <slot id="port">
-                <startPhrase>jackIn</startPhrase>
-                <endPhrase>jackOut</endPhrase>
+                <startPhrase>@jackIn</startPhrase>
+                <endPhrase>@jackOut</endPhrase>
                 <startPrompt>Jack In</startPrompt>
                 <endPrompt>Jack Out</endPrompt>
                 <exposedComponent>network</exposedComponent>

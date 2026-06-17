@@ -84,7 +84,6 @@ public class Item extends GameInstanced implements Noun, ScriptValueHolder, Stat
 		return getTemplate().getDescription();
 	}
 
-	// TODO - Remove (move Item round processing to game loop, using item registry)
 	public void onStartRound() {
 		for (ItemComponent component : components.values()) {
 			component.onStartRound();

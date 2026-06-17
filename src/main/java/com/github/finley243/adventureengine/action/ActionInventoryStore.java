@@ -10,7 +10,6 @@ import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataActorInventory;
 import com.github.finley243.adventureengine.menu.action.MenuDataObjectInventory;
 import com.github.finley243.adventureengine.textgen.Noun;
-import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class ActionInventoryStore extends Action {
@@ -47,7 +46,7 @@ public class ActionInventoryStore extends Action {
         subject.getInventory().removeItem(item);
         inventory.addItem(item);
         Context context = getContext();
-        sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, true, this, null));
+        sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), phrase, context, true, this, null));
     }
 
     @Override

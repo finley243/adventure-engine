@@ -5,7 +5,6 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataActor;
-import com.github.finley243.adventureengine.textgen.Phrases;
 
 public class ActionCarryActorStart extends Action {
 
@@ -33,7 +32,7 @@ public class ActionCarryActorStart extends Action {
         }
         subject.setCarriedActor(carriedActor);
         Context context = Context.builder().subject(subject).target(carriedActor).build();
-        sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get("pickUpActor"), context, true, this, null));
+        sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), "@pickUpActor", context, true, this, null));
     }
 
     @Override

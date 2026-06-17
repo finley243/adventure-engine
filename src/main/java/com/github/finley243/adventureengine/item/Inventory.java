@@ -25,14 +25,6 @@ public class Inventory {
 		this.itemsStateless = new HashMap<>();
 	}
 
-	public void onStartRound() {
-		for (List<Item> itemList : items.values()) {
-			for (Item item : itemList) {
-				item.onStartRound();
-			}
-		}
-	}
-
 	public void addItem(Item item) {
 		if (item.hasState()) {
 			if (item.getInventory() != null) throw new UnsupportedOperationException("Cannot add item " + item + " to inventory because it is still located in another inventory");

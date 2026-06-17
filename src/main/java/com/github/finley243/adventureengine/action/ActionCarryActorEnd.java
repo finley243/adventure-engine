@@ -5,7 +5,6 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataActor;
-import com.github.finley243.adventureengine.textgen.Phrases;
 
 public class ActionCarryActorEnd extends Action {
 
@@ -30,7 +29,7 @@ public class ActionCarryActorEnd extends Action {
     public void choose(int repeatActionCount) {
         subject.setCarriedActor(null);
         Context context = Context.builder().subject(subject).target(carriedActor).build();
-        sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get("putDownActor"), context, true, this, null));
+        sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), "@putDownActor", context, true, this, null));
     }
 
     @Override

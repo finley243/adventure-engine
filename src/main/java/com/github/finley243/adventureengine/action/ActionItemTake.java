@@ -8,7 +8,6 @@ import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.component.WeaponItemComponent;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataItemWorld;
-import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 public class ActionItemTake extends Action {
@@ -37,7 +36,7 @@ public class ActionItemTake extends Action {
 		area.getInventory().removeItem(item);
 		subject.getInventory().addItem(item);
 		Context context = getContext();
-		sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get("pickUp"), context, true, this, null));
+		sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), "@pickUp", context, true, this, null));
 	}
 
 	@Override

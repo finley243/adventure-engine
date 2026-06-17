@@ -42,7 +42,6 @@ public abstract class TurnController {
             return;
         }
         actor.getEffectComponent().onStartRound();
-        actor.getInventory().onStartRound();
         onStartTurn(scriptRuntime);
         actionPointsUsed = 0;
         repeatActions.clear();

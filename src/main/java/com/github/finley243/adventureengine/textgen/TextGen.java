@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.textgen;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.gamedata.PhraseManager;
 import com.github.finley243.adventureengine.load.ScriptParser;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
@@ -44,6 +45,7 @@ public class TextGen {
     }};
 
 	private final ScriptParser scriptParser;
+	private PhraseManager phraseManager;
 	private ScriptRuntime scriptRuntime;
 	
 	private TextContext lastContext;
@@ -83,6 +85,16 @@ public class TextGen {
 	
 	public void clearContext() {
 		lastContext = null;
+	}
+
+	public void setPhraseManager(PhraseManager phraseManager) {
+		if (this.phraseManager != null) throw new IllegalStateException("TextGen phraseManager has already been set");
+		this.phraseManager = phraseManager;
+	}
+
+	private PhraseManager getPhraseManager() {
+		if (phraseManager == null) throw new IllegalStateException("TextGen phraseManager has not been set");
+		return phraseManager;
 	}
 
 	public void setScriptRuntime(ScriptRuntime scriptRuntime) {
@@ -203,7 +215,7 @@ public class TextGen {
 			String name = tokenMatcher.group(1);
 			// TODO - Prevent infinite recursion
 			builder.append(line, lastEnd, start);
-			String phraseToInsert = Phrases.get(name);
+			String phraseToInsert = getPhraseManager().get(name);
 			if (phraseToInsert != null) {
 				builder.append(phraseToInsert);
 			} else {

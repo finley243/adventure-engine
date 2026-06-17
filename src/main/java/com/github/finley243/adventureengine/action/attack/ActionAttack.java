@@ -20,7 +20,6 @@ import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.script.ScriptValueHolder;
 import com.github.finley243.adventureengine.textgen.MultiNoun;
 import com.github.finley243.adventureengine.textgen.Noun;
-import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
@@ -210,7 +209,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         AttackTarget.ComputedDamage computedDamage = target.applyEffectsAndComputeDamage(damageData, scriptRuntime, context);
         context.setLocalVariable("finalDamage", Expression.integer(computedDamage.amount()));
         context.setLocalVariable("isKillingBlow", Expression.bool(computedDamage.isKillingBlow()));
-        sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get(attackPhrase), Phrases.get(attackPhraseAudible), context, true, isLoud, null, null));
+        sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), attackPhrase, attackPhraseAudible, context, true, isLoud, null, null));
         target.applyDamage(computedDamage, scriptRuntime, context);
         subject.triggerScript("on_attack_success", context);
     }
@@ -222,7 +221,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         context.setLocalVariable("relativeTo", Expression.string(getArea() == null ? "null" : getArea().getRelativeName()));
         context.setLocalVariable("repeats", Expression.integer(repeatActionCount));
         context.setLocalVariable("success", Expression.bool(false));
-        sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get(attackPhrase), Phrases.get(attackPhraseAudible), context, true, isLoud, null, null));
+        sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), attackPhrase, attackPhraseAudible, context, true, isLoud, null, null));
         subject.triggerScript("on_attack_failure", context);
     }
 
@@ -237,7 +236,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         List<Noun> targetsFailNouns = targetsFail.stream().map(target -> (Noun) target).toList();
         context.setLocalVariable("targetsSuccess", targetsSuccessNouns.isEmpty() ? null : Expression.noun(new MultiNoun(targetsSuccessNouns)));
         context.setLocalVariable("targetsFail", targetsFailNouns.isEmpty() ? null : Expression.noun(new MultiNoun(targetsFailNouns)));
-        sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get(attackOverallPhrase), Phrases.get(attackOverallPhraseAudible), context, true, isLoud, this, null));
+        sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), attackOverallPhrase, attackOverallPhraseAudible, context, true, isLoud, this, null));
     }
 
     @Override
@@ -247,7 +246,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         context.setLocalVariable("relativeTo", Expression.string(getArea() == null ? "null" : getArea().getRelativeName()));
         context.setLocalVariable("repeats", Expression.integer(repeatActionCount));
         context.setLocalVariable("success", Expression.bool(false));
-        sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get(attackOverallPhrase), Phrases.get(attackOverallPhraseAudible), context, true, isLoud, this, null));
+        sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), attackOverallPhrase, attackOverallPhraseAudible, context, true, isLoud, this, null));
     }
 
     @Override

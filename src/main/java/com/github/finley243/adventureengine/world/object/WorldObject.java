@@ -1,13 +1,15 @@
 package com.github.finley243.adventureengine.world.object;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.gamedata.MutableRegistry;
 import com.github.finley243.adventureengine.gamedata.Registry;
+import com.github.finley243.adventureengine.item.Item;
+import com.github.finley243.adventureengine.item.ItemFactory;
 import com.github.finley243.adventureengine.load.GameDataException;
 import com.github.finley243.adventureengine.menu.action.MenuDataNetwork;
 import com.github.finley243.adventureengine.menu.action.MenuDataObject;
@@ -64,6 +66,12 @@ public class WorldObject extends GameInstanced implements Noun, Physical, Script
 		}
 		this.HP = getTemplate().getMaxHP();
 		setEnabled(!startDisabled);
+	}
+
+	public void generateInitialInventory(ItemFactory itemFactory, MutableRegistry<Item> itemRegistry) {
+		if (hasComponentOfType(InventoryObjectComponent.class)) {
+			getComponentOfType(InventoryObjectComponent.class).generateInitialInventory(itemFactory, itemRegistry);
+		}
 	}
 
 	private ObjectTemplate getTemplate() {
@@ -198,12 +206,6 @@ public class WorldObject extends GameInstanced implements Noun, Physical, Script
 
 	public boolean isHidden() {
 		return isHidden;
-	}
-
-	public void onStartRound(Game game) {
-		for (ObjectComponent component : components.values()) {
-			component.onStartRound(game);
-		}
 	}
 
 	@Override

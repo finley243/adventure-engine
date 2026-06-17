@@ -64,21 +64,21 @@ public class Room extends GameInstanced implements Noun, ScriptValueHolder {
 	public String getMovePhrase(Actor subject) {
 		if (Objects.equals(subject.getArea().getRoom(), this)) {
 			return switch (nameType) {
-				case IN -> "moveInWithin";
-				case ON -> "moveOnWithin";
-				case FRONT -> "moveFrontWithin";
-				case BEHIND -> "moveBehindWithin";
-				case SIDE -> "moveBesideWithin";
-				case NEAR -> "moveNearWithin";
+				case IN -> "@moveInWithin";
+				case ON -> "@moveOnWithin";
+				case FRONT -> "@moveFrontWithin";
+				case BEHIND -> "@moveBehindWithin";
+				case SIDE -> "@moveBesideWithin";
+				case NEAR -> "@moveNearWithin";
 			};
 		}
 		return switch (nameType) {
-			case IN -> "moveTo";
-			case ON -> "moveOnto";
-			case FRONT -> "moveFront";
-			case BEHIND -> "moveBehind";
-			case SIDE -> "moveBeside";
-			case NEAR -> "moveToward";
+			case IN -> "@moveTo";
+			case ON -> "@moveOnto";
+			case FRONT -> "@moveFront";
+			case BEHIND -> "@moveBehind";
+			case SIDE -> "@moveBeside";
+			case NEAR -> "@moveToward";
 		};
 	}
 	

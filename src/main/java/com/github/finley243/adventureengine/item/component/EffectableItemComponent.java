@@ -18,7 +18,7 @@ public class EffectableItemComponent extends ItemComponent {
 
     @Override
     public boolean hasState() {
-        return effectComponent.hasAnyEffect();
+        return true;
     }
 
     public void addEffect(Effect effect) {

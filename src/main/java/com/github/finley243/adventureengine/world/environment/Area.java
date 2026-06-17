@@ -196,18 +196,17 @@ public class Area extends GameInstanced implements Noun, ScriptValueHolder, Stat
 			return getRoom().getMovePhrase(subject);
 		}
 		return switch (nameType) {
-			case IN -> "moveTo";
-			case ON -> "moveOnto";
-			case FRONT -> "moveFront";
-			case BEHIND -> "moveBehind";
-			case SIDE -> "moveBeside";
-			case NEAR -> "moveToward";
+			case IN -> "@moveTo";
+			case ON -> "@moveOnto";
+			case FRONT -> "@moveFront";
+			case BEHIND -> "@moveBehind";
+			case SIDE -> "@moveBeside";
+			case NEAR -> "@moveToward";
 		};
 	}
 
 	public void onStartRound() {
 		applyEffects();
-		getInventory().onStartRound();
 		effectComponent.onStartRound();
 	}
 	

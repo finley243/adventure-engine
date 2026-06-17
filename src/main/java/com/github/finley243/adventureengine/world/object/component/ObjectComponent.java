@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.world.object.component;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionDependencies;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -58,8 +57,6 @@ public abstract class ObjectComponent implements ScriptValueHolder {
     public void onSetObjectEnabled(boolean enable) {}
 
     public void onSetObjectArea(Area area) {}
-
-    public void onStartRound(Game game) {}
 
     protected abstract String getStatName();
 

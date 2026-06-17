@@ -9,10 +9,9 @@ import com.github.finley243.adventureengine.actor.controller.TurnController;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.event.ui.TextClearEvent;
-import com.github.finley243.adventureengine.gamedata.ActorRegistry;
-import com.github.finley243.adventureengine.gamedata.AreaRegistry;
-import com.github.finley243.adventureengine.gamedata.Registry;
-import com.github.finley243.adventureengine.gamedata.TimerManager;
+import com.github.finley243.adventureengine.gamedata.*;
+import com.github.finley243.adventureengine.item.Item;
+import com.github.finley243.adventureengine.item.ItemFactory;
 import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.quest.QuestManager;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
@@ -33,6 +32,8 @@ public class Game {
 	private final TimerManager timerManager;
 	private final ActorRegistry actorRegistry;
 	private final Registry<WorldObject> objectRegistry;
+	private final ItemFactory itemFactory;
+    private final MutableRegistry<Item> itemRegistry;
 	private final AreaRegistry areaRegistry;
 	private final ScriptRuntime scriptRuntime;
 	private final Pathfinder pathfinder;
@@ -40,13 +41,15 @@ public class Game {
 
 	private boolean continueGame;
 
-    public Game(UIEventBus eventBus, MenuManager menuManager, QuestManager questManager, DateTimeController dateTimeController, ScriptRuntime scriptRuntime, ActionDependencies actionDependencies, ActorRegistry actorRegistry, Registry<WorldObject> objectRegistry, AreaRegistry areaRegistry, TimerManager timerManager, Pathfinder pathfinder, SensoryEventDispatcher sensoryEventDispatcher) {
+    public Game(UIEventBus eventBus, MenuManager menuManager, QuestManager questManager, DateTimeController dateTimeController, ScriptRuntime scriptRuntime, ActionDependencies actionDependencies, ActorRegistry actorRegistry, Registry<WorldObject> objectRegistry, ItemFactory itemFactory, MutableRegistry<Item> itemRegistry, AreaRegistry areaRegistry, TimerManager timerManager, Pathfinder pathfinder, SensoryEventDispatcher sensoryEventDispatcher) {
 		this.eventBus = eventBus;
         this.questManager = questManager;
 		this.dateTimeController = dateTimeController;
 		this.scriptRuntime = scriptRuntime;
 		this.actorRegistry = actorRegistry;
 		this.objectRegistry = objectRegistry;
+		this.itemFactory = itemFactory;
+        this.itemRegistry = itemRegistry;
 		this.areaRegistry = areaRegistry;
 		this.timerManager = timerManager;
 		this.pathfinder = pathfinder;
@@ -62,7 +65,18 @@ public class Game {
 		}
 	}
 
-	public void start() {
+	public void newGame() {
+		for (Actor actor : actorRegistry.getAll()) {
+			actor.applyStartingEffects();
+			actor.generateInitialInventory(itemFactory, itemRegistry);
+		}
+		for (WorldObject object : objectRegistry.getAll()) {
+			object.generateInitialInventory(itemFactory, itemRegistry);
+		}
+		start();
+	}
+
+	private void start() {
 		continueGame = true;
 		while (continueGame) {
 			startRound();
@@ -80,8 +94,8 @@ public class Game {
 		for (Area area : areaRegistry.getAll()) {
 			area.onStartRound();
 		}
-		for (WorldObject object : objectRegistry.getAll()) {
-			object.onStartRound(this);
+		for (Item item : itemRegistry.getAll()) {
+			item.onStartRound();
 		}
 		Actor player = actorRegistry.getPlayer();
 		if (player.getArea().getRoom() != null) {

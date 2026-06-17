@@ -7,7 +7,6 @@ import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
-import com.github.finley243.adventureengine.textgen.Phrases;
 
 import java.util.List;
 
@@ -40,7 +39,7 @@ public class ActionItemConsume extends Action {
 	public void choose(int repeatActionCount) {
 		subject.getInventory().removeItem(item);
 		Context context = getContext();
-		sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get(consumePhrase), context, true, this, null));
+		sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), consumePhrase, context, true, this, null));
 		for (Effect effect : effects) {
 			subject.getEffectComponent().addEffect(effect);
 		}
