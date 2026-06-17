@@ -168,7 +168,6 @@ public class Actor extends GameInstanced implements Noun, Physical, ScriptValueH
 		if (!startDead) {
 			HP = maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP, Context.from(defaultContext).build());
 		}
-		setEnabled(!startDisabled);
 	}
 
 	public void resolveBehaviorReferences(Registry<Area> areaRegistry, Registry<WorldObject> objectRegistry, Registry<Actor> actorRegistry) {
@@ -176,6 +175,10 @@ public class Actor extends GameInstanced implements Noun, Physical, ScriptValueH
 		for (Behavior behavior : behaviors) {
 			behavior.resolveReferences(areaRegistry, objectRegistry, actorRegistry);
 		}
+	}
+
+	public void setInitialEnabledState() {
+		setEnabled(!startDisabled);
 	}
 
 	public void generateInitialInventory(ItemFactory itemFactory, MutableRegistry<Item> itemMutableRegistry) {

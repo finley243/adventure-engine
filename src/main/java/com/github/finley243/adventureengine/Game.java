@@ -69,6 +69,7 @@ public class Game {
 		for (Actor actor : actorRegistry.getAll()) {
 			actor.applyStartingEffects();
 			actor.generateInitialInventory(itemFactory, itemRegistry);
+			actor.setInitialEnabledState();
 		}
 		for (WorldObject object : objectRegistry.getAll()) {
 			object.generateInitialInventory(itemFactory, itemRegistry);
