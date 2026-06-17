@@ -87,7 +87,7 @@ public class ScriptLoader {
         functions.add(Script.builder("add", ScriptCollectionAdd::new).parameter("collection").parameter("value").build());
         functions.add(Script.builder("listAddIndex", ScriptListAddIndex::new).parameter("list").parameter("index").parameter("value").build());
         functions.add(Script.builder("remove", ScriptCollectionRemove::new).parameter("collection").parameter("value").build());
-        functions.add(Script.builder("listRemoveIndex", ScriptListAddIndex::new).parameter("list").parameter("index").build());
+        functions.add(Script.builder("listRemoveIndex", ScriptListRemoveIndex::new).allowAnyReturn().parameter("list").parameter("index").build());
         functions.add(Script.builder("listIndexOf", ScriptListIndexOf::new).returnType(Expression.DataType.INTEGER).parameter("list").parameter("value").build());
         functions.add(Script.builder("listSet", ScriptListIndexSet::new).parameter("list").parameter("index").parameter("value").build());
         functions.add(Script.builder("listGet", ScriptListIndexGet::new).allowAnyReturn().parameter("list").parameter("index").build());

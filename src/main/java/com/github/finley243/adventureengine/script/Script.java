@@ -134,11 +134,6 @@ public abstract class Script {
 			return this;
 		}
 
-		public FunctionBuilder parameter(String name, Expression defaultValue) {
-			parameters.add(new ScriptParser.ScriptParameter(name, true, defaultValue));
-			return this;
-		}
-
 		public FunctionBuilder optionalParameter(String name) {
 			parameters.add(new ScriptParser.ScriptParameter(name, false, null));
 			return this;
