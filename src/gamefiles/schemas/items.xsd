@@ -51,7 +51,7 @@
             <xs:element name="armorMult" type="xs:decimal"/>
             <xs:element name="silenced" type="xs:boolean"/>
             <xs:element name="targetEffect" type="xs:string"/>
-        </xs:choice minOccurs="0" maxOccurs="unbounded">
+        </xs:choice>
         <xs:attribute name="type" type="ItemComponentType" use="required"/>
         <xs:attribute name="restricted" type="xs:boolean"/>
         <!-- ammo -->
