@@ -1,0 +1,7 @@
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/attributes.xsd">
+    <attribute id="body">body</attribute>
+    <attribute id="intelligence">intelligence</attribute>
+    <attribute id="charisma">charisma</attribute>
+    <attribute id="dexterity">dexterity</attribute>
+    <attribute id="agility">agility</attribute>
+</data>

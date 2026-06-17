@@ -1,0 +1,123 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:include schemaLocation="common.xsd"/>
+
+    <xs:element name="data">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="area" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="name">
+                                <xs:complexType>
+                                    <xs:simpleContent>
+                                        <xs:extension base="xs:string">
+                                            <xs:attribute name="type" type="xs:string"/>
+                                            <xs:attribute name="plural" type="xs:boolean"/>
+                                        </xs:extension>
+                                    </xs:simpleContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="description" type="SceneLine" minOccurs="0"/>
+                            <xs:element name="link" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="type" type="xs:string"/>
+                                    <xs:attribute name="dist" type="DistanceCategory"/>
+                                    <xs:attribute name="dir" type="CompassDirection"/>
+                                    <xs:attribute name="area" type="xs:string"/>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="object" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="localVar" minOccurs="0" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:simpleContent>
+                                                    <xs:extension base="xs:string">
+                                                        <xs:attribute name="name" type="xs:string" use="required"/>
+                                                    </xs:extension>
+                                                </xs:simpleContent>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="objectLink" minOccurs="0" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:attribute name="link" type="xs:string" use="required"/>
+                                                <xs:attribute name="object" type="xs:string" use="required"/>
+                                                <xs:attribute name="dir" type="CompassDirection"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="vehicleObjectOverride" type="xs:string" minOccurs="0"/>
+                                        <xs:element name="networkID" type="xs:string" minOccurs="0"/>
+                                    </xs:sequence>
+                                    <xs:attribute name="id" type="xs:string" use="required"/>
+                                    <xs:attribute name="template" type="xs:string" use="required"/>
+                                    <xs:attribute name="startDisabled" type="xs:boolean"/>
+                                    <xs:attribute name="startHidden" type="xs:boolean"/>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="actor" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="descriptor" type="xs:string" minOccurs="0"/>
+                                        <xs:element name="behaviors" minOccurs="0">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="behavior" type="Behavior" maxOccurs="unbounded"/>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute name="id" type="xs:string" use="required"/>
+                                    <xs:attribute name="template" type="xs:string" use="required"/>
+                                    <xs:attribute name="startDead" type="xs:boolean"/>
+                                    <xs:attribute name="startDisabled" type="xs:boolean"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="id" type="xs:string" use="required"/>
+                        <xs:attribute name="room" type="xs:string"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+        <xs:unique name="uniqueID">
+            <xs:selector xpath="area"/>
+            <xs:field xpath="@id"/>
+        </xs:unique>
+        <xs:unique name="uniqueObjectID">
+            <xs:selector xpath="area/object"/>
+            <xs:field xpath="@id"/>
+        </xs:unique>
+        <xs:unique name="uniqueActorID">
+            <xs:selector xpath="area/actor"/>
+            <xs:field xpath="@id"/>
+        </xs:unique>
+        <xs:unique name="uniqueItemID">
+            <xs:selector xpath="area/item"/>
+            <xs:field xpath="@id"/>
+        </xs:unique>
+    </xs:element>
+
+    <xs:complexType name="Behavior">
+        <xs:sequence>
+            <xs:element name="behavior" type="Behavior" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="idle" type="Idle" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="type" type="xs:string"/>
+        <xs:attribute name="isCycle" type="xs:boolean"/>
+        <xs:attribute name="duration" type="xs:integer"/>
+        <xs:attribute name="area" type="xs:string"/>
+        <xs:attribute name="object" type="xs:string"/>
+        <xs:attribute name="slot" type="xs:string"/>
+        <xs:attribute name="actor" type="xs:string"/>
+        <xs:attribute name="action" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="Idle">
+        <xs:sequence>
+            <xs:element name="condition" type="xs:string" minOccurs="0"/>
+            <xs:element name="phrase" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

@@ -1,4 +1,4 @@
-<data>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/sense_types.xsd">
     <senseType id="vision_night">
         <name>night vision</name>
     </senseType>

@@ -1,7 +1,4 @@
-<data>
-    <room id="warehouse">
-        <name>warehouse</name>
-    </room>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/areas.xsd">
     <area id="warehouse_aisle_back">
         <name type="in">back aisle</name>
         <link type="basic" dist="CLOSE" dir="S" area="warehouse_aisle_front"/>

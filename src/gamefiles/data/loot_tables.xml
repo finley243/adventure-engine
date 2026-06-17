@@ -1,4 +1,4 @@
-<data>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/loot_tables.xsd">
     <lootTable id="weapon_melee" useAll="false">
         <item>baseball_bat</item>
         <item>katana</item>

@@ -1,4 +1,4 @@
-<data>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/scenes.xsd">
     <scene id="stratis_lobby_intro">
         <condition>
             stat.actor("stratis_receptionist").active &amp;&amp; !stat.actor("stratis_receptionist").inCombat &amp;&amp;

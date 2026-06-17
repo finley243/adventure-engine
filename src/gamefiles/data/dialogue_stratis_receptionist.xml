@@ -1,4 +1,4 @@
-<data>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/scenes.xsd">
     <scene id="stratis_receptionist_start" type="select">
         <line redirect="stratis_receptionist_main" once="true">"Hello, welcome to the Stratis Hotel. How can I be of assistance?"</line>
         <line redirect="stratis_receptionist_main">"Welcome back. How can I be of assistance?"</line>
@@ -54,10 +54,6 @@
         <line exit="true">
             <line>The receptionist smirks.</line>
             <line>"You think you're the first to try that here?"</line>
-            <scriptPost type="combat">
-                <actor holder="target"/>
-                <target holder="player"/>
-            </scriptPost>
             <scriptPost>
                 startCombat(actor=statHolder.target, target=statHolder.player);
             </scriptPost>

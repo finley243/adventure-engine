@@ -1,4 +1,4 @@
-<data>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/networks.xsd">
     <node id="wilsons_corner_store_main">
         <name>node_main</name>
         <node id="wilsons_corner_store_devices">

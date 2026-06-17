@@ -1,4 +1,4 @@
-<data>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/actors.xsd">
     <actor id="default" faction="default" isEnforcer="false" actionPoints="3" movePoints="2" hp="30" startLevel="1">
         <name proper="false" pronoun="THEY">DEFAULT</name>
         <levelUpThreshold>20</levelUpThreshold>

@@ -1,4 +1,4 @@
-<data>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/actions.xsd">
     <action id="lock_pick">
         <prompt>Pick lock</prompt>
         <condition>

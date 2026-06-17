@@ -1,4 +1,4 @@
-<data>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/actions.xsd">
     <action id="drive">
         <prompt>Drive</prompt>
         <parameter name="areaName">stat.parentArea.name</parameter>

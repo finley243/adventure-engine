@@ -1,14 +1,8 @@
-<data>
-    <room id="street_corner_fifth_sinclair">
-        <name proper="false" type="in">intersection</name>
-    </room>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/areas.xsd">
     <area id="street_corner_fifth_sinclair_1" room="street_corner_fifth_sinclair">
         <link type="basic" dist="CLOSE" dir="E" area="street_sinclair_fifth_sixth_1"/>
         <link type="basic" dist="CLOSE" dir="S" area="street_fifth_sinclair_archer_1"/>
     </area>
-    <room id="street_corner_fifth_archer">
-        <name proper="false" type="in">intersection</name>
-    </room>
     <area id="street_corner_fifth_archer_1" room="street_corner_fifth_archer">
         <link type="basic" dist="CLOSE" dir="E" area="street_archer_fifth_sixth_1"/>
         <link type="basic" dist="CLOSE" dir="N" area="street_fifth_sinclair_archer_2"/>
@@ -17,23 +11,14 @@
             <localVar name="door_link_dir">"NE"</localVar>
         </object>
     </area>
-    <room id="street_corner_sixth_sinclair">
-        <name proper="false" type="in">intersection</name>
-    </room>
     <area id="street_corner_sixth_sinclair_1" room="street_corner_sixth_sinclair">
         <link type="basic" dist="CLOSE" dir="W" area="street_sinclair_fifth_sixth_3"/>
         <link type="basic" dist="CLOSE" dir="S" area="street_sixth_sinclair_archer_1"/>
     </area>
-    <room id="street_corner_sixth_archer">
-        <name proper="false" type="in">intersection</name>
-    </room>
     <area id="street_corner_sixth_archer_1" room="street_corner_sixth_archer">
         <link type="basic" dist="CLOSE" dir="W" area="street_archer_fifth_sixth_3"/>
         <link type="basic" dist="CLOSE" dir="N" area="street_sixth_sinclair_archer_2"/>
     </area>
-    <room id="street_sinclair_fifth_sixth">
-        <name proper="true" type="on">Sinclair Street</name>
-    </room>
     <area id="street_sinclair_fifth_sixth_1" room="street_sinclair_fifth_sixth">
         <link type="basic" dist="CLOSE" dir="W" area="street_corner_fifth_sinclair_1"/>
         <link type="basic" dist="CLOSE" dir="E" area="street_sinclair_fifth_sixth_2"/>
@@ -47,9 +32,6 @@
         <link type="basic" dist="CLOSE" dir="W" area="street_sinclair_fifth_sixth_2"/>
         <link type="basic" dist="CLOSE" dir="E" area="street_corner_sixth_sinclair_1"/>
     </area>
-    <room id="street_archer_fifth_sixth">
-        <name proper="true" type="on">Archer Street</name>
-    </room>
     <area id="street_archer_fifth_sixth_1" room="street_archer_fifth_sixth">
         <link type="basic" dist="CLOSE" dir="W" area="street_corner_fifth_archer_1"/>
         <link type="basic" dist="CLOSE" dir="E" area="street_archer_fifth_sixth_2"/>
@@ -68,9 +50,6 @@
         <link type="basic" dist="CLOSE" dir="W" area="street_archer_fifth_sixth_2"/>
         <link type="basic" dist="CLOSE" dir="E" area="street_corner_sixth_archer_1"/>
     </area>
-    <room id="street_fifth_sinclair_archer">
-        <name proper="true" type="on">5th Avenue</name>
-    </room>
     <area id="street_fifth_sinclair_archer_1" room="street_fifth_sinclair_archer">
         <link type="basic" dist="CLOSE" dir="S" area="street_fifth_sinclair_archer_2"/>
         <link type="basic" dist="CLOSE" dir="N" area="street_corner_fifth_sinclair_1"/>
@@ -80,9 +59,6 @@
         <link type="basic" dist="CLOSE" dir="S" area="street_corner_fifth_archer_1"/>
         <object id="test_motorcycle" template="motorcycle"/>
     </area>
-    <room id="street_sixth_sinclair_archer">
-        <name proper="true" type="on">6th Avenue</name>
-    </room>
     <area id="street_sixth_sinclair_archer_1" room="street_sixth_sinclair_archer">
         <link type="basic" dist="CLOSE" dir="S" area="street_sixth_sinclair_archer_2"/>
         <link type="basic" dist="CLOSE" dir="N" area="street_corner_sixth_sinclair_1"/>
@@ -91,9 +67,6 @@
         <link type="basic" dist="CLOSE" dir="N" area="street_sixth_sinclair_archer_1"/>
         <link type="basic" dist="CLOSE" dir="S" area="street_corner_sixth_archer_1"/>
     </area>
-    <room id="alley_archer_fifth_sixth">
-        <name proper="false" type="in">alley</name>
-    </room>
     <area id="alley_archer_fifth_sixth_1" room="alley_archer_fifth_sixth">
         <link type="basic" dist="CLOSE" dir="N" area="street_sinclair_fifth_sixth_2"/>
         <link type="basic" dist="CLOSE" dir="S" area="alley_archer_fifth_sixth_2"/>

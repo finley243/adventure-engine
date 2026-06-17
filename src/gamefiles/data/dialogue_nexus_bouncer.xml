@@ -1,4 +1,4 @@
-<data>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/scenes.xsd">
     <scene id="nexus_bouncer_start" type="select">
         <line once="true">
             <line>The bouncer glances at you and frowns.</line>

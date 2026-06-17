@@ -1,4 +1,4 @@
-<data>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/damage_types.xsd">
     <damageType id="physical"/>
     <damageType id="thermal"/>
     <damageType id="chemical"/>

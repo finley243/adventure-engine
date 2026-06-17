@@ -1,4 +1,4 @@
-<data>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/items.xsd">
     <item id="can_soda" price="1">
         <name>empty soda can</name>
     </item>

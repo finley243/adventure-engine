@@ -1,4 +1,4 @@
-<data>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/items.xsd">
     <item id="tactical_vest" price="40">
         <name>tactical vest</name>
         <component type="equippable">

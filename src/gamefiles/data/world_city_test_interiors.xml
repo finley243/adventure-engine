@@ -1,13 +1,4 @@
-<data>
-    <room id="sinclair_tech_store">
-        <name proper="true">Argon Electronics</name>
-    </room>
-    <room id="wilsons_corner_store">
-        <name proper="true">Wilson's corner store</name>
-        <description>
-            <line>The store is small, with no wasted space. Near the entrance is the checkout counter. To the north are shelves stocked with various goods, with a row of coolers behind them.</line>
-        </description>
-    </room>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/areas.xsd">
     <area id="wilsons_corner_store_entrance" room="wilsons_corner_store">
         <name type="near">entrance</name>
         <link type="basic" dist="CLOSE" dir="N" area="wilsons_corner_store_shelves"/>
@@ -45,9 +36,6 @@
             <localVar name="door_link_dir">"E"</localVar>
         </object>
     </area>
-    <!--<room id="wilsons_corner_store_backroom">
-        <name>backroom</name>
-    </room>-->
     <area id="wilsons_corner_store_backroom_area">
         <name type="in">backroom</name>
         <object id="wilsons_corner_store_backroom_door_interior" template="door_basic">
@@ -59,12 +47,6 @@
             <localVar name="door_link_dir">"E"</localVar>
         </object>
     </area>
-    <room id="archer_burger_restaurant">
-        <name>BigBurger</name>
-    </room>
-    <room id="archer_apartments_entrance">
-        <name>apartments</name>
-    </room>
     <area id="archer_apartments_entrance_front" room="archer_apartments_entrance">
         <name type="near">entrance</name>
         <link type="basic" dist="CLOSE" dir="N" area="archer_apartments_entrance_stairs"/>
@@ -77,7 +59,4 @@
         <name type="near">stairs</name>
         <link type="basic" dist="CLOSE" dir="S" area="archer_apartments_entrance_front"/>
     </area>
-    <room id="archer_apartments_23">
-        <name proper="true">apartment 23</name>
-    </room>
 </data>

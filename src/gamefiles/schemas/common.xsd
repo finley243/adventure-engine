@@ -1,0 +1,82 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:simpleType name="DistanceCategory">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="NEAR"/>
+            <xs:enumeration value="CLOSE"/>
+            <xs:enumeration value="FAR"/>
+            <xs:enumeration value="DISTANT"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="CompassDirection">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="N"/>
+            <xs:enumeration value="NW"/>
+            <xs:enumeration value="NE"/>
+            <xs:enumeration value="S"/>
+            <xs:enumeration value="SW"/>
+            <xs:enumeration value="SE"/>
+            <xs:enumeration value="W"/>
+            <xs:enumeration value="E"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="SceneLine" mixed="true">
+        <xs:sequence>
+            <xs:element name="condition" type="xs:string" minOccurs="0"/>
+            <xs:element name="scriptPre" type="xs:string" minOccurs="0"/>
+            <xs:element name="line" type="SceneLine" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="scriptPost" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="type" type="LineSelectorType"/>
+        <xs:attribute name="redirect" type="xs:string"/>
+        <xs:attribute name="once" type="xs:boolean"/>
+        <xs:attribute name="from" type="xs:string"/>
+        <xs:attribute name="exit" type="xs:boolean"/>
+    </xs:complexType>
+
+    <xs:complexType name="ScriptWithTrigger">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="trigger" type="xs:string"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:simpleType name="LineSelectorType">
+        <xs:restriction>
+            <xs:enumeration value="select"/>
+            <xs:enumeration value="all"/>
+            <xs:enumeration value="random"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="RestrictionType">
+        <xs:restriction>
+            <xs:enumeration value="public"/>
+            <xs:enumeration value="private"/>
+            <xs:enumeration value="hostile"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="AreaNameType">
+        <xs:restriction>
+            <xs:enumeration value="in"/>
+            <xs:enumeration value="on"/>
+            <xs:enumeration value="near"/>
+            <xs:enumeration value="front"/>
+            <xs:enumeration value="side"/>
+            <xs:enumeration value="behind"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="FactionRelation">
+        <xs:restriction>
+            <xs:enumeration value="HOSTILE"/>
+            <xs:enumeration value="NEUTRAL"/>
+            <xs:enumeration value="ALLY"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

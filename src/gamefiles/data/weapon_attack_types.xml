@@ -1,4 +1,4 @@
-<data>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/attack_types.xsd">
     <attackType id="basic_ranged" category="single" ammoConsumed="1">
         <prompt>Attack</prompt>
         <attackPhrase>rangedAttack</attackPhrase>

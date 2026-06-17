@@ -1,7 +1,4 @@
-<data>
-    <room id="providence_lobby">
-        <name>lobby</name>
-    </room>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/areas.xsd">
     <area id="providence_lobby_entrance" room="providence_lobby">
         <name type="near">entrance</name>
         <link type="basic" dist="CLOSE" dir="N" area="providence_lobby_reception"/>

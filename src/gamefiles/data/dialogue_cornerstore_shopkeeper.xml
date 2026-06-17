@@ -1,4 +1,4 @@
-<data>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/scenes.xsd">
     <scene id="cornerstore_shopkeeper_start">
         <line once="true" redirect="cornerstore_shopkeeper_main">
             <line>"Welcome, welcome! We've got everything you need here, all at a good price. What can I help you with?"</line>
@@ -11,7 +11,7 @@
         <choice link="cornerstore_shopkeeper_end">Goodbye.</choice>
     </scene>
     <scene id="cornerstore_shopkeeper_end">
-        <line end="true">"'Till next time."</line>
+        <line exit="true">"'Till next time."</line>
     </scene>
     <scene id="cornerstore_shopkeeper_andre_questions_repeat">
         <condition>stat.scene("cornerstore_shopkeeper_andre_questions").triggered</condition>

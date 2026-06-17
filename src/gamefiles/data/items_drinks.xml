@@ -1,4 +1,4 @@
-<data>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/items.xsd">
     <item id="nitron_cola" price="10">
         <name>Nitron Cola</name>
         <component type="consumable">

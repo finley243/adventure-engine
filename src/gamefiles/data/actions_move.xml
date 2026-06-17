@@ -1,4 +1,4 @@
-<data>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/actions.xsd">
     <action id="move_basic">
         <prompt>$areaName ($dir)</prompt>
         <parameter name="areaName">statHolder.parentArea.room != null &amp;&amp; (statHolder.subject.area.room == null || stat.subject.area.room.id != stat.parentArea.room.id) ? stat.parentArea.room.name : stat.parentArea.name</parameter>

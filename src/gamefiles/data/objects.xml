@@ -1,4 +1,4 @@
-<data>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/objects.xsd">
     <object id="door_basic">
         <name>door</name>
         <component type="link">

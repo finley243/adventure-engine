@@ -1,4 +1,4 @@
-<data>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/items.xsd">
     <item id="stratis_room_key">
         <name>Stratis room 508 keycard</name>
     </item>

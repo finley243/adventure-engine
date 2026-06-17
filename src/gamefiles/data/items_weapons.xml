@@ -1,4 +1,4 @@
-<data>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/items.xsd">
     <item id="baseball_bat" price="15">
         <name>baseball bat</name>
         <component type="weapon" class="club" restricted="true">

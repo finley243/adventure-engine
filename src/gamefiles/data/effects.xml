@@ -1,4 +1,4 @@
-<data>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/effects.xsd">
     <effect id="hit_limb_weapon">
         <scriptAdd>drop_equipped_force();</scriptAdd>
     </effect>
