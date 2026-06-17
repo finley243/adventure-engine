@@ -7,7 +7,7 @@
             <xs:sequence>
                 <xs:element name="object" maxOccurs="unbounded">
                     <xs:complexType>
-                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:sequence>
                             <xs:element name="name">
                                 <xs:complexType>
                                     <xs:simpleContent>
@@ -17,14 +17,14 @@
                                     </xs:simpleContent>
                                 </xs:complexType>
                             </xs:element>
-                            <xs:element name="description" type="SceneLine"/>
-                            <xs:element name="damage" type="DamageResistance"/>
-                            <xs:element name="script" type="ScriptWithTrigger"/>
-                            <xs:element name="action" type="ObjectAction"/>
-                            <xs:element name="networkAction" type="ObjectAction"/>
-                            <xs:element name="component" type="ObjectComponent"/>
-                            <xs:element name="localVar" type="LocalVar"/>
-                        </xs:choice>
+                            <xs:element name="description" type="SceneLine" minOccurs="0"/>
+                            <xs:element name="damage" type="DamageResistance" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="script" type="ScriptWithTrigger" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="action" type="CustomAction" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="networkAction" type="CustomAction" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="component" type="ObjectComponent" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="localVar" type="LocalVar" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:sequence>
                         <xs:attribute name="id" type="xs:string" use="required"/>
                         <xs:attribute name="maxHP" type="xs:integer"/>
                     </xs:complexType>
@@ -49,7 +49,7 @@
             <xs:element name="storePrompt" type="xs:string"/>
             <xs:element name="storePhrase" type="xs:string"/>
             <xs:element name="inventory" type="InlineLootTable"/>
-            <xs:element name="itemAction" type="ObjectAction"/>
+            <xs:element name="itemAction" type="CustomAction"/>
             <!-- link -->
             <xs:element name="link" type="LinkEntry"/>
             <!-- usable -->
@@ -65,21 +65,6 @@
         <xs:attribute name="vehicleType" type="xs:string"/>
     </xs:complexType>
 
-    <xs:complexType name="ObjectAction">
-        <xs:sequence>
-            <xs:element name="parameter" minOccurs="0" maxOccurs="unbounded">
-                <xs:complexType>
-                    <xs:simpleContent>
-                        <xs:extension base="xs:string">
-                            <xs:attribute name="name" type="xs:string" use="required"/>
-                        </xs:extension>
-                    </xs:simpleContent>
-                </xs:complexType>
-            </xs:element>
-        </xs:sequence>
-        <xs:attribute name="template" type="xs:string" use="required"/>
-    </xs:complexType>
-
     <xs:complexType name="LinkEntry">
         <xs:sequence>
             <xs:element name="conditionMovable" type="xs:string" minOccurs="0"/>
@@ -90,14 +75,14 @@
     </xs:complexType>
 
     <xs:complexType name="UsableSlot">
-        <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:sequence>
             <xs:element name="startPhrase" type="xs:string"/>
             <xs:element name="endPhrase" type="xs:string"/>
             <xs:element name="startPrompt" type="xs:string"/>
             <xs:element name="endPrompt" type="xs:string"/>
-            <xs:element name="exposedComponent" type="xs:string"/>
-            <xs:element name="usingAction" type="ObjectAction"/>
-        </xs:choice>
+            <xs:element name="exposedComponent" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="usingAction" type="CustomAction" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
         <xs:attribute name="id" type="xs:string" use="required"/>
         <xs:attribute name="cover" type="xs:boolean"/>
         <xs:attribute name="hidden" type="xs:boolean"/>

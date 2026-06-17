@@ -11,8 +11,4 @@
             </node>
         </node>
     </node>
-    <scene id="wilsons_corner_store_purchase_logs">
-        <line>Purchase history corrupted.</line>
-        <line>Please load backup file to continue.</line>
-    </scene>
 </data>

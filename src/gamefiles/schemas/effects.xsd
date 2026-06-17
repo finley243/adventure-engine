@@ -13,18 +13,18 @@
     </xs:element>
 
     <xs:complexType name="EffectBase">
-        <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:element name="conditionAdd" type="xs:string"/>
-            <xs:element name="conditionRemove" type="xs:string"/>
-            <xs:element name="conditionActive" type="xs:string"/>
-            <xs:element name="scriptAdd" type="xs:string"/>
-            <xs:element name="scriptRemove" type="xs:string"/>
-            <xs:element name="scriptRound" type="xs:string"/>
-            <xs:element name="statCondition" type="xs:string"/>
-            <xs:element name="add" type="xs:string"/>
-            <xs:element name="remove" type="xs:string"/>
-            <xs:element name="effect" type="EffectBase"/>
-        </xs:choice>
+        <xs:sequence>
+            <xs:element name="conditionAdd" type="xs:string" minOccurs="0"/>
+            <xs:element name="conditionRemove" type="xs:string" minOccurs="0"/>
+            <xs:element name="conditionActive" type="xs:string" minOccurs="0"/>
+            <xs:element name="scriptAdd" type="xs:string" minOccurs="0"/>
+            <xs:element name="scriptRemove" type="xs:string" minOccurs="0"/>
+            <xs:element name="scriptRound" type="xs:string" minOccurs="0"/>
+            <xs:element name="statCondition" type="xs:string" minOccurs="0"/>
+            <xs:element name="add" type="xs:string" minOccurs="0"/>
+            <xs:element name="remove" type="xs:string" minOccurs="0"/>
+            <xs:element name="effect" type="EffectBase" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
         <xs:attribute name="type" type="EffectType"/>
         <xs:attribute name="duration" type="xs:integer"/>
         <xs:attribute name="permanent" type="xs:boolean"/>

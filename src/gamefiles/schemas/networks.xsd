@@ -4,10 +4,9 @@
 
     <xs:element name="data">
         <xs:complexType>
-            <xs:choice minOccurs="0" maxOccurs="unbounded">
-                <xs:element name="node" type="NetworkNode"/>
-                <xs:element name="scene" type="NetworkScene"/>
-            </xs:choice>
+            <xs:sequence>
+                <xs:element name="node" type="NetworkNode" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
         </xs:complexType>
         <xs:unique name="uniqueNodeID">
             <xs:selector xpath="node"/>
@@ -28,16 +27,6 @@
         <xs:attribute name="type" type="NodeType"/>
         <xs:attribute name="scene" type="xs:string"/>
         <xs:attribute name="object" type="xs:string"/>
-    </xs:complexType>
-
-    <xs:complexType name="NetworkScene">
-        <xs:sequence>
-            <xs:element name="condition" type="xs:string" minOccurs="0"/>
-            <xs:element name="line" type="SceneLine" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element name="choice" type="SceneChoice" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-        <xs:attribute name="id" type="xs:string" use="required"/>
-        <xs:attribute name="type" type="LineSelectorType"/>
     </xs:complexType>
 
     <xs:simpleType name="NodeType">

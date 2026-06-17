@@ -7,13 +7,13 @@
             <xs:sequence>
                 <xs:element name="item" maxOccurs="unbounded">
                     <xs:complexType>
-                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:sequence>
                             <xs:element name="name" type="xs:string"/>
-                            <xs:element name="description" type="SceneLine"/>
-                            <xs:element name="script" type="ScriptWithTrigger"/>
-                            <xs:element name="action" type="ItemAction"/>
-                            <xs:element name="component" type="ItemComponent"/>
-                        </xs:choice>
+                            <xs:element name="description" type="SceneLine" minOccurs="0"/>
+                            <xs:element name="script" type="ScriptWithTrigger" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="action" type="CustomAction" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="component" type="ItemComponent" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:sequence>
                         <xs:attribute name="id" type="xs:string" use="required"/>
                         <xs:attribute name="price" type="xs:integer"/>
                     </xs:complexType>
@@ -51,7 +51,7 @@
             <xs:element name="armorMult" type="xs:decimal"/>
             <xs:element name="silenced" type="xs:boolean"/>
             <xs:element name="targetEffect" type="xs:string"/>
-        </xs:choice>
+        </xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:attribute name="type" type="ItemComponentType" use="required"/>
         <xs:attribute name="restricted" type="xs:boolean"/>
         <!-- ammo -->
@@ -66,12 +66,12 @@
     </xs:complexType>
 
     <xs:complexType name="EquipSlotGroup">
-        <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:sequence>
             <xs:element name="slot" type="xs:string"/>
-            <xs:element name="exposedComponent" type="xs:string"/>
-            <xs:element name="effect" type="xs:string"/>
-            <xs:element name="equippedAction" type="ItemAction"/>
-        </xs:choice>
+            <xs:element name="exposedComponent" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="effect" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="equippedAction" type="CustomAction" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="ComponentDamage">
@@ -85,21 +85,6 @@
     <xs:complexType name="ModSlotEntry">
         <xs:attribute name="name" type="xs:string" use="required"/>
         <xs:attribute name="count" type="xs:integer"/>
-    </xs:complexType>
-
-    <xs:complexType name="ItemAction">
-        <xs:sequence>
-            <xs:element name="parameter" minOccurs="0" maxOccurs="unbounded">
-                <xs:complexType>
-                    <xs:simpleContent>
-                        <xs:extension base="xs:string">
-                            <xs:attribute name="name" type="xs:string" use="required"/>
-                        </xs:extension>
-                    </xs:simpleContent>
-                </xs:complexType>
-            </xs:element>
-        </xs:sequence>
-        <xs:attribute name="template" type="xs:string" use="required"/>
     </xs:complexType>
 
     <xs:simpleType name="ItemComponentType">

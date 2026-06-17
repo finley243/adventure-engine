@@ -7,24 +7,23 @@
             <xs:sequence>
                 <xs:element name="actor" maxOccurs="unbounded">
                     <xs:complexType>
-                        <xs:choice minOccurs="0" maxOccurs="unbounded">
-                            <xs:element name="name" type="ActorName"/>
-                            <xs:element name="levelUpThreshold" type="xs:string"/>
-                            <xs:element name="attribute" type="KeyValueInt"/>
-                            <xs:element name="skill" type="KeyValueInt"/>
-                            <xs:element name="senseType" type="xs:string"/>
-                            <xs:element name="tag" type="xs:string"/>
-                            <xs:element name="attackType" type="xs:string"/>
-                            <xs:element name="script" type="ScriptWithTrigger"/>
-                            <xs:element name="startEffect" type="xs:string"/>
-                            <xs:element name="inventory" type="InlineLootTable"/>
-                            <xs:element name="limb" type="Limb"/>
-                            <xs:element name="equipSlot" type="EquipSlot"/>
-                            <xs:element name="damageResistance" type="ActorDamageResistance"/>
-                            <xs:element name="bark" type="Bark"/>
-                            <xs:element name="action" type="CustomAction"/>
-                            <xs:element name="itemAction" type="CustomAction"/>
-                        </xs:choice>
+                        <xs:sequence>
+                            <xs:element name="name" type="ActorName" minOccurs="0"/>
+                            <xs:element name="levelUpThreshold" type="xs:string" minOccurs="0"/>
+                            <xs:element name="attribute" type="KeyValueInt" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="skill" type="KeyValueInt" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="senseType" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="attackType" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="script" type="ScriptWithTrigger" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="startEffect" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="inventory" type="InlineLootTable" minOccurs="0"/>
+                            <xs:element name="limb" type="Limb" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="equipSlot" type="EquipSlot" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="damageResistance" type="ActorDamageResistance" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="bark" type="Bark" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="action" type="CustomAction" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="itemAction" type="CustomAction" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:sequence>
                         <xs:attribute name="id" type="xs:string" use="required"/>
                         <xs:attribute name="parent" type="xs:string"/>
                         <xs:attribute name="faction" type="xs:string"/>
@@ -79,14 +78,14 @@
     </xs:complexType>
 
     <xs:complexType name="Limb">
-        <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:sequence>
             <xs:element name="name" type="xs:string"/>
-            <xs:element name="hitEffect" type="xs:string"/>
-        </xs:choice>
+            <xs:element name="hitEffect" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
         <xs:attribute name="id" type="xs:string" use="required"/>
         <xs:attribute name="hitChance" type="xs:decimal"/>
         <xs:attribute name="damageMult" type="xs:decimal"/>
-        <xs:attribute name="apparelSlot" type="xs:string"/>
+        <xs:attribute name="apparelSlot" type="xs:string" use="required"/>
     </xs:complexType>
 
     <xs:complexType name="EquipSlot">
@@ -104,10 +103,10 @@
     </xs:complexType>
 
     <xs:complexType name="Bark">
-        <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:element name="visible" type="xs:string"/>
-            <xs:element name="nonVisible" type="xs:string"/>
-        </xs:choice>
+        <xs:sequence>
+            <xs:element name="visible" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="nonVisible" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
         <xs:attribute name="trigger" type="xs:string" use="required"/>
         <xs:attribute name="response" type="BarkResponseType"/>
     </xs:complexType>
