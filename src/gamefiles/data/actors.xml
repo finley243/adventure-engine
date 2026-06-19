@@ -41,11 +41,11 @@
         <equipSlot id="legs">legs</equipSlot>
         <equipSlot id="hand_main">main hand</equipSlot>
         <equipSlot id="hand_off">off hand</equipSlot>
-        <damageResistance type="physical" value="0"/>
-        <damageResistance type="thermal" value="0"/>
-        <damageResistance type="chemical" value="0"/>
-        <damageResistance type="explosive" value="0"/>
-        <damageResistance type="electrical" value="0"/>
+        <damage type="physical" value="0"/>
+        <damage type="thermal" value="0"/>
+        <damage type="chemical" value="0"/>
+        <damage type="explosive" value="0"/>
+        <damage type="electrical" value="0"/>
     </actor>
     <actor id="player" parent="default" hp="70" faction="player">
         <name proper="true" pronoun="YOU">PLAYER</name>

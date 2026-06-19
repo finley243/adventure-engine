@@ -18,7 +18,7 @@
                             <xs:element name="inventory" type="InlineLootTable" minOccurs="0"/>
                             <xs:element name="limb" type="Limb" minOccurs="0" maxOccurs="unbounded"/>
                             <xs:element name="equipSlot" type="EquipSlot" minOccurs="0" maxOccurs="unbounded"/>
-                            <xs:element name="damageResistance" type="ActorDamageResistance" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="damage" type="ActorDamageResistance" minOccurs="0" maxOccurs="unbounded"/>
                             <xs:element name="action" type="CustomAction" minOccurs="0" maxOccurs="unbounded"/>
                             <xs:element name="itemAction" type="CustomAction" minOccurs="0" maxOccurs="unbounded"/>
                             <xs:element name="bark" type="Bark" minOccurs="0" maxOccurs="unbounded"/>
