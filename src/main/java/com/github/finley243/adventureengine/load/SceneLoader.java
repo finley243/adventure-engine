@@ -20,7 +20,6 @@ public class SceneLoader {
     private static final String NAME_TYPE = "type";
     private static final String NAME_CONDITION = "condition";
     private static final String NAME_ONCE = "once";
-    private static final String NAME_PRIORITY = "priority";
     private static final String NAME_LINE = "line";
     private static final String NAME_CHOICE = "choice";
 
@@ -37,7 +36,6 @@ public class SceneLoader {
 
     private static final Scene.SceneType DEFAULT_TYPE = Scene.SceneType.ALL;
     private static final boolean DEFAULT_ONCE = false;
-    private static final int DEFAULT_PRIORITY = 1;
 
     private static final boolean DEFAULT_LINE_ONCE = false;
     private static final boolean DEFAULT_LINE_EXIT = false;
@@ -66,7 +64,6 @@ public class SceneLoader {
         }
         Condition condition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, NAME_CONDITION), scriptParser, "Scene(" + sceneID + ") - condition", scriptRuntime);
         boolean once = LoadUtils.attributeBool(element, NAME_ONCE, DEFAULT_ONCE);
-        int priority = LoadUtils.attributeInt(element, NAME_PRIORITY, DEFAULT_PRIORITY);
         List<Element> lineElements = LoadUtils.directChildrenWithName(element, NAME_LINE);
         List<SceneLine> lines = new ArrayList<>();
         for (Element lineElement : lineElements) {
@@ -79,7 +76,7 @@ public class SceneLoader {
             SceneChoice choice = parseSceneChoice(choiceElement);
             choices.add(choice);
         }
-        return new Scene(sceneID, condition, once, priority, lines, choices, type);
+        return new Scene(sceneID, condition, once, lines, choices, type);
     }
 
     private SceneLine parseSceneLine(Element element, String sceneID) {

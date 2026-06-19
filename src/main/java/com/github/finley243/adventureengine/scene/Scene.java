@@ -17,21 +17,19 @@ public class Scene extends GameInstanced implements ScriptValueHolder {
 
 	private final Condition condition;
 	private final boolean once;
-	private final int priority;
-	private final List<SceneLine> lines;
+    private final List<SceneLine> lines;
 	private final List<SceneChoice> choices;
 
 	private final SceneType type;
 
 	private boolean hasTriggered;
 	
-	public Scene(String ID, Condition condition, boolean once, int priority, List<SceneLine> lines, List<SceneChoice> choices, SceneType type) {
+	public Scene(String ID, Condition condition, boolean once, List<SceneLine> lines, List<SceneChoice> choices, SceneType type) {
 		// TODO - Always assigned a non-null ID (for in-line scenes, assign an "automatic" ID if none is manually specified)
 		super(ID);
 		this.condition = condition;
 		this.once = once;
-		this.priority = priority;
-		this.lines = lines;
+        this.lines = lines;
 		this.choices = choices;
 		this.type = type;
 		this.hasTriggered = false;
@@ -60,10 +58,6 @@ public class Scene extends GameInstanced implements ScriptValueHolder {
 
 	public SceneType getType() {
 		return type;
-	}
-
-	public int getPriority() {
-		return priority;
 	}
 
 	public void setTriggered() {
