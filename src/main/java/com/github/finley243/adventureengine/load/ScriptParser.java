@@ -219,7 +219,7 @@ public class ScriptParser {
             if (currentGroup.size() >= 3 && currentGroup.get(1).type != ScriptTokenType.ASSIGNMENT) throw new IllegalArgumentException("Function contains invalid parameter definition");
             String parameterName = currentGroup.getFirst().value;
             boolean parameterIsRequired = currentGroup.size() < 3;
-            if (parameterIsRequired) {
+            if (!parameterIsRequired) {
                 hasParsedNamedParameter = true;
             } else if (hasParsedNamedParameter) {
                 throw new IllegalArgumentException("Function contains unnamed parameter after named parameter");
@@ -259,7 +259,7 @@ public class ScriptParser {
                         branches.add(new ScriptIfTokens(tokens.subList(index + 2, branchConditionEndIndex), tokens.subList(branchConditionEndIndex + 2, branchBodyEndIndex)));
                         index = branchBodyEndIndex + 1;
                     } else {
-                        if (tokens.get(index + 1).type != ScriptTokenType.PARENTHESIS_OPEN) throw new IllegalArgumentException("Else statement is missing body");
+                        if (tokens.get(index + 1).type != ScriptTokenType.BRACKET_OPEN) throw new IllegalArgumentException("Else statement is missing body");
                         int branchBodyEndIndex = findPairedClosingBracket(tokens, index + 1);
                         if (branchBodyEndIndex == -1) throw new IllegalArgumentException("Else statement body is not closed");
                         bodyElse = tokens.subList(index + 2, branchBodyEndIndex);
