@@ -11,6 +11,7 @@ import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.item.template.*;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.script.parse.ScriptLexer;
 import org.w3c.dom.Element;
 
 import java.util.*;
@@ -20,16 +21,16 @@ public class ItemTemplateLoader {
     private static final String NAME_ITEM = "item";
 
     private final ConfigHandler configHandler;
-    private final ScriptParser scriptParser;
+    private final ScriptPipeline scriptPipeline;
     private final SceneLoader sceneLoader;
     private final Registry<ActionTemplate> actionRegistry;
     private final Registry<Effect> effectRegistry;
     private final Registry<WeaponClass> weaponClassRegistry;
     private final Registry<DamageType> damageTypeRegistry;
 
-    public ItemTemplateLoader(ConfigHandler configHandler, ScriptParser scriptParser, SceneLoader sceneLoader, Registry<ActionTemplate> actionRegistry, Registry<Effect> effectRegistry, Registry<WeaponClass> weaponClassRegistry, Registry<DamageType> damageTypeRegistry) {
+    public ItemTemplateLoader(ConfigHandler configHandler, ScriptPipeline scriptPipeline, SceneLoader sceneLoader, Registry<ActionTemplate> actionRegistry, Registry<Effect> effectRegistry, Registry<WeaponClass> weaponClassRegistry, Registry<DamageType> damageTypeRegistry) {
         this.configHandler = configHandler;
-        this.scriptParser = scriptParser;
+        this.scriptPipeline = scriptPipeline;
         this.sceneLoader = sceneLoader;
         this.actionRegistry = actionRegistry;
         this.effectRegistry = effectRegistry;
@@ -46,8 +47,8 @@ public class ItemTemplateLoader {
         String id = element.getAttribute("id");
         String name = LoadUtils.singleTag(element, "name", null);
         Scene description = sceneLoader.parseScene(LoadUtils.singleChildWithName(element, "description"));
-        Map<String, List<Script>> scripts = LoadUtils.loadScriptsWithTriggers(element, scriptParser, "ItemTemplate(" + id + ")");
-        List<ActionCustom.CustomActionHolder> customActions = LoadUtils.loadCustomActions(element, "action", scriptParser, actionRegistry, "ItemTemplate(" + id + ")");
+        Map<String, List<Script>> scripts = LoadUtils.loadScriptsWithTriggers(element, scriptPipeline, "ItemTemplate(" + id + ")");
+        List<ActionCustom.CustomActionHolder> customActions = LoadUtils.loadCustomActions(element, "action", scriptPipeline, actionRegistry, "ItemTemplate(" + id + ")");
         int price = LoadUtils.attributeInt(element, "price", 0);
         List<ItemComponentTemplate> components = new ArrayList<>();
         for (Element componentElement : LoadUtils.directChildrenWithName(element, "component")) {
@@ -118,7 +119,7 @@ public class ItemTemplateLoader {
                         if (effect == null) throw new GameDataException("ItemComponentTemplateEquippable has invalid equipped effect: " + effectID);
                         equippedEffects.add(effect);
                     }
-                    List<ActionCustom.CustomActionHolder> equippedActions = LoadUtils.loadCustomActions(componentElement, "equippedAction", scriptParser, actionRegistry, "ItemComponent(" + itemID + ")");
+                    List<ActionCustom.CustomActionHolder> equippedActions = LoadUtils.loadCustomActions(componentElement, "equippedAction", scriptPipeline, actionRegistry, "ItemComponent(" + itemID + ")");
                     equipSlots.add(new EquippableItemComponentTemplate.EquippableSlotsData(slotGroup, exposedComponents, equippedEffects, equippedActions));
                 }
                 return new EquippableItemComponentTemplate(actionsRestricted, equipSlots);

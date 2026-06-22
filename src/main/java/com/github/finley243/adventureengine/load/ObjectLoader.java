@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.load;
 
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.gamedata.Registry;
+import com.github.finley243.adventureengine.script.parse.ScriptLexer;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.component.LinkObjectComponent;
@@ -16,12 +17,12 @@ import java.util.Set;
 
 public class ObjectLoader {
 
-    private final ScriptParser scriptParser;
+    private final ScriptPipeline scriptPipeline;
     private final ObjectComponentFactory objectComponentFactory;
     private final Registry<ObjectTemplate> objectTemplateRegistry;
 
-    public ObjectLoader(ScriptParser scriptParser, ObjectComponentFactory objectComponentFactory, Registry<ObjectTemplate> objectTemplateRegistry) {
-        this.scriptParser = scriptParser;
+    public ObjectLoader(ScriptPipeline scriptPipeline, ObjectComponentFactory objectComponentFactory, Registry<ObjectTemplate> objectTemplateRegistry) {
+        this.scriptPipeline = scriptPipeline;
         this.objectComponentFactory = objectComponentFactory;
         this.objectTemplateRegistry = objectTemplateRegistry;
     }
@@ -45,7 +46,7 @@ public class ObjectLoader {
         Map<String, Expression> localVarsDefault = new HashMap<>();
         for (Element varDefaultElement : LoadUtils.directChildrenWithName(element, "localVar")) {
             String varName = LoadUtils.attribute(varDefaultElement, "name", null);
-            Expression varExpression = LoadUtils.loadScriptLiteral(varDefaultElement, scriptParser, "Object(" + id + ") - local var: " + varName);
+            Expression varExpression = LoadUtils.loadScriptLiteral(varDefaultElement, scriptPipeline, "Object(" + id + ") - local var: " + varName);
             localVarsDefault.put(varName, varExpression);
         }
         return new WorldObject(id, template, startDisabled, startHidden, objectLinks, vehicleOverrideObjectID, networkNodeID, localVarsDefault, objectComponentFactory);

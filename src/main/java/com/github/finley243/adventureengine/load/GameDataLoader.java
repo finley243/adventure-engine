@@ -20,6 +20,7 @@ import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.network.NetworkNode;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
+import com.github.finley243.adventureengine.script.parse.ScriptLexer;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.LinkType;
 import com.github.finley243.adventureengine.world.environment.Room;
@@ -68,6 +69,7 @@ public class GameDataLoader {
     private static final String NAME_AREA = "areas";
 
     private final ConfigHandler configHandler;
+    private final ScriptLexer scriptLexer;
     private final ScriptParser scriptParser;
     private final ScriptRuntime scriptRuntime;
     private final MutableRegistry<Item> itemMutableRegistry;
@@ -76,8 +78,9 @@ public class GameDataLoader {
     private final Pathfinder pathfinder;
     private final SensoryEventDispatcher sensoryEventDispatcher;
 
-    public GameDataLoader(ConfigHandler configHandler, ScriptParser scriptParser, ScriptRuntime scriptRuntime, MutableRegistry<Item> itemMutableRegistry, UIEventBus eventBus, MenuManager menuManager, Pathfinder pathfinder, SensoryEventDispatcher sensoryEventDispatcher) {
+    public GameDataLoader(ConfigHandler configHandler, ScriptLexer scriptLexer, ScriptParser scriptParser, ScriptRuntime scriptRuntime, MutableRegistry<Item> itemMutableRegistry, UIEventBus eventBus, MenuManager menuManager, Pathfinder pathfinder, SensoryEventDispatcher sensoryEventDispatcher) {
         this.configHandler = configHandler;
+        this.scriptLexer = scriptLexer;
         this.scriptParser = scriptParser;
         this.scriptRuntime = scriptRuntime;
         this.itemMutableRegistry = itemMutableRegistry;
@@ -93,7 +96,8 @@ public class GameDataLoader {
         }
 
         File scriptDir = new File(dir, SCRIPTS_PATH);
-        ScriptLoader scriptLoader = new ScriptLoader(scriptParser);
+        ScriptPipeline scriptPipeline = new ScriptPipeline(scriptLexer, scriptParser);
+        ScriptLoader scriptLoader = new ScriptLoader(scriptPipeline);
         Map<String, ScriptParser.ScriptData> nativeFunctions = scriptLoader.generateNativeFunctions();
         Map<String, ScriptParser.ScriptData> scriptMap;
         if (!scriptDir.exists()) {
@@ -118,7 +122,7 @@ public class GameDataLoader {
             throw new RuntimeException(e);
         }
 
-        ActionLoader actionLoader = new ActionLoader(scriptParser, scriptRuntime);
+        ActionLoader actionLoader = new ActionLoader(scriptPipeline, scriptRuntime);
         Map<String, ActionTemplate> actionMap = loadMapFromFileName(dir, NAME_ACTION_TEMPLATE, builder, actionLoader::load);
         Registry<ActionTemplate> actionRegistry = new Registry<>(actionMap);
 
@@ -136,11 +140,11 @@ public class GameDataLoader {
         Map<String, SenseType> senseTypeMap = loadMapFromFileName(dir, NAME_SENSE_TYPE, builder, e -> characterTypeLoader.loadSenseTypes(e, obstructionTypeRegistry));
         Registry<SenseType> senseTypeRegistry = new Registry<>(senseTypeMap);
 
-        EffectLoader effectLoader = new EffectLoader(scriptParser, scriptRuntime);
+        EffectLoader effectLoader = new EffectLoader(scriptPipeline, scriptRuntime);
         Map<String, Effect> effectMap = loadMapFromFileName(dir, NAME_EFFECT, builder, effectLoader::load);
         Registry<Effect> effectRegistry = new Registry<>(effectMap);
 
-        CombatTypeLoader combatTypeLoader = new CombatTypeLoader(scriptParser);
+        CombatTypeLoader combatTypeLoader = new CombatTypeLoader(scriptPipeline);
         Map<String, DamageType> damageTypeMap = loadMapFromFileName(dir, NAME_DAMAGE_TYPE, builder, combatTypeLoader::loadDamageTypes);
         Registry<DamageType> damageTypeRegistry = new Registry<>(damageTypeMap);
         Map<String, AttackType> attackTypeMap = loadMapFromFileName(dir, NAME_ATTACK_TYPE, builder, e -> combatTypeLoader.loadAttackTypes(e, pathfinder, damageTypeRegistry, effectRegistry));
@@ -152,11 +156,11 @@ public class GameDataLoader {
         Map<String, Faction> factionMap = loadMapFromFileName(dir, NAME_FACTION, builder, factionLoader::load);
         Registry<Faction> factionRegistry = new Registry<>(factionMap);
 
-        SceneLoader sceneLoader = new SceneLoader(scriptParser, scriptRuntime);
+        SceneLoader sceneLoader = new SceneLoader(scriptPipeline, scriptRuntime);
         Map<String, Scene> sceneMap = loadMapFromFileName(dir, NAME_SCENE, builder, sceneLoader::load);
         Registry<Scene> sceneRegistry = new Registry<>(sceneMap);
 
-        ItemTemplateLoader itemTemplateLoader = new ItemTemplateLoader(configHandler, scriptParser, sceneLoader, actionRegistry, effectRegistry, weaponClassRegistry, damageTypeRegistry);
+        ItemTemplateLoader itemTemplateLoader = new ItemTemplateLoader(configHandler, scriptPipeline, sceneLoader, actionRegistry, effectRegistry, weaponClassRegistry, damageTypeRegistry);
         Map<String, ItemTemplate> itemTemplateMap = loadMapFromFileName(dir, NAME_ITEM_TEMPLATE, builder, itemTemplateLoader::load);
         Registry<ItemTemplate> itemTemplateRegistry = new Registry<>(itemTemplateMap);
 
@@ -164,7 +168,7 @@ public class GameDataLoader {
         Map<String, LootTable> lootTableMap = loadMapFromFileName(dir, NAME_LOOT_TABLE, builder, lootTableLoader::load);
         Registry<LootTable> lootTableRegistry = new Registry<>(lootTableMap);
 
-        ObjectTemplateLoader objectTemplateLoader = new ObjectTemplateLoader(scriptParser, scriptRuntime, sceneLoader, lootTableLoader, actionRegistry, lootTableRegistry, damageTypeRegistry);
+        ObjectTemplateLoader objectTemplateLoader = new ObjectTemplateLoader(scriptPipeline, scriptRuntime, sceneLoader, lootTableLoader, actionRegistry, lootTableRegistry, damageTypeRegistry);
         Map<String, ObjectTemplate> objectTemplateMap = loadMapFromFileName(dir, NAME_OBJECT_TEMPLATE, builder, objectTemplateLoader::load);
         Registry<ObjectTemplate> objectTemplateRegistry = new Registry<>(objectTemplateMap);
 
@@ -172,11 +176,11 @@ public class GameDataLoader {
         Map<String, NetworkNode> networkMap = loadMapFromFileName(dir, NAME_NETWORK_NODE, builder, networkLoader::load);
         Registry<NetworkNode> networkRegistry = new Registry<>(networkMap);
 
-        RoomLoader roomLoader = new RoomLoader(sceneLoader, scriptParser, scriptRuntime, factionRegistry);
+        RoomLoader roomLoader = new RoomLoader(sceneLoader, scriptPipeline, scriptRuntime, factionRegistry);
         Map<String, Room> roomMap =  loadMapFromFileName(dir, NAME_ROOM, builder, roomLoader::load);
         Registry<Room> roomRegistry = new Registry<>(roomMap);
 
-        ActorTemplateLoader actorTemplateLoader = new ActorTemplateLoader(scriptParser, lootTableLoader, senseTypeRegistry, actionRegistry, effectRegistry, factionRegistry, attackTypeRegistry, sceneRegistry, lootTableRegistry);
+        ActorTemplateLoader actorTemplateLoader = new ActorTemplateLoader(scriptPipeline, lootTableLoader, senseTypeRegistry, actionRegistry, effectRegistry, factionRegistry, attackTypeRegistry, sceneRegistry, lootTableRegistry);
         Map<String, ActorTemplate> actorTemplateMap = loadMapFromFileName(dir, NAME_ACTOR_TEMPLATE, builder, actorTemplateLoader::load);
         Registry<ActorTemplate> actorTemplateRegistry = new Registry<>(actorTemplateMap);
 
@@ -184,10 +188,10 @@ public class GameDataLoader {
         ItemFactory itemFactory = new ItemFactory(itemTemplateRegistry, itemMutableRegistry, itemComponentFactory);
         ObjectComponentFactory objectComponentFactory = new ObjectComponentFactory(itemFactory);
 
-        ActorLoader actorLoader = new ActorLoader(scriptParser, actorTemplateRegistry, scriptRuntime, sensoryEventDispatcher, itemFactory, pathfinder, senseTypeRegistry, effectRegistry, damageTypeRegistry, attributeRegistry, skillRegistry);
-        ObjectLoader objectLoader = new ObjectLoader(scriptParser, objectComponentFactory, objectTemplateRegistry);
+        ActorLoader actorLoader = new ActorLoader(scriptPipeline, actorTemplateRegistry, scriptRuntime, sensoryEventDispatcher, itemFactory, pathfinder, senseTypeRegistry, effectRegistry, damageTypeRegistry, attributeRegistry, skillRegistry);
+        ObjectLoader objectLoader = new ObjectLoader(scriptPipeline, objectComponentFactory, objectTemplateRegistry);
         ItemLoader itemLoader = new ItemLoader(itemFactory, itemTemplateRegistry);
-        AreaLoader areaLoader = new AreaLoader(configHandler, eventBus, menuManager, pathfinder, scriptRuntime, scriptParser, sceneLoader, actorLoader, objectLoader, itemLoader, factionRegistry, roomRegistry, obstructionTypeRegistry, linkTypeRegistry, effectRegistry, itemFactory);
+        AreaLoader areaLoader = new AreaLoader(configHandler, eventBus, menuManager, pathfinder, scriptRuntime, scriptPipeline, sceneLoader, actorLoader, objectLoader, itemLoader, factionRegistry, roomRegistry, obstructionTypeRegistry, linkTypeRegistry, effectRegistry, itemFactory);
         Element areasElement = getRootElementFromFileName(dir, NAME_AREA, builder);
         AreaLoader.AreaLoaderResult areaLoaderResult = areaLoader.load(areasElement);
         AreaRegistry areaRegistry = new AreaRegistry(areaLoaderResult.areas());

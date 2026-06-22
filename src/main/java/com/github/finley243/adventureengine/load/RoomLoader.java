@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
+import com.github.finley243.adventureengine.script.parse.ScriptLexer;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
 import org.w3c.dom.Element;
@@ -31,13 +32,13 @@ public class RoomLoader {
     private static final boolean DEFAULT_ALLOW_ALLIES = false;
 
     private final SceneLoader sceneLoader;
-    private final ScriptParser scriptParser;
+    private final ScriptPipeline scriptPipeline;
     private final ScriptRuntime scriptRuntime;
     private final Registry<Faction> factionRegistry;
 
-    public RoomLoader(SceneLoader sceneLoader, ScriptParser scriptParser, ScriptRuntime scriptRuntime, Registry<Faction> factionRegistry) {
+    public RoomLoader(SceneLoader sceneLoader, ScriptPipeline scriptPipeline, ScriptRuntime scriptRuntime, Registry<Faction> factionRegistry) {
         this.sceneLoader = sceneLoader;
-        this.scriptParser = scriptParser;
+        this.scriptPipeline = scriptPipeline;
         this.scriptRuntime = scriptRuntime;
         this.factionRegistry = factionRegistry;
     }
@@ -68,7 +69,7 @@ public class RoomLoader {
             throw new GameDataException("Room has invalid restriction type");
         }
         boolean allowAllies = LoadUtils.attributeBool(element, NAME_ALLOW_ALLIES, DEFAULT_ALLOW_ALLIES);
-        Map<String, List<Script>> roomScripts = LoadUtils.loadScriptsWithTriggers(element, scriptParser, "Room(" + ID + ")");
+        Map<String, List<Script>> roomScripts = LoadUtils.loadScriptsWithTriggers(element, scriptPipeline, "Room(" + ID + ")");
         return new Room(scriptRuntime, ID, name, nameType, nameIsProper, description, ownerFaction, restrictionType, allowAllies, roomScripts);
     }
 

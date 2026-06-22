@@ -14,6 +14,7 @@ import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
+import com.github.finley243.adventureengine.script.parse.ScriptLexer;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.environment.LinkType;
@@ -33,7 +34,7 @@ public class AreaLoader {
     private final MenuManager menuManager;
     private final Pathfinder pathfinder;
     private final ScriptRuntime scriptRuntime;
-    private final ScriptParser scriptParser;
+    private final ScriptPipeline scriptPipeline;
     private final SceneLoader sceneLoader;
     private final ActorLoader actorLoader;
     private final ObjectLoader objectLoader;
@@ -45,13 +46,13 @@ public class AreaLoader {
     private final Registry<Effect> effectRegistry;
     private final ItemFactory itemFactory;
 
-    public AreaLoader(ConfigHandler configHandler, UIEventBus eventBus, MenuManager menuManager, Pathfinder pathfinder, ScriptRuntime scriptRuntime, ScriptParser scriptParser, SceneLoader sceneLoader, ActorLoader actorLoader, ObjectLoader objectLoader, ItemLoader itemLoader, Registry<Faction> factionRegistry, Registry<Room> roomRegistry, Registry<ObstructionType> obstructionTypeRegistry, Registry<LinkType> linkTypeRegistry, Registry<Effect> effectRegistry, ItemFactory itemFactory) {
+    public AreaLoader(ConfigHandler configHandler, UIEventBus eventBus, MenuManager menuManager, Pathfinder pathfinder, ScriptRuntime scriptRuntime, ScriptPipeline scriptPipeline, SceneLoader sceneLoader, ActorLoader actorLoader, ObjectLoader objectLoader, ItemLoader itemLoader, Registry<Faction> factionRegistry, Registry<Room> roomRegistry, Registry<ObstructionType> obstructionTypeRegistry, Registry<LinkType> linkTypeRegistry, Registry<Effect> effectRegistry, ItemFactory itemFactory) {
         this.configHandler = configHandler;
         this.eventBus = eventBus;
         this.menuManager = menuManager;
         this.pathfinder = pathfinder;
         this.scriptRuntime = scriptRuntime;
-        this.scriptParser = scriptParser;
+        this.scriptPipeline = scriptPipeline;
         this.sceneLoader = sceneLoader;
         this.actorLoader = actorLoader;
         this.objectLoader = objectLoader;
@@ -135,7 +136,7 @@ public class AreaLoader {
             defaultObstructionTypes.add(obstructionType);
         }
 
-        Map<String, List<Script>> areaScripts = LoadUtils.loadScriptsWithTriggers(element, scriptParser, "Area(" + areaID + ")");
+        Map<String, List<Script>> areaScripts = LoadUtils.loadScriptsWithTriggers(element, scriptPipeline, "Area(" + areaID + ")");
 
         Map<String, WorldObject> objectMap = new HashMap<>();
         for (Element objectElement : LoadUtils.directChildrenWithName(element, "object")) {

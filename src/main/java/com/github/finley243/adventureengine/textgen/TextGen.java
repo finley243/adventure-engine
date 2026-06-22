@@ -6,6 +6,8 @@ import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.gamedata.PhraseManager;
 import com.github.finley243.adventureengine.load.ScriptParser;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
+import com.github.finley243.adventureengine.script.parse.ScriptLexer;
+import com.github.finley243.adventureengine.script.parse.ScriptToken;
 import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 
 import java.util.*;
@@ -44,6 +46,7 @@ public class TextGen {
 		put("has", "have");
     }};
 
+	private final ScriptLexer scriptLexer;
 	private final ScriptParser scriptParser;
 	private PhraseManager phraseManager;
 	private ScriptRuntime scriptRuntime;
@@ -56,7 +59,8 @@ public class TextGen {
 	 * Format for conditionals: ([condition]phrase|[other condition]other phrase|default phrase)
 	 */
 
-	public TextGen(ScriptParser scriptParser) {
+	public TextGen(ScriptLexer scriptLexer, ScriptParser scriptParser) {
+		this.scriptLexer = scriptLexer;
 		this.scriptParser = scriptParser;
 	}
 
@@ -196,7 +200,8 @@ public class TextGen {
 				throw new IllegalArgumentException("Condition is missing closing bracket");
 			}
 			String conditionString = currentBranch.substring(1, conditionCloseIndex);
-			Condition condition = new Condition(getScriptRuntime(), scriptParser.parseExpression(conditionString, "Phrase: " + originalLine));
+			List<ScriptToken> conditionTokens = scriptLexer.parseToTokens(conditionString, "Phrase: " + originalLine);
+			Condition condition = new Condition(getScriptRuntime(), scriptParser.parseExpressionExternal(conditionTokens));
 			if (condition.isMet(context)) {
 				return currentBranch.substring(conditionCloseIndex + 1);
 			}

@@ -15,6 +15,7 @@ import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.item.ItemFactory;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
+import com.github.finley243.adventureengine.script.parse.ScriptLexer;
 import com.github.finley243.adventureengine.world.environment.Area;
 import org.w3c.dom.Element;
 
@@ -23,7 +24,7 @@ import java.util.List;
 
 public class ActorLoader {
 
-    private final ScriptParser scriptParser;
+    private final ScriptPipeline scriptPipeline;
     private final Registry<ActorTemplate> actorTemplateRegistry;
     private final ScriptRuntime scriptRuntime;
     private final SensoryEventDispatcher sensoryEventDispatcher;
@@ -35,8 +36,8 @@ public class ActorLoader {
     private final Registry<Attribute> attributeRegistry;
     private final Registry<Skill> skillRegistry;
 
-    public ActorLoader(ScriptParser scriptParser, Registry<ActorTemplate> actorTemplateRegistry, ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, ItemFactory itemFactory, Pathfinder pathfinder, Registry<SenseType> senseTypeRegistry, Registry<Effect> effectRegistry, Registry<DamageType> damageTypeRegistry, Registry<Attribute> attributeRegistry, Registry<Skill> skillRegistry) {
-        this.scriptParser = scriptParser;
+    public ActorLoader(ScriptPipeline scriptPipeline, Registry<ActorTemplate> actorTemplateRegistry, ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, ItemFactory itemFactory, Pathfinder pathfinder, Registry<SenseType> senseTypeRegistry, Registry<Effect> effectRegistry, Registry<DamageType> damageTypeRegistry, Registry<Attribute> attributeRegistry, Registry<Skill> skillRegistry) {
+        this.scriptPipeline = scriptPipeline;
         this.actorTemplateRegistry = actorTemplateRegistry;
         this.scriptRuntime = scriptRuntime;
         this.sensoryEventDispatcher = sensoryEventDispatcher;
@@ -84,9 +85,9 @@ public class ActorLoader {
 
     private Behavior parseBehavior(Element behaviorElement, String actorID) {
         String type = LoadUtils.attribute(behaviorElement, "type", null);
-        Condition condition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(behaviorElement, "condition"), scriptParser, "Behavior(" + actorID + ") - condition", scriptRuntime);
-        Script startScript = LoadUtils.loadScript(LoadUtils.singleChildWithName(behaviorElement, "scriptStart"), scriptParser, "Behavior(" + actorID + ") - start script");
-        Script eachRoundScript = LoadUtils.loadScript(LoadUtils.singleChildWithName(behaviorElement, "scriptEachRound"), scriptParser, "Behavior(" + actorID + ") - round script");
+        Condition condition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(behaviorElement, "condition"), scriptPipeline, "Behavior(" + actorID + ") - condition", scriptRuntime);
+        Script startScript = LoadUtils.loadScript(LoadUtils.singleChildWithName(behaviorElement, "scriptStart"), scriptPipeline, "Behavior(" + actorID + ") - start script");
+        Script eachRoundScript = LoadUtils.loadScript(LoadUtils.singleChildWithName(behaviorElement, "scriptEachRound"), scriptPipeline, "Behavior(" + actorID + ") - round script");
         int duration = LoadUtils.attributeInt(behaviorElement, "duration", 0);
         List<Idle> idles = new ArrayList<>();
         List<Element> idleElements = LoadUtils.directChildrenWithName(behaviorElement, "idle");
@@ -114,7 +115,7 @@ public class ActorLoader {
             }
             case "action" -> {
                 String actionID = LoadUtils.attribute(behaviorElement, "action", null);
-                Condition actionCondition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(behaviorElement, "actionCondition"), scriptParser, "Behavior(" + actorID + ") - action condition", scriptRuntime);
+                Condition actionCondition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(behaviorElement, "actionCondition"), scriptPipeline, "Behavior(" + actorID + ") - action condition", scriptRuntime);
                 return new ActionBehavior(condition, startScript, eachRoundScript, duration, idles, actionID, actionCondition);
             }
             case "procedure" -> {
@@ -127,7 +128,7 @@ public class ActorLoader {
     }
 
     private Idle parseIdle(Element idleElement, String actorID) {
-        Condition condition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(idleElement, "condition"), scriptParser, "Idle(" + actorID + ") - condition", scriptRuntime);
+        Condition condition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(idleElement, "condition"), scriptPipeline, "Idle(" + actorID + ") - condition", scriptRuntime);
         String phrase = LoadUtils.singleTag(idleElement, "phrase", null);
         return new Idle(sensoryEventDispatcher, condition, phrase);
     }

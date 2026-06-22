@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
+import com.github.finley243.adventureengine.script.parse.ScriptLexer;
 import org.w3c.dom.Element;
 
 import java.util.ArrayList;
@@ -15,11 +16,11 @@ public class ActionLoader {
 
     private static final String NAME_ACTION = "action";
 
-    private final ScriptParser scriptParser;
+    private final ScriptPipeline scriptPipeline;
     private final ScriptRuntime scriptRuntime;
 
-    public ActionLoader(ScriptParser scriptParser, ScriptRuntime scriptRuntime) {
-        this.scriptParser = scriptParser;
+    public ActionLoader(ScriptPipeline scriptPipeline, ScriptRuntime scriptRuntime) {
+        this.scriptPipeline = scriptPipeline;
         this.scriptRuntime = scriptRuntime;
     }
 
@@ -33,20 +34,20 @@ public class ActionLoader {
         Map<String, Script> parameters = new HashMap<>();
         for (Element parameterElement : LoadUtils.directChildrenWithName(element, "parameter")) {
             String parameterName = LoadUtils.attribute(parameterElement, "name", null);
-            Script parameterValue = LoadUtils.loadScriptExpression(parameterElement, scriptParser, "ActionTemplate(" + ID + ") - parameter: " + parameterName);
+            Script parameterValue = LoadUtils.loadScriptExpression(parameterElement, scriptPipeline, "ActionTemplate(" + ID + ") - parameter: " + parameterName);
             parameters.put(parameterName, parameterValue);
         }
         int actionPoints = LoadUtils.attributeInt(element, "actionPoints", 0);
         List<ActionTemplate.ConditionWithMessage> selectConditions = new ArrayList<>();
         int conditionNum = 1;
         for (Element conditionElement : LoadUtils.directChildrenWithName(element, "condition")) {
-            Condition condition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(conditionElement, "script"), scriptParser, "ActionTemplate(" + ID + ") - condition " + conditionNum, scriptRuntime);
+            Condition condition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(conditionElement, "script"), scriptPipeline, "ActionTemplate(" + ID + ") - condition " + conditionNum, scriptRuntime);
             String blockMessage = LoadUtils.singleTag(conditionElement, "blockMessage", null);
             selectConditions.add(new ActionTemplate.ConditionWithMessage(condition, blockMessage));
             conditionNum += 1;
         }
-        Condition showCondition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, "conditionShow"), scriptParser, "ActionTemplate(" + ID + ") - show condition", scriptRuntime);
-        Script script = LoadUtils.loadScript(LoadUtils.singleChildWithName(element, "script"), scriptParser, "ActionTemplate(" + ID + ") - script");
+        Condition showCondition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, "conditionShow"), scriptPipeline, "ActionTemplate(" + ID + ") - show condition", scriptRuntime);
+        Script script = LoadUtils.loadScript(LoadUtils.singleChildWithName(element, "script"), scriptPipeline, "ActionTemplate(" + ID + ") - script");
         return new ActionTemplate(ID, prompt, parameters, actionPoints, selectConditions, showCondition, script);
     }
 

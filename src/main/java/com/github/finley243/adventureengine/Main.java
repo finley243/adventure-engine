@@ -15,6 +15,7 @@ import com.github.finley243.adventureengine.load.ScriptParser;
 import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.quest.QuestManager;
 import com.github.finley243.adventureengine.script.ScriptRuntimeImpl;
+import com.github.finley243.adventureengine.script.parse.ScriptLexer;
 import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.ui.ConsoleInterface;
 import com.github.finley243.adventureengine.ui.ConsoleParserInterface;
@@ -38,8 +39,9 @@ public class Main {
         Map<ConfigOption, String> configData = configLoader.loadConfig(configFile);
 		ConfigHandler configHandler = new ConfigHandler(configData);
 
+		ScriptLexer scriptLexer = new ScriptLexer();
 		ScriptParser scriptParser = new ScriptParser();
-		TextGen textGen = new TextGen(scriptParser);
+		TextGen textGen = new TextGen(scriptLexer, scriptParser);
 		UIEventBus eventBus = new UIEventBusImpl(textGen);
 		MenuManager menuManager = new MenuManager(eventBus);
 		eventBus.register(menuManager);
@@ -61,7 +63,7 @@ public class Main {
 
 		MutableRegistry<Item> itemMutableRegistry = new MutableRegistry<>(Map.of());
 
-		GameDataLoader gameDataLoader = new GameDataLoader(configHandler, scriptParser, scriptRuntime, itemMutableRegistry, eventBus, menuManager, pathfinder, sensoryEventDispatcher);
+		GameDataLoader gameDataLoader = new GameDataLoader(configHandler, scriptLexer, scriptParser, scriptRuntime, itemMutableRegistry, eventBus, menuManager, pathfinder, sensoryEventDispatcher);
 		File dataDirectory = Path.of(GAMEFILES + DATA_DIRECTORY).toFile();
 		GameData gameData = gameDataLoader.loadData(dataDirectory);
 		scriptRuntime.setGameData(gameData);

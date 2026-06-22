@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.load;
 
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.script.*;
+import com.github.finley243.adventureengine.script.parse.ScriptToken;
 import com.google.common.base.Functions;
 
 import java.io.File;
@@ -13,13 +14,11 @@ import java.util.stream.Collectors;
 public class ScriptLoader {
 
     private static final String SCRIPT_FILE_EXTENSION = "ascr";
-    private static final int NATIVE_FUNCTION_LINE = -1;
-    private static final String NATIVE_FUNCTION_FILENAME = "NATIVE";
 
-    private final ScriptParser scriptParser;
+    private final ScriptPipeline scriptPipeline;
 
-    public ScriptLoader(ScriptParser scriptParser) {
-        this.scriptParser = scriptParser;
+    public ScriptLoader(ScriptPipeline scriptPipeline) {
+        this.scriptPipeline = scriptPipeline;
     }
 
     public Map<String, ScriptParser.ScriptData> loadFromDir(File dir, Set<String> reservedFunctionNames) {
@@ -39,7 +38,8 @@ public class ScriptLoader {
                 }
                 List<ScriptParser.ScriptData> functions;
                 try {
-                    functions = scriptParser.parseFunctions(fileContents, file.getName());
+                    List<ScriptToken> tokenList = scriptPipeline.lexer().parseToTokens(fileContents, file.getName());
+                    functions = scriptPipeline.parser().parseFunctions(tokenList);
                 } catch (ScriptCompileException e) {
                     throw new GameDataException("Script parsing failure:\n" + e.getFileName() + ":" + e.getLineNumber() + " - " + e.getMessage());
                 }

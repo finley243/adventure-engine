@@ -10,6 +10,7 @@ import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
+import com.github.finley243.adventureengine.script.parse.ScriptLexer;
 import com.github.finley243.adventureengine.world.object.template.*;
 import org.w3c.dom.Element;
 
@@ -19,7 +20,7 @@ public class ObjectTemplateLoader {
 
     private static final String NAME_OBJECT_TEMPLATE = "object";
 
-    private final ScriptParser scriptParser;
+    private final ScriptPipeline scriptPipeline;
     private final ScriptRuntime scriptRuntime;
     private final SceneLoader sceneLoader;
     private final LootTableLoader lootTableLoader;
@@ -27,8 +28,8 @@ public class ObjectTemplateLoader {
     private final Registry<LootTable> lootTableRegistry;
     private final Registry<DamageType> damageTypeRegistry;
 
-    public ObjectTemplateLoader(ScriptParser scriptParser, ScriptRuntime scriptRuntime, SceneLoader sceneLoader, LootTableLoader lootTableLoader, Registry<ActionTemplate> actionRegistry, Registry<LootTable> lootTableRegistry, Registry<DamageType> damageTypeRegistry) {
-        this.scriptParser = scriptParser;
+    public ObjectTemplateLoader(ScriptPipeline scriptPipeline, ScriptRuntime scriptRuntime, SceneLoader sceneLoader, LootTableLoader lootTableLoader, Registry<ActionTemplate> actionRegistry, Registry<LootTable> lootTableRegistry, Registry<DamageType> damageTypeRegistry) {
+        this.scriptPipeline = scriptPipeline;
         this.scriptRuntime = scriptRuntime;
         this.sceneLoader = sceneLoader;
         this.lootTableLoader = lootTableLoader;
@@ -63,9 +64,9 @@ public class ObjectTemplateLoader {
                 damageMults.put(damageType, damageMult);
             }
         }
-        Map<String, List<Script>> scripts = LoadUtils.loadScriptsWithTriggers(element, scriptParser, "ObjectTemplate(" + ID + ")");
-        List<ActionCustom.CustomActionHolder> customActions = LoadUtils.loadCustomActions(element, "action", scriptParser, actionRegistry, "ObjectTemplate(" + ID + ")");
-        List<ActionCustom.CustomActionHolder> networkActions = LoadUtils.loadCustomActions(element, "networkAction", scriptParser, actionRegistry, "ObjectTemplate(" + ID + ")");
+        Map<String, List<Script>> scripts = LoadUtils.loadScriptsWithTriggers(element, scriptPipeline, "ObjectTemplate(" + ID + ")");
+        List<ActionCustom.CustomActionHolder> customActions = LoadUtils.loadCustomActions(element, "action", scriptPipeline, actionRegistry, "ObjectTemplate(" + ID + ")");
+        List<ActionCustom.CustomActionHolder> networkActions = LoadUtils.loadCustomActions(element, "networkAction", scriptPipeline, actionRegistry, "ObjectTemplate(" + ID + ")");
         List<ObjectComponentTemplate> components = new ArrayList<>();
         for (Element componentElement : LoadUtils.directChildrenWithName(element, "component")) {
             ObjectComponentTemplate componentTemplate = parseObjectComponentTemplate(componentElement, ID);
@@ -74,7 +75,7 @@ public class ObjectTemplateLoader {
         Map<String, Expression> localVarsDefault = new HashMap<>();
         for (Element varDefaultElement : LoadUtils.directChildrenWithName(element, "localVar")) {
             String varName = LoadUtils.attribute(varDefaultElement, "name", null);
-            Expression varExpression = LoadUtils.loadScriptLiteral(varDefaultElement, scriptParser, "ObjectTemplate(" + ID + ") - local var: " + varName);
+            Expression varExpression = LoadUtils.loadScriptLiteral(varDefaultElement, scriptPipeline, "ObjectTemplate(" + ID + ") - local var: " + varName);
             localVarsDefault.put(varName, varExpression);
         }
         return new ObjectTemplate(ID, name, isProperName, description, maxHP, damageResistances, damageMults, scripts, customActions, networkActions, components, localVarsDefault);
@@ -93,7 +94,7 @@ public class ObjectTemplateLoader {
                 String storePhrase = LoadUtils.singleTag(element, "storePhrase", null);
                 boolean enableTake = LoadUtils.attributeBool(element, "enableTake", true);
                 boolean enableStore = LoadUtils.attributeBool(element, "enableStore", true);
-                List<ActionCustom.CustomActionHolder> perItemActions = LoadUtils.loadCustomActions(element, "itemAction", scriptParser, actionRegistry, "ObjectComponentInventory(" + objectID + ")");
+                List<ActionCustom.CustomActionHolder> perItemActions = LoadUtils.loadCustomActions(element, "itemAction", scriptPipeline, actionRegistry, "ObjectComponentInventory(" + objectID + ")");
                 return new InventoryObjectComponentTemplate(startEnabled, actionsRestricted, lootTable, takePrompt, takePhrase, storePrompt, storePhrase, enableTake, enableStore, perItemActions);
             }
             case "network" -> {
@@ -106,7 +107,7 @@ public class ObjectTemplateLoader {
                     String moveActionID = LoadUtils.attribute(linkDataElement, "moveAction", null);
                     ActionTemplate moveAction = actionRegistry.getFromID(moveActionID);
                     if (moveAction == null) throw new GameDataException("ObjectComponentTemplate has invalid move action reference: " + moveActionID);
-                    Condition conditionVisible = LoadUtils.loadCondition(LoadUtils.singleChildWithName(linkDataElement, "conditionVisible"), scriptParser, "ObjectComponentLink(" + objectID + ") - link visible condition", scriptRuntime);
+                    Condition conditionVisible = LoadUtils.loadCondition(LoadUtils.singleChildWithName(linkDataElement, "conditionVisible"), scriptPipeline, "ObjectComponentLink(" + objectID + ") - link visible condition", scriptRuntime);
                     boolean isVisible = LoadUtils.attributeBool(linkDataElement, "visible", false);
                     linkData.put(linkID, new LinkObjectComponentTemplate.ObjectLinkData(moveAction, conditionVisible, isVisible));
                 }
@@ -128,7 +129,7 @@ public class ObjectTemplateLoader {
                     boolean userCanPerformParentActions = LoadUtils.attributeBool(slotElement, "parentActions", true);
                     boolean shouldRemoveUserOnDeath = LoadUtils.attributeBool(slotElement, "removeUserOnDeath", false);
                     Set<String> componentsExposed = LoadUtils.setOfTags(slotElement, "exposedComponent");
-                    List<ActionCustom.CustomActionHolder> usingActions = LoadUtils.loadCustomActions(slotElement, "usingAction", scriptParser, actionRegistry, "ObjectComponentUsable(" + objectID + ")");
+                    List<ActionCustom.CustomActionHolder> usingActions = LoadUtils.loadCustomActions(slotElement, "usingAction", scriptPipeline, actionRegistry, "ObjectComponentUsable(" + objectID + ")");
                     usableSlotData.put(slotID, new UsableObjectComponentTemplate.UsableSlotData(startPhrase, endPhrase, endDeathPhrase, startPrompt, endPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas, userCanPerformLocalActions, userCanPerformParentActions, shouldRemoveUserOnDeath, componentsExposed, usingActions));
                 }
                 return new UsableObjectComponentTemplate(startEnabled, actionsRestricted, usableSlotData);

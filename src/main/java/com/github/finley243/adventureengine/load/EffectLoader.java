@@ -15,11 +15,11 @@ public class EffectLoader {
 
     private static final String NAME_EFFECT = "effect";
 
-    private final ScriptParser scriptParser;
+    private final ScriptPipeline scriptPipeline;
     private final ScriptRuntime scriptRuntime;
 
-    public EffectLoader(ScriptParser scriptParser, ScriptRuntime scriptRuntime) {
-        this.scriptParser = scriptParser;
+    public EffectLoader(ScriptPipeline scriptPipeline, ScriptRuntime scriptRuntime) {
+        this.scriptPipeline = scriptPipeline;
         this.scriptRuntime = scriptRuntime;
     }
 
@@ -34,17 +34,17 @@ public class EffectLoader {
         String effectType = LoadUtils.attribute(element, "type", null);
         int duration = LoadUtils.attributeInt(element, "duration", 0);
         boolean stackable = LoadUtils.attributeBool(element, "stack", true);
-        Condition conditionAdd = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, "conditionAdd"), scriptParser, "Effect(" + ID + ") - add condition", scriptRuntime);
-        Condition conditionRemove = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, "conditionRemove"), scriptParser, "Effect(" + ID + ") - remove condition", scriptRuntime);
-        Condition conditionActive = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, "conditionActive"), scriptParser, "Effect(" + ID + ") - active condition", scriptRuntime);
-        Script scriptAdd = LoadUtils.loadScript(LoadUtils.singleChildWithName(element, "scriptAdd"), scriptParser, "Effect(" + ID + ") - add script");
-        Script scriptRemove = LoadUtils.loadScript(LoadUtils.singleChildWithName(element, "scriptRemove"), scriptParser, "Effect(" + ID + ") - remove script");
-        Script scriptRound = LoadUtils.loadScript(LoadUtils.singleChildWithName(element, "scriptRound"), scriptParser, "Effect(" + ID + ") - round script");
+        Condition conditionAdd = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, "conditionAdd"), scriptPipeline, "Effect(" + ID + ") - add condition", scriptRuntime);
+        Condition conditionRemove = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, "conditionRemove"), scriptPipeline, "Effect(" + ID + ") - remove condition", scriptRuntime);
+        Condition conditionActive = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, "conditionActive"), scriptPipeline, "Effect(" + ID + ") - active condition", scriptRuntime);
+        Script scriptAdd = LoadUtils.loadScript(LoadUtils.singleChildWithName(element, "scriptAdd"), scriptPipeline, "Effect(" + ID + ") - add script");
+        Script scriptRemove = LoadUtils.loadScript(LoadUtils.singleChildWithName(element, "scriptRemove"), scriptPipeline, "Effect(" + ID + ") - remove script");
+        Script scriptRound = LoadUtils.loadScript(LoadUtils.singleChildWithName(element, "scriptRound"), scriptPipeline, "Effect(" + ID + ") - round script");
         switch (effectType) {
             case "add" -> {
                 String statMod = LoadUtils.attribute(element, "stat", null);
                 String statModValue = LoadUtils.attribute(element, "amount", "0");
-                Condition statCondition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, "statCondition"), scriptParser, "Effect(" + ID + ") - stat condition", scriptRuntime);
+                Condition statCondition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, "statCondition"), scriptPipeline, "Effect(" + ID + ") - stat condition", scriptRuntime);
                 boolean statModIsFloat = statModValue.contains(".");
                 if (statModIsFloat) {
                     float statModValueFloat = Float.parseFloat(statModValue);
@@ -57,26 +57,26 @@ public class EffectLoader {
             case "mult" -> {
                 String statMult = LoadUtils.attribute(element, "stat", null);
                 float statMultAmount = LoadUtils.attributeFloat(element, "amount", 0.0f);
-                Condition statCondition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, "statCondition"), scriptParser, "Effect(" + ID + ") - stat condition", scriptRuntime);
+                Condition statCondition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, "statCondition"), scriptPipeline, "Effect(" + ID + ") - stat condition", scriptRuntime);
                 return new MultEffect(ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statMult, statMultAmount, statCondition);
             }
             case "boolean" -> {
                 String statBoolean = LoadUtils.attribute(element, "stat", null);
                 boolean statBooleanValue = LoadUtils.attributeBool(element, "value", true);
-                Condition statCondition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, "statCondition"), scriptParser, "Effect(" + ID + ") - stat condition", scriptRuntime);
+                Condition statCondition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, "statCondition"), scriptPipeline, "Effect(" + ID + ") - stat condition", scriptRuntime);
                 return new BooleanEffect(ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statBoolean, statBooleanValue, statCondition);
             }
             case "string" -> {
                 String statString = LoadUtils.attribute(element, "stat", null);
                 String statStringValue = LoadUtils.attribute(element, "value", null);
-                Condition statCondition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, "statCondition"), scriptParser, "Effect(" + ID + ") - stat condition", scriptRuntime);
+                Condition statCondition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, "statCondition"), scriptPipeline, "Effect(" + ID + ") - stat condition", scriptRuntime);
                 return new StringEffect(ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statString, statStringValue, statCondition);
             }
             case "stringSet" -> {
                 String statStringSet = LoadUtils.attribute(element, "stat", null);
                 Set<String> stringSetValuesAdd = LoadUtils.setOfTags(element, "add");
                 Set<String> stringSetValuesRemove = LoadUtils.setOfTags(element, "remove");
-                Condition statCondition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, "statCondition"), scriptParser, "Effect(" + ID + ") - stat condition", scriptRuntime);
+                Condition statCondition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, "statCondition"), scriptPipeline, "Effect(" + ID + ") - stat condition", scriptRuntime);
                 return new StringSetEffect(ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statStringSet, stringSetValuesAdd, stringSetValuesRemove, statCondition);
             }
             case "compound" -> {

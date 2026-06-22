@@ -65,10 +65,10 @@ public class CombatTypeLoader {
     private static final boolean DEFAULT_ATTACK_TYPE_OVERRIDE_EFFECTS = false;
     private static final float DEFAULT_ATTACK_TYPE_HIT_CHANCE_MULT = 0.0f;
 
-    private final ScriptParser scriptParser;
+    private final ScriptPipeline scriptPipeline;
 
-    public CombatTypeLoader(ScriptParser scriptParser) {
-        this.scriptParser = scriptParser;
+    public CombatTypeLoader(ScriptPipeline scriptPipeline) {
+        this.scriptPipeline = scriptPipeline;
     }
 
     public Map<String, DamageType> loadDamageTypes(Element element) {
@@ -132,7 +132,7 @@ public class CombatTypeLoader {
         boolean useNonIdealRange = LoadUtils.attributeBool(element, NAME_ATTACK_TYPE_NONIDEAL_RANGE, DEFAULT_ATTACK_TYPE_NONIDEAL_RANGE);
         Set<AreaLink.DistanceCategory> rangeOverride = LoadUtils.setOfEnumTags(element, NAME_ATTACK_TYPE_RANGE, AreaLink.DistanceCategory.class);
         Integer rateOverride = LoadUtils.attributeInt(element, NAME_ATTACK_TYPE_RATE, null);
-        Script damageOverride = LoadUtils.loadScriptExpression(LoadUtils.singleChildWithName(element, NAME_ATTACK_TYPE_DAMAGE), scriptParser, "WeaponAttackType(" + ID + ") - damage");
+        Script damageOverride = LoadUtils.loadScriptExpression(LoadUtils.singleChildWithName(element, NAME_ATTACK_TYPE_DAMAGE), scriptPipeline, "WeaponAttackType(" + ID + ") - damage");
         float damageMult = LoadUtils.attributeFloat(element, NAME_ATTACK_TYPE_DAMAGE_MULT, DEFAULT_ATTACK_TYPE_DAMAGE_MULT);
         String damageTypeOverrideID = LoadUtils.attribute(element, NAME_ATTACK_TYPE_DAMAGE_TYPE, null);
         DamageType damageTypeOverride = damageTypeRegistry.getFromID(damageTypeOverrideID);
@@ -146,8 +146,8 @@ public class CombatTypeLoader {
             targetEffects.add(effect);
         }
         boolean overrideTargetEffects = LoadUtils.attributeBool(element, NAME_ATTACK_TYPE_OVERRIDE_EFFECTS, DEFAULT_ATTACK_TYPE_OVERRIDE_EFFECTS);
-        Script hitChance = LoadUtils.loadScriptExpression(LoadUtils.singleChildWithName(element, NAME_ATTACK_TYPE_HIT_CHANCE), scriptParser, "WeaponAttackType(" + ID + ") - hit chance");
-        Script hitChanceOverall = LoadUtils.loadScriptExpression(LoadUtils.singleChildWithName(element, NAME_ATTACK_TYPE_HIT_CHANCE_OVERALL), scriptParser, "WeaponAttackType(" + ID + ") - overall hit chance");
+        Script hitChance = LoadUtils.loadScriptExpression(LoadUtils.singleChildWithName(element, NAME_ATTACK_TYPE_HIT_CHANCE), scriptPipeline, "WeaponAttackType(" + ID + ") - hit chance");
+        Script hitChanceOverall = LoadUtils.loadScriptExpression(LoadUtils.singleChildWithName(element, NAME_ATTACK_TYPE_HIT_CHANCE_OVERALL), scriptPipeline, "WeaponAttackType(" + ID + ") - overall hit chance");
         float hitChanceMult = LoadUtils.attributeFloat(element, NAME_ATTACK_TYPE_HIT_CHANCE_MULT, DEFAULT_ATTACK_TYPE_HIT_CHANCE_MULT);
         Boolean isLoudOverride = LoadUtils.attributeBool(element, NAME_ATTACK_TYPE_IS_LOUD_OVERRIDE, null);
         return new AttackType(pathfinder, ID, category, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, useNonIdealRange, rangeOverride, rateOverride, damageOverride, damageMult, damageTypeOverride, armorMultOverride, targetEffects, overrideTargetEffects, hitChance, hitChanceOverall, hitChanceMult, isLoudOverride);
