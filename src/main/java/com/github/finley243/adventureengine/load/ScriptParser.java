@@ -2,7 +2,7 @@ package com.github.finley243.adventureengine.load;
 
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.script.*;
-import com.google.common.collect.Sets;
+import org.jspecify.annotations.NonNull;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -10,14 +10,26 @@ import java.util.regex.Pattern;
 
 public class ScriptParser {
 
-    private enum ScriptTokenType {
-        END_LINE, STRING, FLOAT, INTEGER, NAME, ASSIGNMENT, COMMA, DOT, PLUS, MINUS, DIVIDE, MULTIPLY, MODULO, POWER, PARENTHESIS_OPEN, PARENTHESIS_CLOSE, BRACKET_OPEN, BRACKET_CLOSE, BRACKET_SQUARE_OPEN, BRACKET_SQUARE_CLOSE, BOOLEAN_TRUE, BOOLEAN_FALSE, NULL, COLON, NOT, AND, OR, EQUAL, NOT_EQUAL, GREATER, LESS, GREATER_EQUAL, LESS_EQUAL, TERNARY_IF, RETURN, BREAK, CONTINUE, MODIFIER_PLUS, MODIFIER_MINUS, MODIFIER_MULTIPLY, MODIFIER_DIVIDE, MODIFIER_MODULO, ERROR, LOG
+    enum ScriptTokenType {
+        END_LINE, STRING, FLOAT, INTEGER, NAME, ASSIGNMENT, COMMA, DOT, PLUS, MINUS, DIVIDE, MULTIPLY, MODULO, POWER,
+        PARENTHESIS_OPEN, PARENTHESIS_CLOSE, BRACKET_OPEN, BRACKET_CLOSE, BRACKET_SQUARE_OPEN, BRACKET_SQUARE_CLOSE,
+        BOOLEAN_TRUE, BOOLEAN_FALSE, NULL, COLON, NOT, AND, OR, EQUAL, NOT_EQUAL, GREATER, LESS, GREATER_EQUAL, LESS_EQUAL,
+        TERNARY_IF, RETURN, BREAK, CONTINUE, MODIFIER_PLUS, MODIFIER_MINUS, MODIFIER_MULTIPLY, MODIFIER_DIVIDE, MODIFIER_MODULO,
+        ERROR, LOG, VARIABLE, FUNCTION, FOR, IF, ELSE, STAT, STAT_HOLDER, GAME, GLOBAL, SET, LIST
     }
 
-    private static final Set<String> RESERVED_KEYWORDS = Sets.newHashSet("var", "func", "true", "false", "for", "if", "else", "stat", "statHolder", "return", "break", "continue", "game", "global", "null", "set", "list", "error", "log");
-    private static final String REGEX_PATTERN = "/\\*[.*]+\\*/|//.*[\n\r]|\"(\\\\\"|[^\"])*\"|'(\\\\'|[^'])*'|_?[a-zA-Z][a-zA-Z0-9_]*|([0-9]*\\.[0-9]+|[0-9]+\\.?[0-9]*)f|[0-9]+|\\+=|-=|\\*=|/=|%=|==|!=|<=|>=|<|>|;|=|\\?|,|\\.|\\+|-|/|\\*|%|\\^|:|!|&&|\\|\\||\\(|\\)|\\{|\\}|\\[|\\]|\\S+";
+    private static final Pattern TOKEN_PATTERN = Pattern.compile(
+            "(?<BLOCKCOMMENT>/\\*[\\s\\S]*?\\*/)" +
+                    "|(?<LINECOMMENT>//[^\n]*)" +
+                    "|(?<STRING>\"(\\\\\"|[^\"])*\"|'(\\\\'|[^'])*')" +
+                    "|(?<FLOAT>([0-9]*\\.[0-9]+|[0-9]+\\.?[0-9]*)f)" +
+                    "|(?<INTEGER>[0-9]+)" +
+                    "|(?<NAME>_?[a-zA-Z][a-zA-Z0-9_]*)" +
+                    "|(?<SYMBOL>\\+=|-=|\\*=|/=|%=|==|!=|<=|>=|&&|\\|\\||[;=,.+\\-/*%^:?!<>(){}\\[\\]])" +
+                    "|(?<UNKNOWN>\\S+)"
+    );
     private static final Set<ScriptTokenType> ASSIGNMENT_OPERATORS = Set.of(ScriptTokenType.ASSIGNMENT, ScriptTokenType.MODIFIER_PLUS, ScriptTokenType.MODIFIER_MINUS, ScriptTokenType.MODIFIER_MULTIPLY, ScriptTokenType.MODIFIER_DIVIDE, ScriptTokenType.MODIFIER_MODULO);
-    private static final Map<String, ScriptTokenType> SIMPLE_TOKENS_MAP = new HashMap<>() {
+    private static final Map<String, ScriptTokenType> SYMBOL_MAP = new HashMap<>() {
         {
             put(";", ScriptTokenType.END_LINE);
             put("=", ScriptTokenType.ASSIGNMENT);
@@ -51,6 +63,10 @@ public class ScriptParser {
             put("}", ScriptTokenType.BRACKET_CLOSE);
             put("[", ScriptTokenType.BRACKET_SQUARE_OPEN);
             put("]", ScriptTokenType.BRACKET_SQUARE_CLOSE);
+        }
+    };
+    private static final Map<String, ScriptTokenType> KEYWORD_MAP = new HashMap<>() {
+        {
             put("true", ScriptTokenType.BOOLEAN_TRUE);
             put("false", ScriptTokenType.BOOLEAN_FALSE);
             put("null", ScriptTokenType.NULL);
@@ -59,6 +75,17 @@ public class ScriptParser {
             put("continue", ScriptTokenType.CONTINUE);
             put("error", ScriptTokenType.ERROR);
             put("log", ScriptTokenType.LOG);
+            put("var", ScriptTokenType.VARIABLE);
+            put("func", ScriptTokenType.FUNCTION);
+            put("for", ScriptTokenType.FOR);
+            put("if", ScriptTokenType.IF);
+            put("else", ScriptTokenType.ELSE);
+            put("stat", ScriptTokenType.STAT);
+            put("statHolder", ScriptTokenType.STAT_HOLDER);
+            put("game", ScriptTokenType.GAME);
+            put("global", ScriptTokenType.GLOBAL);
+            put("set", ScriptTokenType.SET);
+            put("list", ScriptTokenType.LIST);
         }
     };
 
@@ -88,31 +115,37 @@ public class ScriptParser {
         return parseLiteral(tokens);
     }
 
-    private static List<ScriptToken> parseToTokens(String scriptText, String fileName) {
+    static List<ScriptToken> parseToTokens(String scriptText, String fileName) {
         List<ScriptToken> tokens = new ArrayList<>();
-        Matcher matcher = Pattern.compile(REGEX_PATTERN).matcher(scriptText);
+        Matcher matcher = TOKEN_PATTERN.matcher(scriptText);
         int lastEnd = 0;
-        int lastLine = 0;
+        int currentLine = 1;
         while (matcher.find()) {
-            String currentToken = matcher.group();
-            int tokenLine = lastLine + scriptText.substring(lastEnd, matcher.start()).split("\n", -1).length;
-            if (currentToken.startsWith("\"") && currentToken.endsWith("\"")) {
-                String value = stringLiteralToValue(currentToken);
-                tokens.add(new ScriptToken(ScriptTokenType.STRING, value, tokenLine, fileName));
-            } else if (currentToken.startsWith("'") && currentToken.endsWith("'")) {
-                String value = stringLiteralToValue(currentToken);
-                tokens.add(new ScriptToken(ScriptTokenType.STRING, value, tokenLine, fileName));
-            } else if (currentToken.matches("([0-9]*\\.[0-9]+|[0-9]+\\.?[0-9]*)f")) {
-                String value = currentToken.substring(0, currentToken.length() - 1);
-                tokens.add(new ScriptToken(ScriptTokenType.FLOAT, value, tokenLine, fileName));
-            } else if (currentToken.matches("[0-9]+")) {
-                tokens.add(new ScriptToken(ScriptTokenType.INTEGER, currentToken, tokenLine, fileName));
-            } else if (SIMPLE_TOKENS_MAP.containsKey(currentToken)) {
-                tokens.add(new ScriptToken(SIMPLE_TOKENS_MAP.get(currentToken), tokenLine, fileName));
-            } else if (currentToken.matches("_?[a-zA-Z][a-zA-Z0-9_]*")) {
-                tokens.add(new ScriptToken(ScriptTokenType.NAME, currentToken, tokenLine, fileName));
-            } else if (currentToken.matches("\\S+")) {
-                throw new ScriptCompileException("Invalid token found", fileName, tokenLine);
+            for (int i = lastEnd; i < matcher.start(); i++) {
+                if (scriptText.charAt(i) == '\n') currentLine++;
+            }
+            lastEnd = matcher.end();
+            if (matcher.group("BLOCKCOMMENT") != null || matcher.group("LINECOMMENT") != null) {
+                continue;
+            } else if (matcher.group("STRING") != null) {
+                String value = stringLiteralToValue(matcher.group());
+                tokens.add(new ScriptToken(ScriptTokenType.STRING, value, currentLine, fileName));
+            } else if (matcher.group("FLOAT") != null) {
+                String tokenText = matcher.group();
+                String value = tokenText.substring(0, tokenText.length() - 1);
+                tokens.add(new ScriptToken(ScriptTokenType.FLOAT, value, currentLine, fileName));
+            } else if (matcher.group("INTEGER") != null) {
+                tokens.add(new ScriptToken(ScriptTokenType.INTEGER, matcher.group(), currentLine, fileName));
+            } else if (matcher.group("NAME") != null) {
+                String tokenText = matcher.group();
+                ScriptTokenType nameType = KEYWORD_MAP.getOrDefault(tokenText, ScriptTokenType.NAME);
+                tokens.add(new ScriptToken(nameType, tokenText, currentLine, fileName));
+            } else if (matcher.group("SYMBOL") != null) {
+                ScriptTokenType symbolType = SYMBOL_MAP.get(matcher.group());
+                if (symbolType == null) throw new IllegalArgumentException("Script token pattern matched a symbol that does not have a definition");
+                tokens.add(new ScriptToken(symbolType, null, currentLine, fileName));
+            } else if (matcher.group("UNKNOWN") != null) {
+                throw new ScriptCompileException("Invalid token found", fileName, currentLine);
             }
         }
         return tokens;
@@ -144,14 +177,13 @@ public class ScriptParser {
     }
 
     private static ScriptData parseFunction(ScriptTokenFunction functionTokens) {
-        if (functionTokens.header().getFirst().type != ScriptTokenType.NAME || !functionTokens.header().getFirst().value.equals("func")) {
+        if (functionTokens.header().getFirst().type != ScriptTokenType.FUNCTION) {
             throw new IllegalArgumentException("Function header is missing func keyword");
         }
         if (functionTokens.header().getLast().type != ScriptTokenType.NAME) {
             throw new IllegalArgumentException("Function header is missing valid name");
         }
         String functionName = functionTokens.header().getLast().value;
-        if (RESERVED_KEYWORDS.contains(functionName)) throw new IllegalArgumentException("Function name is reserved");
         boolean functionHasReturn = functionHasReturn(functionTokens.header());
         Expression.DataType functionReturnType = parseFunctionReturnType(functionTokens.header());
         List<ScriptParameter> functionParameters = parseFunctionParameters(functionTokens.parameters());
@@ -204,7 +236,7 @@ public class ScriptParser {
         List<Script> scripts = new ArrayList<>();
         int index = 0;
         while (index < tokens.size()) {
-            if (tokens.get(index).type == ScriptTokenType.NAME && tokens.get(index).value.equals("if")) {
+            if (tokens.get(index).type == ScriptTokenType.IF) {
                 int lineStart = tokens.get(index).line;
                 List<ScriptIfTokens> branches = new ArrayList<>();
                 List<ScriptToken> bodyElse = null;
@@ -216,8 +248,8 @@ public class ScriptParser {
                 if (bodyEndIndex == -1) throw new IllegalArgumentException("If statement body is not closed");
                 branches.add(new ScriptIfTokens(tokens.subList(index + 2, conditionEndIndex), tokens.subList(conditionEndIndex + 2, bodyEndIndex)));
                 index = bodyEndIndex + 1;
-                while (bodyElse == null && index < tokens.size() && tokens.get(index).type == ScriptTokenType.NAME && tokens.get(index).value.equals("else")) {
-                    if (tokens.get(index + 1).type == ScriptTokenType.NAME && tokens.get(index + 1).value.equals("if")) {
+                while (bodyElse == null && index < tokens.size() && tokens.get(index).type == ScriptTokenType.ELSE) {
+                    if (tokens.get(index + 1).type == ScriptTokenType.IF) {
                         if (tokens.get(index + 2).type != ScriptTokenType.PARENTHESIS_OPEN) throw new IllegalArgumentException("Else if statement is missing condition");
                         int branchConditionEndIndex = findPairedClosingBracket(tokens, index + 2);
                         if (branchConditionEndIndex == -1) throw new IllegalArgumentException("Else if statement condition is not closed");
@@ -236,7 +268,7 @@ public class ScriptParser {
                 }
                 Script script = parseIf(branches, bodyElse, lineStart);
                 scripts.add(script);
-            } else if (tokens.get(index).type == ScriptTokenType.NAME && tokens.get(index).value.equals("for")) {
+            } else if (tokens.get(index).type == ScriptTokenType.FOR) {
                 int lineStart = tokens.get(index).line;
                 if (tokens.get(index + 1).type != ScriptTokenType.PARENTHESIS_OPEN) throw new IllegalArgumentException("For loop is missing iterator");
                 int iteratorEndIndex = findPairedClosingBracket(tokens, index + 1);
@@ -281,7 +313,7 @@ public class ScriptParser {
     }
 
     private static Script parseSingleInstruction(List<ScriptToken> tokens) {
-        if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("var")) {
+        if (tokens.getFirst().type == ScriptTokenType.VARIABLE) {
             // Variable declaration
             return parseVariableDeclaration(tokens);
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.get(1).type == ScriptTokenType.PARENTHESIS_OPEN && tokens.getLast().type == ScriptTokenType.PARENTHESIS_CLOSE) {
@@ -334,10 +366,10 @@ public class ScriptParser {
     private static Script parseAssignment(List<ScriptToken> tokens) {
         int assignmentOperatorIndex = findFirstTokenIndexFromSet(tokens, ASSIGNMENT_OPERATORS, 0);
         int firstSquareBracketIndex = findFirstTokenIndex(tokens, ScriptTokenType.BRACKET_SQUARE_OPEN, 0);
-        if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("stat")) {
+        if (tokens.getFirst().type == ScriptTokenType.STAT) {
             // Stat assignment
             return parseStatAssignment(tokens);
-        } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("global")) {
+        } else if (tokens.getFirst().type == ScriptTokenType.GLOBAL) {
             // Global assignment
             return parseGlobalAssignment(tokens);
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && assignmentOperatorIndex == 1) {
@@ -375,7 +407,6 @@ public class ScriptParser {
     private static Script parseVariableDeclaration(List<ScriptToken> tokens) {
         if (tokens.get(1).type != ScriptTokenType.NAME) throw new ScriptCompileException("Variable definition is missing a name", tokens.getFirst().fileName, tokens.getFirst().line);
         String variableName = tokens.get(1).value;
-        if (RESERVED_KEYWORDS.contains(variableName)) throw new ScriptCompileException("Variable name is reserved", tokens.getFirst().fileName, tokens.getFirst().line);
         if (tokens.size() == 2) {
             return new ScriptSetVariable(new Script.ScriptTraceData(tokens.getFirst().line, tokens.getFirst().fileName), variableName, null, true);
         }
@@ -569,18 +600,18 @@ public class ScriptParser {
             return parseListElementReference(tokens);
         } else if (tokens.size() == 1 && tokens.getFirst().type == ScriptTokenType.NAME) {
             return new ScriptGetVariable(new Script.ScriptTraceData(tokens.getFirst().line, tokens.getFirst().fileName), tokens.getFirst().value);
-        } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("stat")) {
+        } else if (tokens.getFirst().type == ScriptTokenType.STAT) {
             ScriptStatReference statReference = parseStatReference(tokens);
             return new ScriptGetStat(new Script.ScriptTraceData(tokens.getFirst().line, tokens.getFirst().fileName), statReference.statHolder(), statReference.name());
-        } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("statHolder")) {
+        } else if (tokens.getFirst().type == ScriptTokenType.STAT_HOLDER) {
             ScriptValueHolderReference scriptValueHolderReference = parseStatHolderReference(tokens);
             return new ScriptStatHolder(new Script.ScriptTraceData(tokens.getFirst().line, tokens.getFirst().fileName), scriptValueHolderReference);
-        } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("global")) {
+        } else if (tokens.getFirst().type == ScriptTokenType.GLOBAL) {
             ScriptGlobalReference globalReference = parseGlobalReference(tokens);
             return new ScriptGetGlobal(new Script.ScriptTraceData(tokens.getFirst().line, tokens.getFirst().fileName), globalReference.name());
-        } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("game")) {
+        } else if (tokens.getFirst().type == ScriptTokenType.GAME) {
             return parseGameValue(tokens);
-        } else if (tokens.getFirst().type == ScriptTokenType.NAME && (tokens.getFirst().value.equals("set") || tokens.getFirst().value.equals("list"))) {
+        } else if (tokens.getFirst().type == ScriptTokenType.SET || tokens.getFirst().type == ScriptTokenType.LIST) {
             return parseCollection(tokens);
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.get(1).type == ScriptTokenType.PARENTHESIS_OPEN && tokens.getLast().type == ScriptTokenType.PARENTHESIS_CLOSE) {
             return parseFunctionCall(tokens);
@@ -599,11 +630,11 @@ public class ScriptParser {
     }
 
     private static Script parseCollection(List<ScriptToken> tokens) {
-        if (tokens.getFirst().type != ScriptTokenType.NAME || (!tokens.getFirst().value.equals("set") && !tokens.getFirst().value.equals("list"))) throw new ScriptCompileException("Collection constructor is missing set or list keyword", tokens.getFirst().fileName, tokens.getFirst().line);
+        if (tokens.getFirst().type != ScriptTokenType.SET && tokens.getFirst().type != ScriptTokenType.LIST) throw new ScriptCompileException("Collection constructor is missing set or list keyword", tokens.getFirst().fileName, tokens.getFirst().line);
         if (tokens.get(1).type != ScriptTokenType.PARENTHESIS_OPEN) throw new ScriptCompileException("Collection constructor is missing value block", tokens.getFirst().fileName, tokens.getFirst().line);
         if (tokens.getLast().type != ScriptTokenType.PARENTHESIS_CLOSE) throw new ScriptCompileException("Collection constructor value block is not closed", tokens.getFirst().fileName, tokens.getFirst().line);
         if (tokens.size() == 3) {
-            if (tokens.getFirst().value.equals("set")) {
+            if (tokens.getFirst().type == ScriptTokenType.SET) {
                 return new ScriptBuildSet(new Script.ScriptTraceData(tokens.getFirst().line, tokens.getFirst().fileName), new ArrayList<>());
             } else {
                 return new ScriptBuildList(new Script.ScriptTraceData(tokens.getFirst().line, tokens.getFirst().fileName), new ArrayList<>());
@@ -624,7 +655,7 @@ public class ScriptParser {
             Script currentValueScript = parseExpression(currentGroup);
             collectionValues.add(currentValueScript);
         }
-        if (tokens.getFirst().value.equals("set")) {
+        if (tokens.getFirst().type == ScriptTokenType.SET) {
             return new ScriptBuildSet(new Script.ScriptTraceData(tokens.getFirst().line, tokens.getFirst().fileName), collectionValues);
         } else {
             return new ScriptBuildList(new Script.ScriptTraceData(tokens.getFirst().line, tokens.getFirst().fileName), collectionValues);
@@ -653,7 +684,7 @@ public class ScriptParser {
     }
 
     private static ScriptStatReference parseStatReference(List<ScriptToken> tokens) {
-        if (tokens.getFirst().type != ScriptTokenType.NAME || !tokens.getFirst().value.equals("stat")) throw new ScriptCompileException("Stat reference is missing stat keyword", tokens.getFirst().fileName, tokens.getFirst().line);
+        if (tokens.getFirst().type != ScriptTokenType.STAT) throw new ScriptCompileException("Stat reference is missing stat keyword", tokens.getFirst().fileName, tokens.getFirst().line);
         if (tokens.get(1).type != ScriptTokenType.DOT) throw new ScriptCompileException("Stat reference is missing period after stat keyword", tokens.getFirst().fileName, tokens.getFirst().line);
         int lastDotIndex = findLastTokenIndex(tokens, ScriptTokenType.DOT, tokens.size() - 1);
         if (lastDotIndex == -1) throw new ScriptCompileException("Stat reference has invalid name", tokens.getFirst().fileName, tokens.getFirst().line);
@@ -671,7 +702,7 @@ public class ScriptParser {
     }
 
     private static ScriptValueHolderReference parseStatHolderReference(List<ScriptToken> tokens) {
-        if (tokens.getFirst().type != ScriptTokenType.NAME || !tokens.getFirst().value.equals("statHolder")) throw new ScriptCompileException("Stat holder reference is missing statHolder keyword", tokens.getFirst().fileName, tokens.getFirst().line);
+        if (tokens.getFirst().type != ScriptTokenType.STAT_HOLDER) throw new ScriptCompileException("Stat holder reference is missing statHolder keyword", tokens.getFirst().fileName, tokens.getFirst().line);
         if (tokens.get(1).type != ScriptTokenType.DOT) throw new ScriptCompileException("Stat holder reference is missing period after statHolder keyword", tokens.getFirst().fileName, tokens.getFirst().line);
         return parseStatHolder(tokens.subList(2, tokens.size()));
     }
@@ -702,7 +733,7 @@ public class ScriptParser {
 
     private static ScriptGlobalReference parseGlobalReference(List<ScriptToken> tokens) {
         if (tokens.size() != 3) throw new ScriptCompileException("Global reference has invalid format", tokens.getFirst().fileName, tokens.getFirst().line);
-        if (tokens.getFirst().type != ScriptTokenType.NAME || !tokens.getFirst().value.equals("global")) throw new ScriptCompileException("Global reference is missing global keyword", tokens.getFirst().fileName, tokens.getFirst().line);
+        if (tokens.getFirst().type != ScriptTokenType.GLOBAL) throw new ScriptCompileException("Global reference is missing global keyword", tokens.getFirst().fileName, tokens.getFirst().line);
         if (tokens.get(1).type != ScriptTokenType.DOT) throw new ScriptCompileException("Global reference is missing period after global keyword", tokens.getFirst().fileName, tokens.getFirst().line);
         if (tokens.get(2).type != ScriptTokenType.NAME) throw new ScriptCompileException("Global reference has invalid name", tokens.getFirst().fileName, tokens.getFirst().line);
         String globalName = tokens.get(2).value;
@@ -711,7 +742,7 @@ public class ScriptParser {
 
     private static Script parseGameValue(List<ScriptToken> tokens) {
         if (tokens.size() != 3) throw new ScriptCompileException("Game value reference has invalid format", tokens.getFirst().fileName, tokens.getFirst().line);
-        if (tokens.getFirst().type != ScriptTokenType.NAME || !tokens.getFirst().value.equals("game")) throw new ScriptCompileException("Game value reference is missing game keyword", tokens.getFirst().fileName, tokens.getFirst().line);
+        if (tokens.getFirst().type != ScriptTokenType.GAME) throw new ScriptCompileException("Game value reference is missing game keyword", tokens.getFirst().fileName, tokens.getFirst().line);
         if (tokens.get(1).type != ScriptTokenType.DOT) throw new ScriptCompileException("Game value reference is missing period after game keyword", tokens.getFirst().fileName, tokens.getFirst().line);
         if (tokens.get(2).type != ScriptTokenType.NAME) throw new ScriptCompileException("Game value reference has invalid name", tokens.getFirst().fileName, tokens.getFirst().line);
         String gameValueName = tokens.get(2).value;
@@ -827,13 +858,12 @@ public class ScriptParser {
     }
 
     private static int findPairedClosingBracket(List<ScriptToken> tokens, int openBracketIndex) {
-        ScriptTokenType targetBracketType;
-        switch (tokens.get(openBracketIndex).type) {
-            case PARENTHESIS_OPEN -> targetBracketType = ScriptTokenType.PARENTHESIS_CLOSE;
-            case BRACKET_OPEN -> targetBracketType = ScriptTokenType.BRACKET_CLOSE;
-            case BRACKET_SQUARE_OPEN -> targetBracketType = ScriptTokenType.BRACKET_SQUARE_CLOSE;
+        ScriptTokenType targetBracketType = switch (tokens.get(openBracketIndex).type) {
+            case PARENTHESIS_OPEN -> ScriptTokenType.PARENTHESIS_CLOSE;
+            case BRACKET_OPEN -> ScriptTokenType.BRACKET_CLOSE;
+            case BRACKET_SQUARE_OPEN -> ScriptTokenType.BRACKET_SQUARE_CLOSE;
             default -> throw new ScriptCompileException("Specified token is not a valid type of open bracket", tokens.getFirst().fileName, tokens.getFirst().line);
-        }
+        };
         Deque<ScriptTokenType> bracketStack = new ArrayDeque<>();
         for (int i = openBracketIndex + 1; i < tokens.size(); i++) {
             ScriptToken token = tokens.get(i);
@@ -874,30 +904,12 @@ public class ScriptParser {
 
     public record ScriptData(String name, boolean hasReturn, Expression.DataType returnType, List<ScriptParameter> parameters, boolean allowExtraParameters, Script script) {}
 
-    private static class ScriptToken {
-        public final ScriptTokenType type;
-        public final String value;
-        public final int line;
-        public final String fileName;
-
-        public ScriptToken(ScriptTokenType type, int line, String fileName) {
-            this.type = type;
-            this.value = null;
-            this.line = line;
-            this.fileName = fileName;
-        }
-
-        public ScriptToken(ScriptTokenType type, String value, int line, String fileName) {
-            this.type = type;
-            this.value = value;
-            this.line = line;
-            this.fileName = fileName;
-        }
-
+    record ScriptToken(ScriptTokenType type, String value, int line, String fileName) {
         @Override
+        @NonNull
         public String toString() {
-            return type.toString() + (value != null ? ":" + value : "");
-        }
+                return type.toString() + (value != null ? ":" + value : "");
+            }
     }
 
     public record ScriptParameter(String name, boolean isRequired, Expression defaultValue) {}
