@@ -1,4 +1,6 @@
 package com.github.finley243.adventureengine.script.parse.nodes;
 
-public record ASTVarAssignment() implements ScriptASTNode {
+import com.github.finley243.adventureengine.script.parse.SourceRange;
+
+public record ASTVarAssignment(String name, ScriptASTNode value, SourceRange range) implements ScriptASTNode {
 }

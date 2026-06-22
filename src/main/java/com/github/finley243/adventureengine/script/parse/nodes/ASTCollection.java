@@ -1,4 +1,11 @@
 package com.github.finley243.adventureengine.script.parse.nodes;
 
-public record ASTCollection() implements ScriptASTNode {
+import com.github.finley243.adventureengine.script.parse.SourceRange;
+
+import java.util.List;
+
+public record ASTCollection(Type type, List<ScriptASTNode> elements, SourceRange range) implements ScriptASTNode {
+    public enum Type {
+        SET, LIST
+    }
 }

@@ -1,4 +1,6 @@
 package com.github.finley243.adventureengine.script.parse.nodes;
 
-public record ASTGameRef() implements ScriptASTNode {
+import com.github.finley243.adventureengine.script.parse.SourceRange;
+
+public record ASTGameRef(String name, SourceRange range) implements ScriptASTNode {
 }

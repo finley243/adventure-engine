@@ -1,4 +1,6 @@
 package com.github.finley243.adventureengine.script.parse.nodes;
 
-public record ASTError() implements ScriptASTNode {
+import com.github.finley243.adventureengine.script.parse.SourceRange;
+
+public record ASTError(String message, SourceRange range) implements ScriptASTNode {
 }

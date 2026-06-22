@@ -1,4 +1,8 @@
 package com.github.finley243.adventureengine.script.parse.nodes;
 
-public record ASTCompound() implements ScriptASTNode {
+import com.github.finley243.adventureengine.script.parse.SourceRange;
+
+import java.util.List;
+
+public record ASTCompound(List<ScriptASTNode> statements, SourceRange range) implements ScriptASTNode {
 }

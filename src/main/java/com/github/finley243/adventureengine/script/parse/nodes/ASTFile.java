@@ -2,5 +2,7 @@ package com.github.finley243.adventureengine.script.parse.nodes;
 
 import com.github.finley243.adventureengine.script.parse.SourceRange;
 
-public record ASTContinue(SourceRange range) implements ScriptASTNode {
+import java.util.List;
+
+public record ASTFile(List<ScriptASTNode> functions, SourceRange range) implements ScriptASTNode {
 }
