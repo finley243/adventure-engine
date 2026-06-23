@@ -4,5 +4,5 @@ import com.github.finley243.adventureengine.script.parse.SourceRange;
 
 import java.util.List;
 
-public record ASTFile(List<ScriptASTNode> functions, SourceRange range) implements ScriptASTNode {
+public record ASTFile(List<ASTNode> functions, SourceRange range) implements ASTNode {
 }

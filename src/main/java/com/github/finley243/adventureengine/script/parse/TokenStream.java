@@ -126,4 +126,9 @@ public class TokenStream {
         }
     }
 
+    @Override
+    public String toString() {
+        return tokens.toString();
+    }
+
 }
