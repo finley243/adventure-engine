@@ -1,9 +1,6 @@
 package com.github.finley243.adventureengine.script.parse;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
 public class TokenStream {
 
@@ -14,36 +11,75 @@ public class TokenStream {
         this.tokens = tokens;
     }
 
-    ScriptToken peek() { return tokens.get(index); }
-    ScriptToken current() { return index == 0 ? null : tokens.get(index - 1); }
-    ScriptToken consume() { return tokens.get(index++); }
-    boolean hasNext() { return index < tokens.size(); }
-
-    boolean expect(ScriptTokenType type) {
-        if (peek().type() != type) {
-            return false;
-        }
-        consume();
-        return true;
+    boolean hasNext() {
+        return index < tokens.size();
     }
 
-    TokenStream consumeBlock(ScriptTokenType open, ScriptTokenType close) {
-        boolean openIsPresent = expect(open);
-        if (!openIsPresent) return null;
+    ScriptToken peek() {
+        if (tokens.isEmpty()) return null;
+        return tokens.get(index);
+    }
+
+    ScriptToken current() {
+        return index == 0 ? null : tokens.get(index - 1);
+    }
+
+    ScriptToken consume() {
+        return tokens.get(index++);
+    }
+
+    ScriptToken expect(ScriptTokenType type) {
+        if (!hasNext() || peek() == null || peek().type() != type) {
+            return null;
+        }
+        return consume();
+    }
+
+    ScriptToken expectOneOf(Set<ScriptTokenType> types) {
+        if (!hasNext() || peek() == null || !types.contains(peek().type())) {
+            return null;
+        }
+        return consume();
+    }
+
+    String expectName() {
+        if (!hasNext() || peek() == null || peek().type() != ScriptTokenType.NAME) {
+            return null;
+        }
+        ScriptToken token = consume();
+        return token.value();
+    }
+
+    BlockResult consumeBlock(ScriptTokenType open, ScriptTokenType close) {
+        boolean openIsPresent = expect(open) != null;
+        if (!openIsPresent) {
+            ScriptToken invalidToken = hasNext() ? peek() : current();
+            syncTo(close);
+            return new BlockResult(null, invalidToken.charStart(), invalidToken.charEnd(), invalidToken.fileName(), invalidToken.line(), BlockError.MISSING_OPEN);
+        }
         int start = index;
+        ScriptToken startToken = current();
         int depth = 1;
         while (hasNext() && depth > 0) {
             ScriptTokenType t = consume().type();
             if (t == open) depth++;
             else if (t == close) depth--;
         }
-        if (depth > 0) return null;
-        return new TokenStream(tokens.subList(start, index - 1));
+        if (depth > 0) {
+            ScriptToken fileEndToken = current();
+            return new BlockResult(null, startToken.charStart(), fileEndToken.charEnd(), startToken.fileName(), startToken.line(), BlockError.MISSING_CLOSE);
+        }
+        TokenStream contents = new TokenStream(tokens.subList(start, index - 1));
+        ScriptToken endToken = current();
+        return new BlockResult(contents, startToken.charStart(), endToken.charEnd(), startToken.fileName(), startToken.line(), BlockError.NONE);
     }
 
-    TokenStream consumeUntil(ScriptTokenType end) {
+    StatementResult consumeUntil(ScriptTokenType end) {
+        String fileName = hasNext() ? peek().fileName() : tokens.getFirst().fileName();
+        int line = hasNext() ? peek().line() : tokens.getFirst().line();
+        int charStart = hasNext() ? peek().charStart() : tokens.getFirst().charStart();
         Deque<ScriptTokenType> bracketStack = new ArrayDeque<>();
-        List<ScriptToken> contents = new ArrayList<>();
+        List<ScriptToken> contentsList = new ArrayList<>();
         while (hasNext()) {
             ScriptTokenType type = peek().type();
             if (bracketStack.isEmpty() && type == end) {
@@ -59,46 +95,33 @@ public class TokenStream {
             } else if (type == ScriptTokenType.BRACKET_SQUARE_CLOSE && !bracketStack.isEmpty() && bracketStack.peek() == ScriptTokenType.BRACKET_SQUARE_OPEN) {
                 bracketStack.pop();
             }
-            contents.add(consume());
+            contentsList.add(consume());
         }
+        int charEnd = current().charEnd();
         if (!bracketStack.isEmpty()) {
-            return null;
+            return new StatementResult(null, charStart, charEnd, fileName, line, StatementError.MISSING_END);
         }
-        return new TokenStream(contents);
+        TokenStream contents = new TokenStream(contentsList);
+        return new StatementResult(contents, charStart, charEnd, fileName, line, StatementError.NONE);
     }
 
-    void syncToEndOfBlock() {
+    void syncTo(ScriptTokenType target) {
         Deque<ScriptTokenType> stack = new ArrayDeque<>();
         while (hasNext()) {
-            ScriptTokenType type = consume().type();
-            if (type == ScriptTokenType.PARENTHESIS_OPEN || type == ScriptTokenType.BRACKET_OPEN || type == ScriptTokenType.BRACKET_SQUARE_OPEN) {
-                stack.push(type);
-            } else if (type == ScriptTokenType.BRACKET_CLOSE) {
-                if (stack.isEmpty()) break;
-                if (stack.peek() == ScriptTokenType.BRACKET_OPEN) stack.pop();
-            } else if (type == ScriptTokenType.PARENTHESIS_CLOSE) {
-                if (!stack.isEmpty() && stack.peek() == ScriptTokenType.PARENTHESIS_OPEN) stack.pop();
-            } else if (type == ScriptTokenType.BRACKET_SQUARE_CLOSE) {
-                if (!stack.isEmpty() && stack.peek() == ScriptTokenType.BRACKET_SQUARE_OPEN) stack.pop();
-            }
-        }
-    }
-
-    void syncToNextStatement() {
-        Deque<ScriptTokenType> stack = new ArrayDeque<>();
-        while (hasNext()) {
-            ScriptTokenType type = consume().type();
-            if (type == ScriptTokenType.PARENTHESIS_OPEN || type == ScriptTokenType.BRACKET_OPEN || type == ScriptTokenType.BRACKET_SQUARE_OPEN) {
-                stack.push(type);
-            } else if (type == ScriptTokenType.BRACKET_CLOSE) {
-                if (stack.isEmpty()) break;
-                if (stack.peek() == ScriptTokenType.BRACKET_OPEN) stack.pop();
-            } else if (type == ScriptTokenType.PARENTHESIS_CLOSE) {
-                if (!stack.isEmpty() && stack.peek() == ScriptTokenType.PARENTHESIS_OPEN) stack.pop();
-            } else if (type == ScriptTokenType.BRACKET_SQUARE_CLOSE) {
-                if (!stack.isEmpty() && stack.peek() == ScriptTokenType.BRACKET_SQUARE_OPEN) stack.pop();
-            } else if (type == ScriptTokenType.END_LINE && stack.isEmpty()) {
+            ScriptTokenType type = hasNext() ? peek().type() : null;
+            if (stack.isEmpty() && type == target) {
+                consume();
                 break;
+            }
+            consume();
+            if (type == ScriptTokenType.PARENTHESIS_OPEN || type == ScriptTokenType.BRACKET_OPEN || type == ScriptTokenType.BRACKET_SQUARE_OPEN) {
+                stack.push(type);
+            } else if (type == ScriptTokenType.PARENTHESIS_CLOSE && !stack.isEmpty() && stack.peek() == ScriptTokenType.PARENTHESIS_OPEN) {
+                stack.pop();
+            } else if (type == ScriptTokenType.BRACKET_CLOSE && !stack.isEmpty() && stack.peek() == ScriptTokenType.BRACKET_OPEN) {
+                stack.pop();
+            } else if (type == ScriptTokenType.BRACKET_SQUARE_CLOSE && !stack.isEmpty() && stack.peek() == ScriptTokenType.BRACKET_SQUARE_OPEN) {
+                stack.pop();
             }
         }
     }

@@ -23,46 +23,68 @@ public class ScriptASTParser {
     }
 
     private ScriptASTNode parseFunctionDef(TokenStream stream, List<CompileError> errors) {
-        ScriptToken funcToken = stream.current();
-        if (!stream.expect(ScriptTokenType.NAME)) {
+        String fileName = stream.current().fileName();
+        int start = stream.current().charStart();
+        String firstName = stream.expectName();
+        if (firstName == null) {
             ScriptToken current = stream.current();
             errors.add(new CompileError("Expected function name", current.fileName(), current.line(), current.charStart(), current.charEnd()));
-            stream.syncToEndOfBlock();
+            stream.syncTo(ScriptTokenType.BRACKET_CLOSE);
             return null;
         }
-        String returnType = null;
-        if (stream.hasNext() && stream.peek().type() == ScriptTokenType.NAME) { // Has return type
-            returnType = stream.current().value();
-            if (!stream.expect(ScriptTokenType.NAME)) {
-                ScriptToken current = stream.current();
-                errors.add(new CompileError("Expected function name", current.fileName(), current.line(), current.charStart(), current.charEnd()));
-                stream.syncToEndOfBlock();
-                return null;
-            }
+        String secondName = stream.expectName();
+        String returnType;
+        String functionName;
+        if (secondName != null) { // Has return type
+            returnType = firstName;
+            functionName = secondName;
+        } else {
+            returnType = null;
+            functionName = firstName;
         }
-        String functionName = stream.current().value();
 
-        TokenStream parameterStream = stream.consumeBlock(ScriptTokenType.PARENTHESIS_OPEN, ScriptTokenType.PARENTHESIS_CLOSE);
-        if (parameterStream == null) {
-            errors.add(new CompileError("Expected function parameters", funcToken.fileName(), funcToken.line(), funcToken.charStart(), funcToken.charEnd()));
-            stream.syncToEndOfBlock();
+        BlockResult parameterResult = stream.consumeBlock(ScriptTokenType.PARENTHESIS_OPEN, ScriptTokenType.PARENTHESIS_CLOSE);
+        if (parameterResult.error() != BlockError.NONE) {
+            String message = switch (parameterResult.error()) {
+                case MISSING_OPEN -> "Function is missing parameter block";
+                case MISSING_CLOSE -> "Function parameter block is not closed";
+                default -> null;
+            };
+            errors.add(new CompileError(message, parameterResult.fileName(), parameterResult.line(), parameterResult.charStart(), parameterResult.charEnd()));
+            stream.syncTo(ScriptTokenType.BRACKET_CLOSE);
             return null;
         }
-        List<ScriptASTNode> parameterNodes = parseParameterDefs(parameterStream, errors);
+        List<ScriptASTNode> parameterNodes = parseParameterDefs(parameterResult.contents(), errors);
 
-        TokenStream bodyStream = stream.consumeBlock(ScriptTokenType.BRACKET_OPEN, ScriptTokenType.BRACKET_CLOSE);
-        if (bodyStream == null) {
-            errors.add(new CompileError("Expected function body", funcToken.fileName(), funcToken.line(), funcToken.charStart(), funcToken.charEnd()));
+        BlockResult bodyResult = stream.consumeBlock(ScriptTokenType.BRACKET_OPEN, ScriptTokenType.BRACKET_CLOSE);
+        if (bodyResult.error() != BlockError.NONE) {
+            String message = switch (bodyResult.error()) {
+                case MISSING_OPEN -> "Function is missing body";
+                case MISSING_CLOSE -> "Function body is not closed";
+                default -> null;
+            };
+            errors.add(new CompileError(message, bodyResult.fileName(), bodyResult.line(), bodyResult.charStart(), bodyResult.charEnd()));
             return null;
         }
-        ScriptASTNode bodyNode = parseCompound(bodyStream, errors);
+        ScriptASTNode bodyNode = parseCompound(bodyResult.contents(), errors);
 
         int end = stream.current().charEnd();
-        return new ASTFunction(functionName, returnType, parameterNodes, bodyNode, new SourceRange(funcToken.charStart(), end, funcToken.fileName()));
+        return new ASTFunction(functionName, returnType, parameterNodes, bodyNode, new SourceRange(start, end, fileName));
     }
 
     private List<ScriptASTNode> parseParameterDefs(TokenStream stream, List<CompileError> errors) {
-        return null;
+        List<ScriptASTNode> parameterNodes = new ArrayList<>();
+        boolean hasOptional = false;
+        while (stream.hasNext()) {
+            StatementResult parameterResult = stream.consumeUntil(ScriptTokenType.COMMA);
+            if (parameterResult.error() != StatementError.NONE) {
+                errors.add(new CompileError("Invalid parameter definition", parameterResult.fileName(), parameterResult.line(), parameterResult.charStart(), parameterResult.charEnd()));
+                continue;
+            }
+            String parameterName = stream.expectName();
+
+        }
+        return parameterNodes;
     }
 
     private ScriptASTNode parseCompound(TokenStream stream, List<CompileError> errors) {
