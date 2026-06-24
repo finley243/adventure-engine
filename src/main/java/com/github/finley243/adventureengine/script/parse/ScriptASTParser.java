@@ -30,6 +30,15 @@ public class ScriptASTParser {
         return new ASTParseResult(expression, errors);
     }
 
+    public ASTParseResult parseInlineScript(List<ScriptToken> tokens) {
+        if (tokens.isEmpty()) return null;
+        TokenStream stream = new TokenStream(tokens);
+        List<CompileError> errors = new ArrayList<>();
+        BlockResult placeholderBlockResult = new BlockResult(stream, tokens.getFirst().charStart(), tokens.getLast().charEnd(), tokens.getFirst().fileName(), tokens.getFirst().line(), BlockError.NONE);
+        ASTNode expression = parseCompound(stream, placeholderBlockResult, errors);
+        return new ASTParseResult(expression, errors);
+    }
+
     private ASTNode parseFile(TokenStream stream, List<CompileError> errors) {
         String fileName = stream.peek().fileName();
         int start = stream.peek().charStart();
