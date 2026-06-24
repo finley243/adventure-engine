@@ -137,7 +137,7 @@ public class ActorTemplateLoader {
             if (unarmedAttackType == null) throw new GameDataException("ActorTemplate has invalid unarmed attack type: " + unarmedAttackTypeID);
             unarmedAttackTypes.add(unarmedAttackType);
         }
-        Map<String, List<Script>> scripts = LoadUtils.loadScriptsWithTriggers(element, scriptPipeline, "Actor(" + id + ")", knownFunctions);
+        Map<String, List<Script>> scripts = LoadUtils.loadScriptsWithTriggers(element, scriptPipeline, "Actor(" + id + ")", knownFunctions, Set.of());
         List<String> startingEffectIDs = LoadUtils.listOfTags(element, "startEffect");
         List<Effect> startingEffects = new ArrayList<>();
         for (String startingEffectID : startingEffectIDs) {

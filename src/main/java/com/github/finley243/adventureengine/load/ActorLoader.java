@@ -88,8 +88,8 @@ public class ActorLoader {
     private Behavior parseBehavior(Element behaviorElement, String actorID) {
         String type = LoadUtils.attribute(behaviorElement, "type", null);
         Condition condition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(behaviorElement, "condition"), scriptPipeline, "Behavior(" + actorID + ") - condition", scriptRuntime, knownFunctions);
-        Script startScript = LoadUtils.loadScript(LoadUtils.singleChildWithName(behaviorElement, "scriptStart"), scriptPipeline, "Behavior(" + actorID + ") - start script", knownFunctions);
-        Script eachRoundScript = LoadUtils.loadScript(LoadUtils.singleChildWithName(behaviorElement, "scriptEachRound"), scriptPipeline, "Behavior(" + actorID + ") - round script", knownFunctions);
+        Script startScript = LoadUtils.loadScript(LoadUtils.singleChildWithName(behaviorElement, "scriptStart"), scriptPipeline, "Behavior(" + actorID + ") - start script", knownFunctions, Set.of());
+        Script eachRoundScript = LoadUtils.loadScript(LoadUtils.singleChildWithName(behaviorElement, "scriptEachRound"), scriptPipeline, "Behavior(" + actorID + ") - round script", knownFunctions, Set.of());
         int duration = LoadUtils.attributeInt(behaviorElement, "duration", 0);
         List<Idle> idles = new ArrayList<>();
         List<Element> idleElements = LoadUtils.directChildrenWithName(behaviorElement, "idle");

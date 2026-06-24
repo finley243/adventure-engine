@@ -38,15 +38,15 @@ public class ScriptValidator {
         throwIfErrors(validateInlineExpression(expression, knownFunctions));
     }
 
-    public List<CompileError> validateInlineBlock(ASTCompound block, Set<String> knownFunctions) {
+    public List<CompileError> validateInlineBlock(ASTCompound block, Set<String> knownFunctions, Set<String> externalVariables) {
         List<CompileError> errors = new ArrayList<>();
-        ValidationContext ctx = new ValidationContext(false, new HashSet<>(), knownFunctions);
+        ValidationContext ctx = new ValidationContext(false, new HashSet<>(externalVariables), knownFunctions);
         validateCompound(block, ctx, errors);
         return errors;
     }
 
-    public void validateInlineBlockOrThrow(ASTCompound block, Set<String> knownFunctions) {
-        throwIfErrors(validateInlineBlock(block, knownFunctions));
+    public void validateInlineBlockOrThrow(ASTCompound block, Set<String> knownFunctions, Set<String> externalVariables) {
+        throwIfErrors(validateInlineBlock(block, knownFunctions, externalVariables));
     }
 
     private Set<String> collectFunctionNames(List<ASTFile> files) {

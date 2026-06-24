@@ -3,7 +3,7 @@
         <scriptAdd>drop_equipped_force();</scriptAdd>
     </effect>
     <effect id="food_basic">
-        <scriptAdd>stat.subject.hp = stat.subject.hp + 10;</scriptAdd>
+        <scriptAdd>context.subject.hp = context.subject.hp + 10;</scriptAdd>
     </effect>
     <effect id="mag_extended_pistol_effect" type="add" stat="clip_size" amount="6" permanent="true"/>
 </data>

@@ -31,6 +31,7 @@
     </action>
     <action id="vending_machine">
         <prompt>Buy $itemName ($price)</prompt>
+        <parameterExternal name="itemID"/>
         <parameter name="itemName">gameData.itemTemplate(itemID).name</parameter>
         <parameter name="price">context.parentObject.price_hacked ? "0" : toString(value=gameData.itemTemplate(itemID).price)</parameter>
         <condition>
@@ -48,6 +49,9 @@
     </action>
     <action id="move_basic">
         <prompt>$areaName ($dir)</prompt>
+        <parameterExternal name="areaName"/>
+        <parameterExternal name="dir"/>
+        <parameterExternal name="dirName"/>
         <parameter name="areaName">context.parentArea.room != null &amp;&amp; (context.subject.area.room == null || context.subject.area.room.id != context.parentArea.room.id) ? context.parentArea.room.name : context.parentArea.name</parameter>
         <script>
             var originAreaID = context.subject.area.id;
@@ -58,6 +62,8 @@
     </action>
     <action id="move_corner">
         <prompt>$areaName (Around corner, $dir)</prompt>
+        <parameterExternal name="areaName"/>
+        <parameterExternal name="dir"/>
         <script>
             var originAreaID = context.subject.area.id;
             var targetArea = context.parentArea.noun;
@@ -68,6 +74,7 @@
     </action>
     <action id="move_door">
         <prompt>$areaName (Through $doorName, $dir)</prompt>
+        <parameterExternal name="dir"/>
         <parameter name="doorName">context.parentObject.name</parameter>
         <parameter name="areaName">context.parentArea.room != null &amp;&amp; (context.subject.area.room == null || context.subject.area.room.id != context.parentArea.room.id) ? context.parentArea.room.name : context.parentArea.name</parameter>
         <condition>

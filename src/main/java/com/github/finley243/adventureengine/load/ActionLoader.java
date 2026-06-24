@@ -29,6 +29,11 @@ public class ActionLoader {
     private ActionTemplate parseAction(Element element) {
         String ID = LoadUtils.attribute(element, "id", null);
         String prompt = LoadUtils.singleTag(element, "prompt", null);
+        Set<String> externalParameters = new HashSet<>();
+        for (Element externalParameterElement : LoadUtils.directChildrenWithName(element, "parameterExternal")) {
+            String parameterName = LoadUtils.attribute(externalParameterElement, "name", null);
+            externalParameters.add(parameterName);
+        }
         Map<String, Script> parameters = new HashMap<>();
         for (Element parameterElement : LoadUtils.directChildrenWithName(element, "parameter")) {
             String parameterName = LoadUtils.attribute(parameterElement, "name", null);
@@ -45,8 +50,10 @@ public class ActionLoader {
             conditionNum += 1;
         }
         Condition showCondition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, "conditionShow"), scriptPipeline, "ActionTemplate(" + ID + ") - show condition", scriptRuntime, knownFunctions);
-        Script script = LoadUtils.loadScript(LoadUtils.singleChildWithName(element, "script"), scriptPipeline, "ActionTemplate(" + ID + ") - script", knownFunctions);
-        return new ActionTemplate(ID, prompt, parameters, actionPoints, selectConditions, showCondition, script);
+        Set<String> allParameterNames = new HashSet<>(externalParameters);
+        allParameterNames.addAll(parameters.keySet());
+        Script script = LoadUtils.loadScript(LoadUtils.singleChildWithName(element, "script"), scriptPipeline, "ActionTemplate(" + ID + ") - script", knownFunctions, allParameterNames);
+        return new ActionTemplate(ID, prompt, externalParameters, parameters, actionPoints, selectConditions, showCondition, script);
     }
 
 }

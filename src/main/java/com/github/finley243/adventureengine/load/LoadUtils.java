@@ -183,7 +183,7 @@ public class LoadUtils {
 		return new Condition(scriptRuntime, conditionScript);
 	}
 
-	public static Script loadScript(Element element, ScriptPipeline scriptPipeline, String sourceName, Set<String> knownFunctions) {
+	public static Script loadScript(Element element, ScriptPipeline scriptPipeline, String sourceName, Set<String> knownFunctions, Set<String> externalVariables) {
 		if (element == null) return null;
 		String scriptText = element.getTextContent().trim();
 		List<ScriptToken> scriptTokens = scriptPipeline.lexer().parseToTokens(scriptText, sourceName);
@@ -195,7 +195,7 @@ public class LoadUtils {
 			}
 			throw new GameDataException(sb.toString());
 		}
-		scriptPipeline.validator().validateInlineBlockOrThrow((ASTCompound) parseResult.node(), knownFunctions);
+		scriptPipeline.validator().validateInlineBlockOrThrow((ASTCompound) parseResult.node(), knownFunctions, externalVariables);
 		return scriptPipeline.converter().convertInlineBlock((ASTCompound) parseResult.node());
 	}
 
@@ -215,11 +215,11 @@ public class LoadUtils {
 		return scriptPipeline.converter().convertInlineExpression(parseResult.node());
 	}
 
-	public static Map<String, List<Script>> loadScriptsWithTriggers(Element parentElement, ScriptPipeline scriptPipeline, String sourceName, Set<String> knownFunctions) {
+	public static Map<String, List<Script>> loadScriptsWithTriggers(Element parentElement, ScriptPipeline scriptPipeline, String sourceName, Set<String> knownFunctions, Set<String> externalVariables) {
 		Map<String, List<Script>> scripts = new HashMap<>();
 		for (Element scriptElement : directChildrenWithName(parentElement, "script")) {
 			String trigger = scriptElement.getAttribute("trigger");
-			Script script = loadScript(scriptElement, scriptPipeline, sourceName + " - script trigger: " + trigger, knownFunctions);
+			Script script = loadScript(scriptElement, scriptPipeline, sourceName + " - script trigger: " + trigger, knownFunctions, externalVariables);
 			scripts.computeIfAbsent(trigger, _ -> new ArrayList<>()).add(script);
 		}
 		return scripts;

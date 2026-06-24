@@ -71,7 +71,7 @@ public class RoomLoader {
             throw new GameDataException("Room has invalid restriction type");
         }
         boolean allowAllies = LoadUtils.attributeBool(element, NAME_ALLOW_ALLIES, DEFAULT_ALLOW_ALLIES);
-        Map<String, List<Script>> roomScripts = LoadUtils.loadScriptsWithTriggers(element, scriptPipeline, "Room(" + ID + ")", knownFunctions);
+        Map<String, List<Script>> roomScripts = LoadUtils.loadScriptsWithTriggers(element, scriptPipeline, "Room(" + ID + ")", knownFunctions, Set.of());
         return new Room(scriptRuntime, ID, name, nameType, nameIsProper, description, ownerFaction, restrictionType, allowAllies, roomScripts);
     }
 

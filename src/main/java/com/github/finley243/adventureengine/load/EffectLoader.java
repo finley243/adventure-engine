@@ -39,9 +39,9 @@ public class EffectLoader {
         Condition conditionAdd = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, "conditionAdd"), scriptPipeline, "Effect(" + ID + ") - add condition", scriptRuntime , knownFunctions);
         Condition conditionRemove = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, "conditionRemove"), scriptPipeline, "Effect(" + ID + ") - remove condition", scriptRuntime, knownFunctions);
         Condition conditionActive = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, "conditionActive"), scriptPipeline, "Effect(" + ID + ") - active condition", scriptRuntime, knownFunctions);
-        Script scriptAdd = LoadUtils.loadScript(LoadUtils.singleChildWithName(element, "scriptAdd"), scriptPipeline, "Effect(" + ID + ") - add script", knownFunctions);
-        Script scriptRemove = LoadUtils.loadScript(LoadUtils.singleChildWithName(element, "scriptRemove"), scriptPipeline, "Effect(" + ID + ") - remove script", knownFunctions);
-        Script scriptRound = LoadUtils.loadScript(LoadUtils.singleChildWithName(element, "scriptRound"), scriptPipeline, "Effect(" + ID + ") - round script", knownFunctions);
+        Script scriptAdd = LoadUtils.loadScript(LoadUtils.singleChildWithName(element, "scriptAdd"), scriptPipeline, "Effect(" + ID + ") - add script", knownFunctions, Set.of());
+        Script scriptRemove = LoadUtils.loadScript(LoadUtils.singleChildWithName(element, "scriptRemove"), scriptPipeline, "Effect(" + ID + ") - remove script", knownFunctions, Set.of());
+        Script scriptRound = LoadUtils.loadScript(LoadUtils.singleChildWithName(element, "scriptRound"), scriptPipeline, "Effect(" + ID + ") - round script", knownFunctions, Set.of());
         switch (effectType) {
             case "add" -> {
                 String statMod = LoadUtils.attribute(element, "stat", null);

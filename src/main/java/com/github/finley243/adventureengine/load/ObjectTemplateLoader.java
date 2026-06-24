@@ -65,7 +65,7 @@ public class ObjectTemplateLoader {
                 damageMults.put(damageType, damageMult);
             }
         }
-        Map<String, List<Script>> scripts = LoadUtils.loadScriptsWithTriggers(element, scriptPipeline, "ObjectTemplate(" + ID + ")", knownFunctions);
+        Map<String, List<Script>> scripts = LoadUtils.loadScriptsWithTriggers(element, scriptPipeline, "ObjectTemplate(" + ID + ")", knownFunctions, Set.of());
         List<ActionCustom.CustomActionHolder> customActions = LoadUtils.loadCustomActions(element, "action", scriptPipeline, actionRegistry, "ObjectTemplate(" + ID + ")", knownFunctions);
         List<ActionCustom.CustomActionHolder> networkActions = LoadUtils.loadCustomActions(element, "networkAction", scriptPipeline, actionRegistry, "ObjectTemplate(" + ID + ")", knownFunctions);
         List<ObjectComponentTemplate> components = new ArrayList<>();

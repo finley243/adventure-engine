@@ -98,8 +98,8 @@ public class SceneLoader {
                 throw new GameDataException("SceneLine has invalid type");
             }
             Condition condition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, NAME_LINE_CONDITION), scriptPipeline, "Scene(" + sceneID + ") - line condition", scriptRuntime, knownFunctions);
-            Script scriptPre = LoadUtils.loadScript(LoadUtils.singleChildWithName(element, NAME_LINE_SCRIPT_PRE), scriptPipeline, "Scene(" + sceneID + ") - line pre-script", knownFunctions);
-            Script scriptPost = LoadUtils.loadScript(LoadUtils.singleChildWithName(element, NAME_LINE_SCRIPT_POST), scriptPipeline, "Scene(" + sceneID + ") - line post-script", knownFunctions);
+            Script scriptPre = LoadUtils.loadScript(LoadUtils.singleChildWithName(element, NAME_LINE_SCRIPT_PRE), scriptPipeline, "Scene(" + sceneID + ") - line pre-script", knownFunctions, Set.of());
+            Script scriptPost = LoadUtils.loadScript(LoadUtils.singleChildWithName(element, NAME_LINE_SCRIPT_POST), scriptPipeline, "Scene(" + sceneID + ") - line post-script", knownFunctions, Set.of());
             List<SceneLine> subLines = new ArrayList<>();
             for (Element subLineElement : LoadUtils.directChildrenWithName(element, NAME_LINE)) {
                 SceneLine subLine = parseSceneLine(subLineElement, sceneID);

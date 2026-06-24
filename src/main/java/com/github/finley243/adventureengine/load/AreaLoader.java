@@ -137,7 +137,7 @@ public class AreaLoader {
             defaultObstructionTypes.add(obstructionType);
         }
 
-        Map<String, List<Script>> areaScripts = LoadUtils.loadScriptsWithTriggers(element, scriptPipeline, "Area(" + areaID + ")", knownFunctions);
+        Map<String, List<Script>> areaScripts = LoadUtils.loadScriptsWithTriggers(element, scriptPipeline, "Area(" + areaID + ")", knownFunctions, Set.of());
 
         Map<String, WorldObject> objectMap = new HashMap<>();
         for (Element objectElement : LoadUtils.directChildrenWithName(element, "object")) {

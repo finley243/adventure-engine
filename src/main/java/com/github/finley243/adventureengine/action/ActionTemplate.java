@@ -6,10 +6,12 @@ import com.github.finley243.adventureengine.script.Script;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ActionTemplate extends GameInstanced {
 
     private final String prompt;
+    private final Set<String> externalParameters;
     private final Map<String, Script> parameters;
     private final int actionPoints;
     // The conditions under which the action can be selected
@@ -18,9 +20,10 @@ public class ActionTemplate extends GameInstanced {
     private final Condition showCondition;
     private final Script script;
 
-    public ActionTemplate(String ID, String prompt, Map<String, Script> parameters, int actionPoints, List<ConditionWithMessage> selectConditions, Condition showCondition, Script script) {
+    public ActionTemplate(String ID, String prompt, Set<String> externalParameters, Map<String, Script> parameters, int actionPoints, List<ConditionWithMessage> selectConditions, Condition showCondition, Script script) {
         super(ID);
         this.prompt = prompt;
+        this.externalParameters = externalParameters;
         this.parameters = parameters;
         this.actionPoints = actionPoints;
         this.selectConditions = selectConditions;
@@ -30,6 +33,10 @@ public class ActionTemplate extends GameInstanced {
 
     public String getPrompt() {
         return prompt;
+    }
+
+    public Set<String> getExternalParameters() {
+        return externalParameters;
     }
 
     public Map<String, Script> getParameters() {

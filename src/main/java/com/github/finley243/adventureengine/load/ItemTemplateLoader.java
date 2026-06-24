@@ -48,7 +48,7 @@ public class ItemTemplateLoader {
         String id = element.getAttribute("id");
         String name = LoadUtils.singleTag(element, "name", null);
         Scene description = sceneLoader.parseScene(LoadUtils.singleChildWithName(element, "description"));
-        Map<String, List<Script>> scripts = LoadUtils.loadScriptsWithTriggers(element, scriptPipeline, "ItemTemplate(" + id + ")", knownFunctions);
+        Map<String, List<Script>> scripts = LoadUtils.loadScriptsWithTriggers(element, scriptPipeline, "ItemTemplate(" + id + ")", knownFunctions, Set.of());
         List<ActionCustom.CustomActionHolder> customActions = LoadUtils.loadCustomActions(element, "action", scriptPipeline, actionRegistry, "ItemTemplate(" + id + ")", knownFunctions);
         int price = LoadUtils.attributeInt(element, "price", 0);
         List<ItemComponentTemplate> components = new ArrayList<>();
