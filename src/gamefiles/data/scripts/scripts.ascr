@@ -5,11 +5,11 @@ func drop_equipped() {
 
 func drop_equipped_specified_slot(equippedSlot) {
     // Test comment
-	if (stat.subject.("has_equipped_" + equippedSlot)) {
-		var dropAreaID = stat.subject.area.id;
-		var equippedItemID = stat.subject.equipped_item(equippedSlot).id;
-		transferItem(transferType = "instance", from = stat.subject.inventory, to = stat.area(dropAreaID).inventory, item = equippedItemID);
-		sensoryEvent(phrase = "forceDrop", area = stat.subject.area.id);
+	if (context.subject.("has_equipped_" + equippedSlot)) {
+		var dropAreaID = context.subject.area.id;
+		var equippedItemID = context.subject.equipped_item(equippedSlot).id;
+		transferItem(transferType = "instance", from = context.subject.inventory, to = gameData.area(dropAreaID).inventory, item = equippedItemID);
+		sendSensoryEvent(phrase = "forceDrop", area = context.subject.area.id);
 	}
 }
 
@@ -19,22 +19,22 @@ func drop_equipped_force() {
 }
 
 func drop_equipped_force_specified_slot(equippedSlot) {
-	if (stat.subject.("has_equipped_" + equippedSlot)) {
-		var dropAreaID = randomFromSet(set = stat.subject.area.movable_areas);
-		var equippedItemID = stat.subject.equipped_item(equippedSlot).id;
-		transferItem(transferType = "instance", from = stat.subject.inventory, to = stat.area(dropAreaID).inventory, item = equippedItemID);
-		sensoryEvent(phrase = "forceDrop", area = stat.subject.area.id);
+	if (context.subject.("has_equipped_" + equippedSlot)) {
+		var dropAreaID = selectRandom(context.subject.area.movable_areas);
+		var equippedItemID = context.subject.equipped_item(equippedSlot).id;
+		transferItem(transferType = "instance", from = context.subject.inventory, to = gameData.area(dropAreaID).inventory, item = equippedItemID);
+		sendSensoryEvent(phrase = "forceDrop", area = context.subject.area.id);
 	}
 }
 
 func on_player_level_up() {
     var skillPoints = 2;
-    skillMenu(statHolder.subject, skillPoints);
+    skillMenu(context.subject, skillPoints);
 }
 
-func float hit_chance_skill(attackSkill, dodgeSkill) {
-    var attackerSkillLevel = stat.subject.("skill_" + attackSkill);
-    var targetSkillLevel = dodgeSkill == null || statHolderType(statHolder.target) != "actor" ? 0 : stat.target.("skill_" + dodgeSkill);
+func hit_chance_skill(attackSkill, dodgeSkill) {
+    var attackerSkillLevel = context.subject.("skill_" + attackSkill);
+    var targetSkillLevel = dodgeSkill == null || statHolderType(context.target) != "actor" ? 0 : context.target.("skill_" + dodgeSkill);
     var hitChance = scaleLog(attackerSkillLevel, 1, 10, 0.1f, 0.9f);
     if (targetSkillLevel >= attackerSkillLevel) {
         var penaltyMult = targetSkillLevel - attackerSkillLevel + 1;

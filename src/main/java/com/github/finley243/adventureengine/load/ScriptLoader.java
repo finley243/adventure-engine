@@ -57,7 +57,7 @@ public class ScriptLoader {
                 }
             }
         }
-        scriptPipeline.validator().validateOrThrow(fileASTs);
+        scriptPipeline.validator().validateOrThrow(fileASTs, reservedFunctionNames);
         List<ScriptFunction> scriptFunctionList = scriptPipeline.converter().convert(fileASTs);
         return scriptFunctionList.stream().collect(Collectors.toMap(ScriptFunction::name, Functions.identity()));
     }

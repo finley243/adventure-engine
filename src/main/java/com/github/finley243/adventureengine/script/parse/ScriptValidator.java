@@ -10,9 +10,10 @@ import java.util.Set;
 
 public class ScriptValidator {
 
-    public List<CompileError> validate(List<ASTFile> files) {
+    public List<CompileError> validate(List<ASTFile> files, Set<String> nativeFunctions) {
         List<CompileError> errors = new ArrayList<>();
         Set<String> knownFunctions = collectFunctionNames(files);
+        knownFunctions.addAll(nativeFunctions);
         for (ASTFile file : files) {
             for (ASTFunction function : file.functions()) {
                 validateFunction(function, knownFunctions, errors);
@@ -21,8 +22,8 @@ public class ScriptValidator {
         return errors;
     }
 
-    public void validateOrThrow(List<ASTFile> files) {
-        List<CompileError> errors = validate(files);
+    public void validateOrThrow(List<ASTFile> files, Set<String> nativeFunctions) {
+        List<CompileError> errors = validate(files, nativeFunctions);
         throwIfErrors(errors);
     }
 
