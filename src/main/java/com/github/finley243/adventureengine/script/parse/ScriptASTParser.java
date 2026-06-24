@@ -22,6 +22,14 @@ public class ScriptASTParser {
         return new ASTParseResult(fileNode, errors);
     }
 
+    public ASTParseResult parseSingleExpression(List<ScriptToken> tokens) {
+        if (tokens.isEmpty()) return null;
+        TokenStream stream = new TokenStream(tokens);
+        List<CompileError> errors = new ArrayList<>();
+        ASTNode expression = parseExpression(stream, errors);
+        return new ASTParseResult(expression, errors);
+    }
+
     private ASTNode parseFile(TokenStream stream, List<CompileError> errors) {
         String fileName = stream.peek().fileName();
         int start = stream.peek().charStart();
