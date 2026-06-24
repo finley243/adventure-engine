@@ -122,6 +122,9 @@ public class ScriptConverter {
             case ASTGlobalRef ref -> new ScriptGetGlobal(trace(ref), convertExpression(ref.name()));
             case ASTFunctionCall call -> convertFunctionCall(call);
             case ASTCollection col -> convertCollection(col);
+            case ASTContextRef ref -> new ScriptStatHolder(trace(ref), convertToHolderRef(ref));
+            case ASTGameDataRef ref -> new ScriptStatHolder(trace(ref), convertToHolderRef(ref));
+            case ASTPlayerRef ref -> new ScriptStatHolder(trace(ref), convertToHolderRef(ref));
             default -> throw new IllegalArgumentException("Unknown expression node: " + node.getClass().getSimpleName());
         };
     }

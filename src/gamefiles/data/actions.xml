@@ -3,113 +3,113 @@
         <prompt>Pick lock</prompt>
         <condition>
             <blockMessage>Unlocked</blockMessage>
-            <script>stat.parentObject.locked</script>
+            <script>context.parentObject.locked</script>
         </condition>
         <condition>
             <blockMessage>Higher lockpick skill required</blockMessage>
-            <script>stat.subject.skill_lockpick &gt;= stat.parentObject.lock_pick_difficulty</script>
+            <script>context.subject.skill_lockpick &gt;= context.parentObject.lock_pick_difficulty</script>
         </condition>
         <script>
-            stat.parentObject.locked = false;
-            sendSensoryEvent(area=stat.subject.area.id, phrase="@pickLock");
+            context.parentObject.locked = false;
+            sendSensoryEvent(area=context.subject.area.id, phrase="@pickLock");
         </script>
     </action>
     <action id="lock_key">
         <prompt>Unlock</prompt>
         <condition>
             <blockMessage>Unlocked</blockMessage>
-            <script>stat.parentObject.locked</script>
+            <script>context.parentObject.locked</script>
         </condition>
         <condition>
             <blockMessage>No valid key in inventory</blockMessage>
-            <script>stat.parentObject.lock_keys != null &amp;&amp; inventoryContains(inventory=stat.subject.inventory, item=stat.parentObject.lock_keys)</script>
+            <script>context.parentObject.lock_keys != null &amp;&amp; inventoryContains(inventory=context.subject.inventory, item=context.parentObject.lock_keys)</script>
         </condition>
         <script>
-            stat.parentObject.locked = false;
-            sendSensoryEvent(area=stat.subject.area.id, phrase="@unlock");
+            context.parentObject.locked = false;
+            sendSensoryEvent(area=context.subject.area.id, phrase="@unlock");
         </script>
     </action>
     <action id="vending_machine">
         <prompt>Buy $itemName ($price)</prompt>
-        <parameter name="itemName">stat.itemTemplate(itemID).name</parameter>
-        <parameter name="price">stat.parentObject.price_hacked ? "0" : toString(value=stat.itemTemplate(itemID).price)</parameter>
+        <parameter name="itemName">gameData.itemTemplate(itemID).name</parameter>
+        <parameter name="price">context.parentObject.price_hacked ? "0" : toString(value=gameData.itemTemplate(itemID).price)</parameter>
         <condition>
             <blockMessage>Not enough credits</blockMessage>
-            <script>stat.subject.money &gt;= stat.itemTemplate(itemID).price</script>
+            <script>context.subject.money &gt;= gameData.itemTemplate(itemID).price</script>
         </condition>
         <script>
-            transferItem(to=stat.subject.inventory, item=itemID);
-            if (!stat.parentObject.price_hacked) {
-                stat.subject.money = stat.subject.money - stat.itemTemplate(itemID).price;
+            transferItem(to=context.subject.inventory, item=itemID);
+            if (!context.parentObject.price_hacked) {
+                context.subject.money = context.subject.money - gameData.itemTemplate(itemID).price;
             }
-            var item = stat.itemTemplate(itemID).noun;
-            sendSensoryEvent(area=stat.subject.area.id, phrase="@vendingMachineBuy", item=item);
+            var item = gameData.itemTemplate(itemID).noun;
+            sendSensoryEvent(area=context.subject.area.id, phrase="@vendingMachineBuy", item=item);
         </script>
     </action>
     <action id="move_basic">
         <prompt>$areaName ($dir)</prompt>
-        <parameter name="areaName">statHolder.parentArea.room != null &amp;&amp; (statHolder.subject.area.room == null || stat.subject.area.room.id != stat.parentArea.room.id) ? stat.parentArea.room.name : stat.parentArea.name</parameter>
+        <parameter name="areaName">context.parentArea.room != null &amp;&amp; (context.subject.area.room == null || context.subject.area.room.id != context.parentArea.room.id) ? context.parentArea.room.name : context.parentArea.name</parameter>
         <script>
-            var originAreaID = stat.subject.area.id;
-            var targetArea = stat.parentArea.noun;
-            sendSensoryEvent(area=set(originAreaID, stat.parentArea.id), phrase=stat.parentArea.move_phrase, targetArea=targetArea, dirName=dirName);
-            setArea(object=statHolder.subject, area=statHolder.parentArea);
+            var originAreaID = context.subject.area.id;
+            var targetArea = context.parentArea.noun;
+            sendSensoryEvent(area=set{originAreaID, context.parentArea.id}, phrase=context.parentArea.move_phrase, targetArea=targetArea, dirName=dirName);
+            setArea(object=context.subject, area=context.parentArea);
         </script>
     </action>
     <action id="move_corner">
         <prompt>$areaName (Around corner, $dir)</prompt>
         <script>
-            var originAreaID = stat.subject.area.id;
-            var targetArea = stat.parentArea.noun;
+            var originAreaID = context.subject.area.id;
+            var targetArea = context.parentArea.noun;
             sendSensoryEvent(area=originAreaID, phrase="@moveCorner", targetArea=targetArea);
-            setArea(object=statHolder.subject, area=statHolder.parentArea);
-            sendSensoryEvent(area=stat.parentArea.id, phrase="moveCorner", detectSelf=false, targetArea=targetArea);
+            setArea(object=context.subject, area=context.parentArea);
+            sendSensoryEvent(area=context.parentArea.id, phrase="moveCorner", detectSelf=false, targetArea=targetArea);
         </script>
     </action>
     <action id="move_door">
         <prompt>$areaName (Through $doorName, $dir)</prompt>
-        <parameter name="doorName">stat.parentObject.name</parameter>
-        <parameter name="areaName">statHolder.parentArea.room != null &amp;&amp; (statHolder.subject.area.room == null || stat.subject.area.room.id != stat.parentArea.room.id) ? stat.parentArea.room.name : stat.parentArea.name</parameter>
+        <parameter name="doorName">context.parentObject.name</parameter>
+        <parameter name="areaName">context.parentArea.room != null &amp;&amp; (context.subject.area.room == null || context.subject.area.room.id != context.parentArea.room.id) ? context.parentArea.room.name : context.parentArea.name</parameter>
         <condition>
             <blockMessage>Locked</blockMessage>
-            <script>stat.parentObject.locked == null || !stat.parentObject.locked</script>
+            <script>context.parentObject.locked == null || !context.parentObject.locked</script>
         </condition>
         <script>
-            var originAreaID = stat.subject.area.id;
-            var targetArea = stat.parentArea.noun;
-            var originRoomID = statHolder.subject.area.room != null ? stat.subject.area.room.id : null;
-            var targetRoomID = statHolder.parentArea.room != null ? stat.parentArea.room.id : null;
-            var originArea = originRoomID != null &amp;&amp; originRoomID != targetRoomID ? stat.subject.area.room.noun : stat.subject.area.noun;
-            var door = stat.parentObject.noun;
+            var originAreaID = context.subject.area.id;
+            var targetArea = context.parentArea.noun;
+            var originRoomID = context.subject.area.room != null ? context.subject.area.room.id : null;
+            var targetRoomID = context.parentArea.room != null ? context.parentArea.room.id : null;
+            var originArea = originRoomID != null &amp;&amp; originRoomID != targetRoomID ? context.subject.area.room.noun : context.subject.area.noun;
+            var door = context.parentObject.noun;
             sendSensoryEvent(area=originAreaID, phrase="@moveThrough", targetArea=targetArea, originArea=originArea, door=door);
-            setArea(object=statHolder.subject, area=statHolder.parentArea);
-            sendSensoryEvent(area=stat.parentArea.id, phrase="moveThroughReverse", detectSelf=false, targetArea=targetArea, originArea=originArea, door=door);
+            setArea(object=context.subject, area=context.parentArea);
+            sendSensoryEvent(area=context.parentArea.id, phrase="moveThroughReverse", detectSelf=false, targetArea=targetArea, originArea=originArea, door=door);
         </script>
     </action>
     <action id="drive">
         <prompt>Drive</prompt>
-        <parameter name="areaName">stat.parentArea.name</parameter>
+        <parameter name="areaName">context.parentArea.name</parameter>
         <script>
-            var targetArea = stat.parentArea.noun;
-            var vehicle = stat.parentObject.noun;
-            sendSensoryEvent(phrase="@driveTo", area=set(stat.subject.area.id, stat.parentArea.id), targetArea=targetArea, vehicle=vehicle);
-            setArea(object=statHolder.parentObject, area=statHolder.parentArea);
+            var targetArea = context.parentArea.noun;
+            var vehicle = context.parentObject.noun;
+            sendSensoryEvent(phrase="@driveTo", area=set{context.subject.area.id, context.parentArea.id}, targetArea=targetArea, vehicle=vehicle);
+            setArea(object=context.parentObject, area=context.parentArea);
         </script>
     </action>
     <action id="drive_corner">
         <prompt>Drive</prompt>
         <script>
-            var targetArea = stat.parentArea.noun;
-            var vehicle = stat.parentObject.noun;
-            sendSensoryEvent(phrase="@driveCorner", area=set(stat.subject.area.id, stat.parentArea.id), targetArea=targetArea, vehicle=vehicle);
-            setArea(object=statHolder.parentObject, area=statHolder.parentArea);
+            var targetArea = context.parentArea.noun;
+            var vehicle = context.parentObject.noun;
+            sendSensoryEvent(phrase="@driveCorner", area=set{context.subject.area.id, context.parentArea.id}, targetArea=targetArea, vehicle=vehicle);
+            setArea(object=context.parentObject, area=context.parentArea);
         </script>
     </action>
     <action id="vending_machine_hack_price">
         <prompt>Hack Price</prompt>
         <condition>
-            <script>!stat.parentObject.price_hacked</script>
+            <script>!context.parentObject.price_hacked</script>
         </condition>
-        <script>stat.parentObject.price_hacked = true;</script>
+        <script>context.parentObject.price_hacked = true;</script>
     </action>
 </data>
