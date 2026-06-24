@@ -214,7 +214,7 @@ public class TextGen {
 			String conditionString = currentBranch.substring(1, conditionCloseIndex);
 			List<ScriptToken> conditionTokens = scriptPipeline.lexer().parseToTokens(conditionString, "Phrase: " + originalLine);
 			ASTParseResult conditionASTResult = scriptPipeline.parser().parseSingleExpression(conditionTokens);
-			scriptPipeline.validator().validateInlineExpressionOrThrow(conditionASTResult.node(), getScriptRegistry().getAllIDs());
+			scriptPipeline.validator().validateInlineExpressionOrThrow(conditionASTResult.node(), getScriptRegistry().getAllIDs(), context.getLocalVariables().keySet());
 			Script conditionScript = scriptPipeline.converter().convertInlineExpression(conditionASTResult.node());
 			Condition condition = new Condition(getScriptRuntime(), conditionScript);
 			if (condition.isMet(context)) {

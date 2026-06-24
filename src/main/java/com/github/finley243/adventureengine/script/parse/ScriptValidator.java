@@ -27,15 +27,15 @@ public class ScriptValidator {
         throwIfErrors(errors);
     }
 
-    public List<CompileError> validateInlineExpression(ASTNode expression, Set<String> knownFunctions) {
+    public List<CompileError> validateInlineExpression(ASTNode expression, Set<String> knownFunctions, Set<String> externalVariables) {
         List<CompileError> errors = new ArrayList<>();
-        ValidationContext ctx = new ValidationContext(false, new HashSet<>(), knownFunctions);
+        ValidationContext ctx = new ValidationContext(false, new HashSet<>(externalVariables), knownFunctions);
         validateExpression(expression, ctx, errors);
         return errors;
     }
 
-    public void validateInlineExpressionOrThrow(ASTNode expression, Set<String> knownFunctions) {
-        throwIfErrors(validateInlineExpression(expression, knownFunctions));
+    public void validateInlineExpressionOrThrow(ASTNode expression, Set<String> knownFunctions, Set<String> externalVariables) {
+        throwIfErrors(validateInlineExpression(expression, knownFunctions, externalVariables));
     }
 
     public List<CompileError> validateInlineBlock(ASTCompound block, Set<String> knownFunctions, Set<String> externalVariables) {

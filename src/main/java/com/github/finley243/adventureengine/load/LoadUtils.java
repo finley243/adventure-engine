@@ -211,7 +211,7 @@ public class LoadUtils {
 			}
 			throw new GameDataException(sb.toString());
 		}
-		scriptPipeline.validator().validateInlineExpression(parseResult.node(), knownFunctions);
+		scriptPipeline.validator().validateInlineExpression(parseResult.node(), knownFunctions, Set.of());
 		return scriptPipeline.converter().convertInlineExpression(parseResult.node());
 	}
 
