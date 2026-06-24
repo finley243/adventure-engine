@@ -410,7 +410,84 @@ public class ScriptASTParser {
     }
 
     private ASTNode parseExpression(TokenStream stream, List<CompileError> errors) {
-        return null;
+        return parseExpression(stream, 0, errors);
+    }
+
+    private ASTNode parseExpression(TokenStream stream, int minPrecedence, List<CompileError> errors) {
+        if (!stream.hasNext()) {
+            return null;
+        }
+        ScriptToken prefixToken = stream.consume();
+        ASTNode left = parsePrefix(prefixToken, stream, errors);
+        if (left == null) return null;
+        while (stream.hasNext() && infixPrecedence(stream.peek().type()) > minPrecedence) {
+            ScriptToken infixToken = stream.consume();
+            left = parseInfix(infixToken, left, stream, errors);
+            if (left == null) return null;
+        }
+        return left;
+    }
+
+    private ASTNode parsePrefix(ScriptToken token, TokenStream stream, List<CompileError> errors) {
+        return switch (token.type()) {
+            case INTEGER, FLOAT, STRING, BOOLEAN_TRUE, BOOLEAN_FALSE, NULL -> parseLiteral(token);
+            case NAME -> parseName(token, stream, errors);
+            case MINUS -> parseUnaryOp(ASTUnaryOp.Operator.NEGATE, token, stream, errors);
+            case NOT -> parseUnaryOp(ASTUnaryOp.Operator.NOT, token, stream, errors);
+            case PARENTHESIS_OPEN -> parseGroup(token, stream, errors);
+            case PLAYER -> parsePlayerRef(token);
+            case GLOBAL -> parseGlobalRef(token, stream, errors);
+            case GAME_DATA -> parseGameDataRef(token, stream, errors);
+            case CONTEXT -> parseContextRef(token, stream, errors);
+            case SET -> parseCollectionConstructor(ASTCollection.Type.SET, ScriptTokenType.BRACKET_OPEN, ScriptTokenType.BRACKET_CLOSE, token, stream, errors);
+            case LIST -> parseCollectionConstructor(ASTCollection.Type.LIST, ScriptTokenType.BRACKET_SQUARE_OPEN, ScriptTokenType.BRACKET_SQUARE_CLOSE, token, stream, errors);
+            default -> {
+                errors.add(new CompileError("Unexpected token in expression", token.fileName(), token.line(), token.charStart(), token.charEnd()));
+                yield null;
+            }
+        };
+    }
+
+    private ASTNode parseInfix(ScriptToken token, ASTNode left, TokenStream stream, List<CompileError> errors) {
+        return switch (token.type()) {
+            case PLUS -> parseBinaryOp(ASTBinaryOp.Operator.ADD, left, token, stream, errors);
+            case MINUS -> parseBinaryOp(ASTBinaryOp.Operator.SUBTRACT, left, token, stream, errors);
+            case MULTIPLY -> parseBinaryOp(ASTBinaryOp.Operator.MULTIPLY, left, token, stream, errors);
+            case DIVIDE -> parseBinaryOp(ASTBinaryOp.Operator.DIVIDE, left, token, stream, errors);
+            case MODULO -> parseBinaryOp(ASTBinaryOp.Operator.MODULO, left, token, stream, errors);
+            case POWER -> parseBinaryOp(ASTBinaryOp.Operator.POWER, left, token, stream, errors);
+            case AND -> parseBinaryOp(ASTBinaryOp.Operator.AND, left, token, stream, errors);
+            case OR -> parseBinaryOp(ASTBinaryOp.Operator.OR, left, token, stream, errors);
+            case EQUAL -> parseBinaryOp(ASTBinaryOp.Operator.EQUAL, left, token, stream, errors);
+            case NOT_EQUAL -> parseBinaryOp(ASTBinaryOp.Operator.NOT_EQUAL, left, token, stream, errors);
+            case GREATER -> parseBinaryOp(ASTBinaryOp.Operator.GREATER, left, token, stream, errors);
+            case GREATER_EQUAL -> parseBinaryOp(ASTBinaryOp.Operator.GREATER_EQUAL, left, token, stream, errors);
+            case LESS -> parseBinaryOp(ASTBinaryOp.Operator.LESS, left, token, stream, errors);
+            case LESS_EQUAL -> parseBinaryOp(ASTBinaryOp.Operator.LESS_EQUAL, left, token, stream, errors);
+            case DOT -> parseMemberAccess(left, token, stream, errors);
+            case BRACKET_SQUARE_OPEN -> parseListIndex(left, token, stream, errors);
+            case TERNARY_IF -> parseTernary(left, token, stream, errors);
+            default -> {
+                errors.add(new CompileError("Unexpected token in expression", token.fileName(), token.line(), token.charStart(), token.charEnd()));
+                yield null;
+            }
+        };
+    }
+
+    private int infixPrecedence(ScriptTokenType type) {
+        return switch (type) {
+            case TERNARY_IF -> 1;
+            case OR -> 2;
+            case AND -> 3;
+            case EQUAL, NOT_EQUAL -> 4;
+            case LESS, GREATER, LESS_EQUAL, GREATER_EQUAL -> 5;
+            case PLUS, MINUS -> 6;
+            case MULTIPLY, DIVIDE -> 7;
+            case MODULO -> 8;
+            case POWER -> 9;
+            case DOT, BRACKET_SQUARE_OPEN -> 10;
+            default -> 0;
+        };
     }
 
     private ASTLiteral parseLiteral(ScriptToken token) {
@@ -423,6 +500,209 @@ public class ScriptASTParser {
             default -> throw new IllegalArgumentException("Token is not a literal type");
         };
         return new ASTLiteral(type, token.value(), new SourceRange(token.charStart(), token.charEnd(), token.fileName()));
+    }
+
+    private ASTNode parseName(ScriptToken token, TokenStream stream, List<CompileError> errors) {
+        if (stream.expect(ScriptTokenType.PARENTHESIS_OPEN) != null) {
+            return parseFunctionCall(token, stream, errors);
+        }
+        return new ASTVar(token.value(), new SourceRange(token.charStart(), token.charEnd(), token.fileName()));
+    }
+
+    private ASTNode parseFunctionCall(ScriptToken nameToken, TokenStream stream, List<CompileError> errors) {
+        List<ASTNode> arguments = new ArrayList<>();
+        boolean hasNamedParameter = false;
+        while (stream.hasNext() && stream.peek().type() != ScriptTokenType.PARENTHESIS_CLOSE) {
+            if (!arguments.isEmpty()) {
+                if (stream.expect(ScriptTokenType.COMMA) == null) {
+                    ScriptToken current = stream.peek();
+                    errors.add(new CompileError("Expected ',' or ')' in function call", current.fileName(), current.line(), current.charStart(), current.charEnd()));
+                    return null;
+                }
+            }
+            boolean isNamed = stream.peek().type() == ScriptTokenType.NAME && stream.peekNext() != null && stream.peekNext().type() == ScriptTokenType.ASSIGNMENT;
+            if (isNamed) {
+                hasNamedParameter = true;
+            } else if (hasNamedParameter) {
+                ScriptToken current = stream.peek();
+                errors.add(new CompileError("Positional parameter cannot follow named parameter", current.fileName(), current.line(), current.charStart(), current.charEnd()));
+                return null;
+            }
+            ASTNode argument = parseFunctionCallArgument(isNamed, stream, errors);
+            if (argument == null) return null;
+            arguments.add(argument);
+        }
+        if (stream.expect(ScriptTokenType.PARENTHESIS_CLOSE) == null) {
+            errors.add(new CompileError("Function call is missing closing parenthesis", nameToken.fileName(), nameToken.line(), nameToken.charStart(), stream.current().charEnd()));
+            return null;
+        }
+        return new ASTFunctionCall(nameToken.value(), arguments, new SourceRange(nameToken.charStart(), stream.current().charEnd(), nameToken.fileName()));
+    }
+
+    private ASTNode parseFunctionCallArgument(boolean isNamed, TokenStream stream, List<CompileError> errors) {
+        if (isNamed) {
+            ScriptToken paramName = stream.consume();
+            stream.consume(); // Assignment operator
+            ASTNode value = parseExpression(stream, 0, errors);
+            if (value == null) return null;
+            return new ASTParameter(paramName.value(), value, new SourceRange(paramName.charStart(), stream.current().charEnd(), paramName.fileName()));
+        } else {
+            ASTNode value = parseExpression(stream, 0, errors);
+            if (value == null) return null;
+            return new ASTParameter(null, value, new SourceRange(value.range().start(), stream.current().charEnd(), value.range().fileName()));
+        }
+    }
+
+    private ASTNode parseUnaryOp(ASTUnaryOp.Operator operator, ScriptToken token, TokenStream stream, List<CompileError> errors) {
+        ASTNode operand = parseExpression(stream, 9, errors);
+        if (operand == null) return null;
+        return new ASTUnaryOp(operator, operand, new SourceRange(token.charStart(), stream.current().charEnd(), token.fileName()));
+    }
+
+    private ASTNode parseGroup(ScriptToken token, TokenStream stream, List<CompileError> errors) {
+        ASTNode expression = parseExpression(stream, 0, errors);
+        if (expression == null) return null;
+        if (stream.expect(ScriptTokenType.PARENTHESIS_CLOSE) == null) {
+            errors.add(new CompileError("Expected ')'", token.fileName(), token.line(), token.charStart(), stream.current().charEnd()));
+            return null;
+        }
+        return expression;
+    }
+
+    private ASTNode parsePlayerRef(ScriptToken token) {
+        return new ASTPlayerRef(new SourceRange(token.charStart(), token.charEnd(), token.fileName()));
+    }
+
+    private ASTNode parseGlobalRef(ScriptToken token, TokenStream stream, List<CompileError> errors) {
+        if (stream.expect(ScriptTokenType.BRACKET_SQUARE_OPEN) == null) {
+            errors.add(new CompileError("Expected '[' after 'global'", token.fileName(), token.line(), token.charStart(), token.charEnd()));
+            return null;
+        }
+        ASTNode key = parseExpression(stream, 0, errors);
+        if (key == null) return null;
+        if (stream.expect(ScriptTokenType.BRACKET_SQUARE_CLOSE) == null) {
+            errors.add(new CompileError("Expected ']' in global reference", token.fileName(), token.line(), token.charStart(), stream.current().charEnd()));
+            return null;
+        }
+        return new ASTGlobalRef(key, new SourceRange(token.charStart(), stream.current().charEnd(), token.fileName()));
+    }
+
+    private ASTNode parseGameDataRef(ScriptToken token, TokenStream stream, List<CompileError> errors) {
+        if (stream.expect(ScriptTokenType.DOT) == null) {
+            errors.add(new CompileError("Expected '.' after 'gameData'", token.fileName(), token.line(), token.charStart(), token.charEnd()));
+            return null;
+        }
+        String dataType = stream.expectName();
+        if (dataType == null) {
+            ScriptToken current = stream.peek();
+            errors.add(new CompileError("Expected data type after 'gameData.'", current.fileName(), current.line(), current.charStart(), current.charEnd()));
+            return null;
+        }
+        if (stream.expect(ScriptTokenType.PARENTHESIS_OPEN) == null) {
+            ScriptToken current = stream.peek();
+            errors.add(new CompileError("Expected '(' after data type in gameData reference", current.fileName(), current.line(), current.charStart(), current.charEnd()));
+            return null;
+        }
+        ASTNode id = parseExpression(stream, 0, errors);
+        if (id == null) return null;
+        if (stream.expect(ScriptTokenType.PARENTHESIS_CLOSE) == null) {
+            errors.add(new CompileError("Expected ')' in gameData reference", token.fileName(), token.line(), token.charStart(), stream.current().charEnd()));
+            return null;
+        }
+        return new ASTGameDataRef(dataType, id, new SourceRange(token.charStart(), stream.current().charEnd(), token.fileName()));
+    }
+
+    private ASTNode parseContextRef(ScriptToken token, TokenStream stream, List<CompileError> errors) {
+        if (stream.expect(ScriptTokenType.DOT) == null) {
+            errors.add(new CompileError("Expected '.' after 'context'", token.fileName(), token.line(), token.charStart(), token.charEnd()));
+            return null;
+        }
+        String name = stream.expectName();
+        if (name == null) {
+            ScriptToken current = stream.peek();
+            errors.add(new CompileError("Expected name after 'context.'", current.fileName(), current.line(), current.charStart(), current.charEnd()));
+            return null;
+        }
+        return new ASTContextRef(name, new SourceRange(token.charStart(), stream.current().charEnd(), token.fileName()));
+    }
+
+    private ASTNode parseCollectionConstructor(ASTCollection.Type type, ScriptTokenType openToken, ScriptTokenType closeToken, ScriptToken token, TokenStream stream, List<CompileError> errors) {
+        if (stream.expect(openToken) == null) {
+            errors.add(new CompileError("Expected opening bracket in collection", token.fileName(), token.line(), token.charStart(), token.charEnd()));
+            return null;
+        }
+        List<ASTNode> elements = new ArrayList<>();
+        while (stream.hasNext() && stream.peek().type() != closeToken) {
+            if (!elements.isEmpty()) {
+                if (stream.expect(ScriptTokenType.COMMA) == null) {
+                    ScriptToken current = stream.peek();
+                    errors.add(new CompileError("Expected ',' or closing bracket in collection", current.fileName(), current.line(), current.charStart(), current.charEnd()));
+                    return null;
+                }
+            }
+            ASTNode element = parseExpression(stream, 0, errors);
+            if (element == null) return null;
+            elements.add(element);
+        }
+        if (stream.expect(closeToken) == null) {
+            errors.add(new CompileError("Collection is missing closing bracket", token.fileName(), token.line(), token.charStart(), stream.current().charEnd()));
+            return null;
+        }
+        return new ASTCollection(type, elements, new SourceRange(token.charStart(), stream.current().charEnd(), token.fileName()));
+    }
+
+    private ASTNode parseBinaryOp(ASTBinaryOp.Operator operator, ASTNode left, ScriptToken token, TokenStream stream, List<CompileError> errors) {
+        int precedence = infixPrecedence(token.type());
+        boolean isRightAssociative = binaryOpIsRightAssociative(operator);
+        ASTNode right = parseExpression(stream, isRightAssociative ? precedence - 1 : precedence, errors);
+        if (right == null) return null;
+        return new ASTBinaryOp(operator, left, right, new SourceRange(left.range().start(), stream.current().charEnd(), left.range().fileName()));
+    }
+
+    private boolean binaryOpIsRightAssociative(ASTBinaryOp.Operator operator) {
+        return operator == ASTBinaryOp.Operator.POWER;
+    }
+
+    private ASTNode parseMemberAccess(ASTNode left, ScriptToken token, TokenStream stream, List<CompileError> errors) {
+        if (stream.expect(ScriptTokenType.PARENTHESIS_OPEN) != null) {
+            ASTNode nameExpression = parseExpression(stream, 0, errors);
+            if (nameExpression == null) return null;
+            if (stream.expect(ScriptTokenType.PARENTHESIS_CLOSE) == null) {
+                errors.add(new CompileError("Expected ')' in dynamic member access", token.fileName(), token.line(), token.charStart(), stream.current().charEnd()));
+                return null;
+            }
+            return new ASTMemberAccess(left, new ASTMemberNameDynamic(nameExpression), new SourceRange(left.range().start(), stream.current().charEnd(), left.range().fileName()));
+        } else {
+            String name = stream.expectName();
+            if (name == null) {
+                ScriptToken current = stream.peek();
+                errors.add(new CompileError("Expected member name after '.'", current.fileName(), current.line(), current.charStart(), current.charEnd()));
+                return null;
+            }
+            return new ASTMemberAccess(left, new ASTMemberNameStatic(name), new SourceRange(left.range().start(), stream.current().charEnd(), left.range().fileName()));
+        }
+    }
+
+    private ASTNode parseListIndex(ASTNode left, ScriptToken token, TokenStream stream, List<CompileError> errors) {
+        ASTNode index = parseExpression(stream, 0, errors);
+        if (index == null) return null;
+        if (stream.expect(ScriptTokenType.BRACKET_SQUARE_CLOSE) == null) {
+            errors.add(new CompileError("Expected ']'", token.fileName(), token.line(), token.charStart(), stream.current().charEnd()));
+            return null;
+        }
+        return new ASTListIndexRef(left, index, new SourceRange(left.range().start(), stream.current().charEnd(), left.range().fileName()));
+    }
+
+    private ASTNode parseTernary(ASTNode condition, ScriptToken token, TokenStream stream, List<CompileError> errors) {
+        ASTNode trueValue = parseExpression(stream, 0, errors);
+        if (trueValue == null) return null;
+        if (stream.expect(ScriptTokenType.COLON) == null) {
+            errors.add(new CompileError("Expected ':' in ternary expression", token.fileName(), token.line(), token.charStart(), stream.current().charEnd()));
+            return null;
+        }
+        ASTNode falseValue = parseExpression(stream, 0, errors);
+        if (falseValue == null) return null;
+        return new ASTTernaryOp(condition, trueValue, falseValue, new SourceRange(condition.range().start(), stream.current().charEnd(), condition.range().fileName()));
     }
 
 }

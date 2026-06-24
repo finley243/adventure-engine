@@ -2,5 +2,5 @@ package com.github.finley243.adventureengine.script.parse.nodes;
 
 import com.github.finley243.adventureengine.script.parse.SourceRange;
 
-public record ASTTernaryOp(ASTNode left, ASTNode center, ASTNode right, SourceRange range) implements ASTNode {
+public record ASTGameDataRef(String type, ASTNode id, SourceRange range) implements ASTNode {
 }

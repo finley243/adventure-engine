@@ -17,7 +17,14 @@ public class TokenStream {
 
     ScriptToken peek() {
         if (tokens.isEmpty()) return null;
+        if (tokens.size() <= index) return null;
         return tokens.get(index);
+    }
+
+    ScriptToken peekNext() {
+        if (tokens.isEmpty()) return null;
+        if (tokens.size() <= index + 1) return null;
+        return tokens.get(index + 1);
     }
 
     ScriptToken current() {
