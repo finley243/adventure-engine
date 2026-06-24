@@ -41,7 +41,7 @@ public class ScriptASTParser {
 
     private ASTNode parseFile(TokenStream stream, List<CompileError> errors) {
         ScriptToken startToken = stream.peek();
-        List<ASTNode> functions = new ArrayList<>();
+        List<ASTFunction> functions = new ArrayList<>();
         while (stream.hasNext()) {
             ScriptToken funcToken = stream.expect(ScriptTokenType.FUNCTION);
             if (funcToken == null) {
@@ -50,7 +50,7 @@ public class ScriptASTParser {
                 stream.syncTo(ScriptTokenType.BRACKET_CLOSE);
                 continue;
             }
-            ASTNode functionNode = parseFunctionDef(stream, errors);
+            ASTFunction functionNode = parseFunctionDef(stream, errors);
             if (functionNode != null) {
                 functions.add(functionNode);
             }
@@ -58,24 +58,14 @@ public class ScriptASTParser {
         return new ASTFile(functions, new SourceRange(startToken, stream.current()));
     }
 
-    private ASTNode parseFunctionDef(TokenStream stream, List<CompileError> errors) {
+    private ASTFunction parseFunctionDef(TokenStream stream, List<CompileError> errors) {
         ScriptToken startToken = stream.current();
-        String firstName = stream.expectName();
-        if (firstName == null) {
+        String functionName = stream.expectName();
+        if (functionName == null) {
             ScriptToken current = stream.current();
             errors.add(new CompileError("Expected function name", new SourceRange(current)));
             stream.syncTo(ScriptTokenType.BRACKET_CLOSE);
             return null;
-        }
-        String secondName = stream.expectName();
-        String returnType;
-        String functionName;
-        if (secondName != null) { // Has return type
-            returnType = firstName;
-            functionName = secondName;
-        } else {
-            returnType = null;
-            functionName = firstName;
         }
 
         BlockResult parameterResult = stream.consumeBlock(ScriptTokenType.PARENTHESIS_OPEN, ScriptTokenType.PARENTHESIS_CLOSE);
@@ -103,7 +93,7 @@ public class ScriptASTParser {
         }
         ASTNode bodyNode = parseCompound(bodyResult.contents(), bodyResult, errors);
 
-        return new ASTFunction(functionName, returnType, parameterNodes, bodyNode, new SourceRange(startToken, stream.current()));
+        return new ASTFunction(functionName, parameterNodes, bodyNode, new SourceRange(startToken, stream.current()));
     }
 
     private List<ASTNode> parseParameterDefs(TokenStream stream, List<CompileError> errors) {
@@ -470,6 +460,7 @@ public class ScriptASTParser {
             case POWER -> parseBinaryOp(ASTBinaryOp.Operator.POWER, left, token, stream, errors);
             case AND -> parseBinaryOp(ASTBinaryOp.Operator.AND, left, token, stream, errors);
             case OR -> parseBinaryOp(ASTBinaryOp.Operator.OR, left, token, stream, errors);
+            case NULL_COALESCING -> parseBinaryOp(ASTBinaryOp.Operator.NULL_COALESCING, left, token, stream, errors);
             case EQUAL -> parseBinaryOp(ASTBinaryOp.Operator.EQUAL, left, token, stream, errors);
             case NOT_EQUAL -> parseBinaryOp(ASTBinaryOp.Operator.NOT_EQUAL, left, token, stream, errors);
             case GREATER -> parseBinaryOp(ASTBinaryOp.Operator.GREATER, left, token, stream, errors);
@@ -489,15 +480,16 @@ public class ScriptASTParser {
     private int infixPrecedence(ScriptTokenType type) {
         return switch (type) {
             case TERNARY_IF -> 1;
-            case OR -> 2;
-            case AND -> 3;
-            case EQUAL, NOT_EQUAL -> 4;
-            case LESS, GREATER, LESS_EQUAL, GREATER_EQUAL -> 5;
-            case PLUS, MINUS -> 6;
-            case MULTIPLY, DIVIDE -> 7;
-            case MODULO -> 8;
-            case POWER -> 9;
-            case DOT, BRACKET_SQUARE_OPEN -> 10;
+            case NULL_COALESCING -> 2;
+            case OR -> 3;
+            case AND -> 4;
+            case EQUAL, NOT_EQUAL -> 5;
+            case LESS, GREATER, LESS_EQUAL, GREATER_EQUAL -> 6;
+            case PLUS, MINUS -> 7;
+            case MULTIPLY, DIVIDE -> 8;
+            case MODULO -> 9;
+            case POWER -> 10;
+            case DOT, BRACKET_SQUARE_OPEN -> 11;
             default -> 0;
         };
     }
@@ -672,7 +664,7 @@ public class ScriptASTParser {
     }
 
     private boolean binaryOpIsRightAssociative(ASTBinaryOp.Operator operator) {
-        return operator == ASTBinaryOp.Operator.POWER;
+        return operator == ASTBinaryOp.Operator.POWER || operator == ASTBinaryOp.Operator.NULL_COALESCING;
     }
 
     private ASTNode parseMemberAccess(ASTNode left, ScriptToken token, TokenStream stream, List<CompileError> errors) {

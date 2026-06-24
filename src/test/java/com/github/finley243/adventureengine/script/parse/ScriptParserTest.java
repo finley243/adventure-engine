@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.script.parse.nodes.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ScriptParserTest {
@@ -29,7 +30,7 @@ public class ScriptParserTest {
     public void testFunctionDefinitions() {
         ScriptASTParser parser = new ScriptASTParser();
         // func doStuff() {}
-        // func boolean isConditionMet(condition) {}
+        // func isConditionMet(condition) {}
         List<ScriptToken> tokens = List.of(new ScriptToken(ScriptTokenType.FUNCTION, null, 1, null, 1, 1),
                 new ScriptToken(ScriptTokenType.NAME, "doStuff", 1, null, 1, 1),
                 new ScriptToken(ScriptTokenType.PARENTHESIS_OPEN, null, 1, null, 1, 1),
@@ -37,7 +38,6 @@ public class ScriptParserTest {
                 new ScriptToken(ScriptTokenType.BRACKET_OPEN, null, 1, null, 1, 1),
                 new ScriptToken(ScriptTokenType.BRACKET_CLOSE, null, 1, null, 1, 1),
                 new ScriptToken(ScriptTokenType.FUNCTION, null, 1, null, 1, 1),
-                new ScriptToken(ScriptTokenType.NAME, "boolean", 1, null, 1, 1),
                 new ScriptToken(ScriptTokenType.NAME, "isConditionMet", 1, null, 1, 1),
                 new ScriptToken(ScriptTokenType.PARENTHESIS_OPEN, null, 1, null, 1, 1),
                 new ScriptToken(ScriptTokenType.NAME, "condition", 1, null, 1, 1),
@@ -344,7 +344,7 @@ public class ScriptParserTest {
     public void testFunctionWithIfElse() {
         ScriptASTParser parser = new ScriptASTParser();
         /*
-        func boolean myFunc(x) {
+        func myFunc(x) {
             if (x > 0) {
                 return true;
             } else if (x < 0) {
@@ -356,7 +356,6 @@ public class ScriptParserTest {
         */
         List<ScriptToken> tokens = List.of(
                 new ScriptToken(ScriptTokenType.FUNCTION, null, 1, null, 1, 1),
-                new ScriptToken(ScriptTokenType.NAME, "boolean", 1, null, 1, 1),
                 new ScriptToken(ScriptTokenType.NAME, "myFunc", 1, null, 1, 1),
                 new ScriptToken(ScriptTokenType.PARENTHESIS_OPEN, null, 1, null, 1, 1),
                 new ScriptToken(ScriptTokenType.NAME, "x", 1, null, 1, 1),
@@ -399,7 +398,6 @@ public class ScriptParserTest {
         Assertions.assertEquals(1, file.functions().size());
         ASTFunction function = (ASTFunction) file.functions().getFirst();
         Assertions.assertEquals("myFunc", function.name());
-        Assertions.assertEquals("boolean", function.returnType());
         Assertions.assertEquals(1, function.parameters().size());
         ASTCompound body = (ASTCompound) function.body();
         Assertions.assertEquals(1, body.statements().size());
@@ -427,6 +425,24 @@ public class ScriptParserTest {
         ASTCompound elseBody = ifNode.elseBranch();
         Assertions.assertEquals(1, elseBody.statements().size());
         Assertions.assertInstanceOf(ASTReturn.class, elseBody.statements().getFirst());
+    }
+
+    @Test
+    public void testScriptPipeline() {
+        ScriptLexer lexer = new ScriptLexer();
+        ScriptASTParser parser = new ScriptASTParser();
+        ScriptValidator validator = new ScriptValidator();
+        String scriptSource = "func testFunction(value) {" +
+                "\nvar sum = value + 8;" +
+                "\nreturn sum;" +
+                "\n}";
+        List<ScriptToken> tokens = lexer.parseToTokens(scriptSource, "testFile");
+        ASTParseResult parseResult = parser.parse(tokens);
+        Assertions.assertTrue(parseResult.errors().isEmpty());
+        List<ASTFile> fileList = new ArrayList<>();
+        fileList.add((ASTFile) parseResult.node());
+        List<CompileError> validatorErrors = validator.validate(fileList);
+        Assertions.assertTrue(validatorErrors.isEmpty(), validatorErrors.toString());
     }
 
 }
