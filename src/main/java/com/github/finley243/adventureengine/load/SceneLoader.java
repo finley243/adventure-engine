@@ -6,7 +6,6 @@ import com.github.finley243.adventureengine.scene.SceneChoice;
 import com.github.finley243.adventureengine.scene.SceneLine;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
-import com.github.finley243.adventureengine.script.parse.ScriptLexer;
 import org.w3c.dom.Element;
 
 import java.util.ArrayList;

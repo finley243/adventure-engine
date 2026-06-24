@@ -15,7 +15,6 @@ import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.item.ItemFactory;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
-import com.github.finley243.adventureengine.script.parse.ScriptLexer;
 import com.github.finley243.adventureengine.world.environment.Area;
 import org.w3c.dom.Element;
 

@@ -34,20 +34,19 @@ public class ScriptASTParser {
         if (tokens.isEmpty()) return null;
         TokenStream stream = new TokenStream(tokens);
         List<CompileError> errors = new ArrayList<>();
-        BlockResult placeholderBlockResult = new BlockResult(stream, tokens.getFirst().charStart(), tokens.getLast().charEnd(), tokens.getFirst().fileName(), tokens.getFirst().line(), BlockError.NONE);
+        BlockResult placeholderBlockResult = new BlockResult(stream, new SourceRange(tokens.getFirst(), tokens.getLast()), BlockError.NONE);
         ASTNode expression = parseCompound(stream, placeholderBlockResult, errors);
         return new ASTParseResult(expression, errors);
     }
 
     private ASTNode parseFile(TokenStream stream, List<CompileError> errors) {
-        String fileName = stream.peek().fileName();
-        int start = stream.peek().charStart();
+        ScriptToken startToken = stream.peek();
         List<ASTNode> functions = new ArrayList<>();
         while (stream.hasNext()) {
             ScriptToken funcToken = stream.expect(ScriptTokenType.FUNCTION);
             if (funcToken == null) {
                 ScriptToken current = stream.peek();
-                errors.add(new CompileError("Only function definitions are allowed at top level", current.fileName(), current.line(), current.charStart(), current.charEnd()));
+                errors.add(new CompileError("Only function definitions are allowed at top level", new SourceRange(current)));
                 stream.syncTo(ScriptTokenType.BRACKET_CLOSE);
                 continue;
             }
@@ -56,17 +55,15 @@ public class ScriptASTParser {
                 functions.add(functionNode);
             }
         }
-        int end = stream.current().charEnd();
-        return new ASTFile(functions, new SourceRange(start, end, fileName));
+        return new ASTFile(functions, new SourceRange(startToken, stream.current()));
     }
 
     private ASTNode parseFunctionDef(TokenStream stream, List<CompileError> errors) {
-        String fileName = stream.current().fileName();
-        int start = stream.current().charStart();
+        ScriptToken startToken = stream.current();
         String firstName = stream.expectName();
         if (firstName == null) {
             ScriptToken current = stream.current();
-            errors.add(new CompileError("Expected function name", current.fileName(), current.line(), current.charStart(), current.charEnd()));
+            errors.add(new CompileError("Expected function name", new SourceRange(current)));
             stream.syncTo(ScriptTokenType.BRACKET_CLOSE);
             return null;
         }
@@ -88,7 +85,7 @@ public class ScriptASTParser {
                 case MISSING_CLOSE -> "Function parameter block is not closed";
                 default -> null;
             };
-            errors.add(new CompileError(message, parameterResult.fileName(), parameterResult.line(), parameterResult.charStart(), parameterResult.charEnd()));
+            errors.add(new CompileError(message, parameterResult.range()));
             stream.syncTo(ScriptTokenType.BRACKET_CLOSE);
             return null;
         }
@@ -101,13 +98,12 @@ public class ScriptASTParser {
                 case MISSING_CLOSE -> "Function body is not closed";
                 default -> null;
             };
-            errors.add(new CompileError(message, bodyResult.fileName(), bodyResult.line(), bodyResult.charStart(), bodyResult.charEnd()));
+            errors.add(new CompileError(message, bodyResult.range()));
             return null;
         }
         ASTNode bodyNode = parseCompound(bodyResult.contents(), bodyResult, errors);
 
-        int end = stream.current().charEnd();
-        return new ASTFunction(functionName, returnType, parameterNodes, bodyNode, new SourceRange(start, end, fileName));
+        return new ASTFunction(functionName, returnType, parameterNodes, bodyNode, new SourceRange(startToken, stream.current()));
     }
 
     private List<ASTNode> parseParameterDefs(TokenStream stream, List<CompileError> errors) {
@@ -116,40 +112,38 @@ public class ScriptASTParser {
         while (stream.hasNext()) {
             StatementResult parameterResult = stream.consumeUntil(ScriptTokenType.COMMA);
             if (parameterResult.error() != StatementError.NONE) {
-                errors.add(new CompileError("Invalid parameter definition", parameterResult.fileName(), parameterResult.line(), parameterResult.charStart(), parameterResult.charEnd()));
+                errors.add(new CompileError("Invalid parameter definition", parameterResult.range()));
                 continue;
             }
             TokenStream parameterStream = parameterResult.contents();
-            int parameterStart = parameterResult.charStart();
+            ScriptToken parameterStartToken = parameterResult.contents().peek();
             String parameterName = parameterStream.expectName();
             if (parameterName == null) {
-                errors.add(new CompileError("Expected parameter name", parameterResult.fileName(), parameterResult.line(), parameterResult.charStart(), parameterResult.charEnd()));
+                errors.add(new CompileError("Expected parameter name", parameterResult.range()));
                 continue;
             }
             if (parameterStream.expect(ScriptTokenType.ASSIGNMENT) != null) { // Optional parameter with default value
                 hasOptional = true;
                 ScriptToken defaultValueToken = parameterStream.expectOneOf(LITERAL_TYPES);
                 if (defaultValueToken == null) {
-                    errors.add(new CompileError("Expected literal default value", parameterResult.fileName(), parameterResult.line(), parameterResult.charStart(), parameterResult.charEnd()));
+                    errors.add(new CompileError("Expected literal default value", parameterResult.range()));
                     continue;
                 }
                 ASTLiteral defaultValue = parseLiteral(defaultValueToken);
                 if (parameterStream.hasNext()) {
-                    errors.add(new CompileError("Unexpected tokens in parameter definition", parameterResult.fileName(), parameterResult.line(), parameterResult.charStart(), parameterResult.charEnd()));
+                    errors.add(new CompileError("Unexpected tokens in parameter definition", parameterResult.range()));
                     continue;
                 }
-                int parameterEnd = parameterStream.current().charEnd();
-                parameterNodes.add(new ASTParameterDefinition(parameterName, defaultValue, new SourceRange(parameterStart, parameterEnd, parameterResult.fileName())));
+                parameterNodes.add(new ASTParameterDefinition(parameterName, defaultValue, new SourceRange(parameterStartToken, parameterStream.current())));
             } else { // Required parameter
                 if (parameterStream.hasNext()) {
-                    errors.add(new CompileError("Unexpected tokens in parameter definition", parameterResult.fileName(), parameterResult.line(), parameterResult.charStart(), parameterResult.charEnd()));
+                    errors.add(new CompileError("Unexpected tokens in parameter definition", parameterResult.range()));
                     continue;
                 }
                 if (hasOptional) {
-                    errors.add(new CompileError("Required parameter cannot follow optional parameter", parameterResult.fileName(), parameterResult.line(), parameterResult.charStart(), parameterResult.charEnd()));
+                    errors.add(new CompileError("Required parameter cannot follow optional parameter", parameterResult.range()));
                 }
-                int parameterEnd = parameterStream.current().charEnd();
-                parameterNodes.add(new ASTParameterDefinition(parameterName, null, new SourceRange(parameterStart, parameterEnd, parameterResult.fileName())));
+                parameterNodes.add(new ASTParameterDefinition(parameterName, null, new SourceRange(parameterStartToken, parameterStream.current())));
             }
         }
         return parameterNodes;
@@ -166,7 +160,7 @@ public class ScriptASTParser {
             } else {
                 StatementResult result = stream.consumeUntil(ScriptTokenType.END_LINE);
                 if (result.error() != StatementError.NONE) {
-                    errors.add(new CompileError("Expected ';'", result.fileName(), result.line(), result.charStart(), result.charEnd()));
+                    errors.add(new CompileError("Expected ';'", result.range()));
                     continue;
                 }
                 statement = parseSingleStatement(result.contents(), result, errors);
@@ -175,7 +169,7 @@ public class ScriptASTParser {
                 statements.add(statement);
             }
         }
-        return new ASTCompound(statements, new SourceRange(blockResult.charStart(), blockResult.charEnd(), blockResult.fileName()));
+        return new ASTCompound(statements, blockResult.range());
     }
 
     private ASTIf parseIf(TokenStream stream, List<CompileError> errors) {
@@ -200,7 +194,7 @@ public class ScriptASTParser {
                         case MISSING_CLOSE -> "Else statement body is not closed";
                         default -> null;
                     };
-                    errors.add(new CompileError(message, elseBodyResult.fileName(), elseBodyResult.line(), elseBodyResult.charStart(), elseBodyResult.charEnd()));
+                    errors.add(new CompileError(message, elseBodyResult.range()));
                     break;
                 }
                 elseBranch = parseCompound(elseBodyResult.contents(), elseBodyResult, errors);
@@ -208,8 +202,7 @@ public class ScriptASTParser {
             }
         }
 
-        int end = stream.current().charEnd();
-        return new ASTIf(branches, elseBranch, new SourceRange(ifToken.charStart(), end, ifToken.fileName()));
+        return new ASTIf(branches, elseBranch, new SourceRange(ifToken, stream.current()));
     }
 
     private ASTIfBranch parseIfBranch(TokenStream stream, String context, List<CompileError> errors) {
@@ -220,7 +213,7 @@ public class ScriptASTParser {
                 case MISSING_CLOSE -> context + " condition block is not closed";
                 default -> null;
             };
-            errors.add(new CompileError(message, conditionResult.fileName(), conditionResult.line(), conditionResult.charStart(), conditionResult.charEnd()));
+            errors.add(new CompileError(message, conditionResult.range()));
             stream.syncTo(ScriptTokenType.BRACKET_CLOSE);
             return null;
         }
@@ -233,11 +226,11 @@ public class ScriptASTParser {
                 case MISSING_CLOSE -> context + " body is not closed";
                 default -> null;
             };
-            errors.add(new CompileError(message, bodyResult.fileName(), bodyResult.line(), bodyResult.charStart(), bodyResult.charEnd()));
+            errors.add(new CompileError(message, bodyResult.range()));
             return null;
         }
         ASTNode body = parseCompound(bodyResult.contents(), bodyResult, errors);
-        return new ASTIfBranch(condition, body, new SourceRange(conditionResult.charStart(), bodyResult.charEnd(), conditionResult.fileName()));
+        return new ASTIfBranch(condition, body, conditionResult.range());
     }
 
     private ASTFor parseFor(TokenStream stream, List<CompileError> errors) {
@@ -250,7 +243,7 @@ public class ScriptASTParser {
                 case MISSING_CLOSE -> "For loop iterator block is not closed";
                 default -> null;
             };
-            errors.add(new CompileError(message, iteratorResult.fileName(), iteratorResult.line(), iteratorResult.charStart(), iteratorResult.charEnd()));
+            errors.add(new CompileError(message, iteratorResult.range()));
             stream.syncTo(ScriptTokenType.BRACKET_CLOSE);
             return null;
         }
@@ -258,13 +251,13 @@ public class ScriptASTParser {
         String iteratorName = iteratorStream.expectName();
         if (iteratorName == null) {
             ScriptToken current = iteratorStream.peek();
-            errors.add(new CompileError("Expected iterator name", current.fileName(), current.line(), current.charStart(), current.charEnd()));
+            errors.add(new CompileError("Expected iterator name", new SourceRange(current)));
             stream.syncTo(ScriptTokenType.BRACKET_CLOSE);
             return null;
         }
         if (iteratorStream.expect(ScriptTokenType.COLON) == null) {
             ScriptToken current = iteratorStream.peek();
-            errors.add(new CompileError("Expected ':' between iterator name and expression", current.fileName(), current.line(), current.charStart(), current.charEnd()));
+            errors.add(new CompileError("Expected ':' between iterator name and expression", new SourceRange(current)));
             stream.syncTo(ScriptTokenType.BRACKET_CLOSE);
             return null;
         }
@@ -277,12 +270,12 @@ public class ScriptASTParser {
                 case MISSING_CLOSE -> "For loop body is not closed";
                 default -> null;
             };
-            errors.add(new CompileError(message, bodyResult.fileName(), bodyResult.line(), bodyResult.charStart(), bodyResult.charEnd()));
+            errors.add(new CompileError(message, bodyResult.range()));
             return null;
         }
         ASTNode body = parseCompound(bodyResult.contents(), bodyResult, errors);
 
-        return new ASTFor(iteratorName, collection, body, new SourceRange(forToken.charStart(), stream.current().charEnd(), forToken.fileName()));
+        return new ASTFor(iteratorName, collection, body, new SourceRange(forToken, stream.current()));
     }
 
     private ASTNode parseSingleStatement(TokenStream stream, StatementResult statementResult, List<CompileError> errors) {
@@ -305,30 +298,30 @@ public class ScriptASTParser {
 
     private ASTReturn parseReturn(TokenStream stream, StatementResult statementResult, List<CompileError> errors) {
         ASTNode returnValue = parseExpression(stream, errors);
-        return new ASTReturn(returnValue, new SourceRange(statementResult.charStart(), statementResult.charEnd(), statementResult.fileName()));
+        return new ASTReturn(returnValue, statementResult.range());
     }
 
     private ASTBreak parseBreak(TokenStream stream, StatementResult statementResult, List<CompileError> errors) {
         if (stream.hasNext()) {
             ScriptToken token = stream.peek();
-            errors.add(new CompileError("Nothing is allowed after break", token.fileName(), token.line(), token.charStart(), token.charEnd()));
+            errors.add(new CompileError("Nothing is allowed after break", new SourceRange(token)));
         }
-        return new ASTBreak(new SourceRange(statementResult.charStart(), statementResult.charEnd(), statementResult.fileName()));
+        return new ASTBreak(statementResult.range());
     }
 
     private ASTContinue parseContinue(TokenStream stream, StatementResult statementResult, List<CompileError> errors) {
         if (stream.hasNext()) {
             ScriptToken token = stream.peek();
-            errors.add(new CompileError("Nothing is allowed after continue", token.fileName(), token.line(), token.charStart(), token.charEnd()));
+            errors.add(new CompileError("Nothing is allowed after continue", new SourceRange(token)));
         }
-        return new ASTContinue(new SourceRange(statementResult.charStart(), statementResult.charEnd(), statementResult.fileName()));
+        return new ASTContinue(statementResult.range());
     }
 
     private ASTVarDeclaration parseVarDeclaration(TokenStream stream, StatementResult statementResult, List<CompileError> errors) {
         String variableName = stream.expectName();
         if (variableName == null) {
             ScriptToken current = stream.peek();
-            errors.add(new CompileError("Expected variable name", current.fileName(), current.line(), current.charStart(), current.charEnd()));
+            errors.add(new CompileError("Expected variable name", new SourceRange(current)));
             return null;
         }
 
@@ -336,13 +329,13 @@ public class ScriptASTParser {
         if (stream.hasNext()) {
             if (stream.expect(ScriptTokenType.ASSIGNMENT) == null) {
                 ScriptToken current = stream.peek();
-                errors.add(new CompileError("Expected '='", current.fileName(), current.line(), current.charStart(), current.charEnd()));
+                errors.add(new CompileError("Expected '='", new SourceRange(current)));
                 return null;
             }
             initialValue = parseExpression(stream, errors);
         }
 
-        return new ASTVarDeclaration(variableName, initialValue, new SourceRange(statementResult.charStart(), statementResult.charEnd(), statementResult.fileName()));
+        return new ASTVarDeclaration(variableName, initialValue, statementResult.range());
     }
 
     private ASTError parseError(TokenStream stream, StatementResult statementResult, List<CompileError> errors) {
@@ -353,15 +346,15 @@ public class ScriptASTParser {
                 case MISSING_CLOSE -> "Error statement is missing closing parenthesis";
                 default -> null;
             };
-            errors.add(new CompileError(message, messageResult.fileName(), messageResult.line(), messageResult.charStart(), messageResult.charEnd()));
+            errors.add(new CompileError(message, messageResult.range()));
             return null;
         }
         if (stream.hasNext()) {
             ScriptToken unexpected = stream.peek();
-            errors.add(new CompileError("Unexpected tokens after error statement", unexpected.fileName(), unexpected.line(), unexpected.charStart(), unexpected.charEnd()));
+            errors.add(new CompileError("Unexpected tokens after error statement", new SourceRange(unexpected)));
         }
         ASTNode messageExpression = parseExpression(messageResult.contents(), errors);
-        return new ASTError(messageExpression, new SourceRange(statementResult.charStart(), statementResult.charEnd(), statementResult.fileName()));
+        return new ASTError(messageExpression, statementResult.range());
     }
 
     private ASTLog parseLog(TokenStream stream, StatementResult statementResult, List<CompileError> errors) {
@@ -372,15 +365,15 @@ public class ScriptASTParser {
                 case MISSING_CLOSE -> "Log statement is missing closing parenthesis";
                 default -> null;
             };
-            errors.add(new CompileError(message, messageResult.fileName(), messageResult.line(), messageResult.charStart(), messageResult.charEnd()));
+            errors.add(new CompileError(message, messageResult.range()));
             return null;
         }
         if (stream.hasNext()) {
             ScriptToken unexpected = stream.peek();
-            errors.add(new CompileError("Unexpected tokens after log statement", unexpected.fileName(), unexpected.line(), unexpected.charStart(), unexpected.charEnd()));
+            errors.add(new CompileError("Unexpected tokens after log statement", new SourceRange(unexpected)));
         }
         ASTNode messageExpression = parseExpression(messageResult.contents(), errors);
-        return new ASTLog(messageExpression, new SourceRange(statementResult.charStart(), statementResult.charEnd(), statementResult.fileName()));
+        return new ASTLog(messageExpression, statementResult.range());
     }
 
     private ASTNode parseAssignmentOrCall(TokenStream stream, StatementResult statementResult, List<CompileError> errors) {
@@ -390,7 +383,7 @@ public class ScriptASTParser {
         ScriptToken assignmentOperator = stream.expectOneOf(ASSIGNMENT_TYPES);
         if (assignmentOperator == null) {
             if (!(left instanceof ASTFunctionCall)) {
-                errors.add(new CompileError("Expression is not a valid statement", statementResult.fileName(), statementResult.line(), statementResult.charStart(), statementResult.charEnd()));
+                errors.add(new CompileError("Expression is not a valid statement", statementResult.range()));
                 return null;
             }
             return left;
@@ -399,7 +392,7 @@ public class ScriptASTParser {
         ASTNode right = parseExpression(stream, errors);
         if (right == null) return null;
 
-        SourceRange range = new SourceRange(statementResult.charStart(), statementResult.charEnd(), statementResult.fileName());
+        SourceRange range = statementResult.range();
         ASTNode value = createValueFromAssignmentOperator(right, left, assignmentOperator.type(), range);
 
         if (left instanceof ASTVar v) {
@@ -411,7 +404,7 @@ public class ScriptASTParser {
         } else if (left instanceof ASTListIndexRef l) {
             return new ASTListIndexAssignment(l, value, range);
         } else {
-            errors.add(new CompileError("Invalid assignment target", statementResult.fileName(), statementResult.line(), statementResult.charStart(), statementResult.charEnd()));
+            errors.add(new CompileError("Invalid assignment target", range));
             return null;
         }
     }
@@ -461,7 +454,7 @@ public class ScriptASTParser {
             case SET -> parseCollectionConstructor(ASTCollection.Type.SET, ScriptTokenType.BRACKET_OPEN, ScriptTokenType.BRACKET_CLOSE, token, stream, errors);
             case LIST -> parseCollectionConstructor(ASTCollection.Type.LIST, ScriptTokenType.BRACKET_SQUARE_OPEN, ScriptTokenType.BRACKET_SQUARE_CLOSE, token, stream, errors);
             default -> {
-                errors.add(new CompileError("Unexpected token in expression", token.fileName(), token.line(), token.charStart(), token.charEnd()));
+                errors.add(new CompileError("Unexpected token in expression", new SourceRange(token)));
                 yield null;
             }
         };
@@ -487,7 +480,7 @@ public class ScriptASTParser {
             case BRACKET_SQUARE_OPEN -> parseListIndex(left, token, stream, errors);
             case TERNARY_IF -> parseTernary(left, token, stream, errors);
             default -> {
-                errors.add(new CompileError("Unexpected token in expression", token.fileName(), token.line(), token.charStart(), token.charEnd()));
+                errors.add(new CompileError("Unexpected token in expression", new SourceRange(token)));
                 yield null;
             }
         };
@@ -518,14 +511,14 @@ public class ScriptASTParser {
             case NULL -> ASTLiteral.Type.NULL;
             default -> throw new IllegalArgumentException("Token is not a literal type");
         };
-        return new ASTLiteral(type, token.value(), new SourceRange(token.charStart(), token.charEnd(), token.fileName()));
+        return new ASTLiteral(type, token.value(), new SourceRange(token));
     }
 
     private ASTNode parseName(ScriptToken token, TokenStream stream, List<CompileError> errors) {
         if (stream.expect(ScriptTokenType.PARENTHESIS_OPEN) != null) {
             return parseFunctionCall(token, stream, errors);
         }
-        return new ASTVar(token.value(), new SourceRange(token.charStart(), token.charEnd(), token.fileName()));
+        return new ASTVar(token.value(), new SourceRange(token));
     }
 
     private ASTNode parseFunctionCall(ScriptToken nameToken, TokenStream stream, List<CompileError> errors) {
@@ -535,7 +528,7 @@ public class ScriptASTParser {
             if (!arguments.isEmpty()) {
                 if (stream.expect(ScriptTokenType.COMMA) == null) {
                     ScriptToken current = stream.peek();
-                    errors.add(new CompileError("Expected ',' or ')' in function call", current.fileName(), current.line(), current.charStart(), current.charEnd()));
+                    errors.add(new CompileError("Expected ',' or ')' in function call", new SourceRange(current)));
                     return null;
                 }
             }
@@ -544,7 +537,7 @@ public class ScriptASTParser {
                 hasNamedParameter = true;
             } else if (hasNamedParameter) {
                 ScriptToken current = stream.peek();
-                errors.add(new CompileError("Positional parameter cannot follow named parameter", current.fileName(), current.line(), current.charStart(), current.charEnd()));
+                errors.add(new CompileError("Positional parameter cannot follow named parameter", new SourceRange(current)));
                 return null;
             }
             ASTNode argument = parseFunctionCallArgument(isNamed, stream, errors);
@@ -552,10 +545,10 @@ public class ScriptASTParser {
             arguments.add(argument);
         }
         if (stream.expect(ScriptTokenType.PARENTHESIS_CLOSE) == null) {
-            errors.add(new CompileError("Function call is missing closing parenthesis", nameToken.fileName(), nameToken.line(), nameToken.charStart(), stream.current().charEnd()));
+            errors.add(new CompileError("Function call is missing closing parenthesis", new SourceRange(nameToken, stream.current())));
             return null;
         }
-        return new ASTFunctionCall(nameToken.value(), arguments, new SourceRange(nameToken.charStart(), stream.current().charEnd(), nameToken.fileName()));
+        return new ASTFunctionCall(nameToken.value(), arguments, new SourceRange(nameToken, stream.current()));
     }
 
     private ASTNode parseFunctionCallArgument(boolean isNamed, TokenStream stream, List<CompileError> errors) {
@@ -564,90 +557,90 @@ public class ScriptASTParser {
             stream.consume(); // Assignment operator
             ASTNode value = parseExpression(stream, 0, errors);
             if (value == null) return null;
-            return new ASTParameter(paramName.value(), value, new SourceRange(paramName.charStart(), stream.current().charEnd(), paramName.fileName()));
+            return new ASTParameter(paramName.value(), value, new SourceRange(paramName, stream.current()));
         } else {
             ASTNode value = parseExpression(stream, 0, errors);
             if (value == null) return null;
-            return new ASTParameter(null, value, new SourceRange(value.range().start(), stream.current().charEnd(), value.range().fileName()));
+            return new ASTParameter(null, value, new SourceRange(value, stream.current()));
         }
     }
 
     private ASTNode parseUnaryOp(ASTUnaryOp.Operator operator, ScriptToken token, TokenStream stream, List<CompileError> errors) {
         ASTNode operand = parseExpression(stream, UNARY_OP_MIN_PRECEDENCE, errors);
         if (operand == null) return null;
-        return new ASTUnaryOp(operator, operand, new SourceRange(token.charStart(), stream.current().charEnd(), token.fileName()));
+        return new ASTUnaryOp(operator, operand, new SourceRange(token, stream.current()));
     }
 
     private ASTNode parseGroup(ScriptToken token, TokenStream stream, List<CompileError> errors) {
         ASTNode expression = parseExpression(stream, 0, errors);
         if (expression == null) return null;
         if (stream.expect(ScriptTokenType.PARENTHESIS_CLOSE) == null) {
-            errors.add(new CompileError("Expected ')'", token.fileName(), token.line(), token.charStart(), stream.current().charEnd()));
+            errors.add(new CompileError("Expected ')'", new SourceRange(token, stream.current())));
             return null;
         }
         return expression;
     }
 
     private ASTNode parsePlayerRef(ScriptToken token) {
-        return new ASTPlayerRef(new SourceRange(token.charStart(), token.charEnd(), token.fileName()));
+        return new ASTPlayerRef(new SourceRange(token));
     }
 
     private ASTNode parseGlobalRef(ScriptToken token, TokenStream stream, List<CompileError> errors) {
         if (stream.expect(ScriptTokenType.BRACKET_SQUARE_OPEN) == null) {
-            errors.add(new CompileError("Expected '[' after 'global'", token.fileName(), token.line(), token.charStart(), token.charEnd()));
+            errors.add(new CompileError("Expected '[' after 'global'", new SourceRange(token)));
             return null;
         }
         ASTNode key = parseExpression(stream, 0, errors);
         if (key == null) return null;
         if (stream.expect(ScriptTokenType.BRACKET_SQUARE_CLOSE) == null) {
-            errors.add(new CompileError("Expected ']' in global reference", token.fileName(), token.line(), token.charStart(), stream.current().charEnd()));
+            errors.add(new CompileError("Expected ']' in global reference", new SourceRange(token, stream.current())));
             return null;
         }
-        return new ASTGlobalRef(key, new SourceRange(token.charStart(), stream.current().charEnd(), token.fileName()));
+        return new ASTGlobalRef(key, new SourceRange(token, stream.current()));
     }
 
     private ASTNode parseGameDataRef(ScriptToken token, TokenStream stream, List<CompileError> errors) {
         if (stream.expect(ScriptTokenType.DOT) == null) {
-            errors.add(new CompileError("Expected '.' after 'gameData'", token.fileName(), token.line(), token.charStart(), token.charEnd()));
+            errors.add(new CompileError("Expected '.' after 'gameData'", new SourceRange(token)));
             return null;
         }
         String dataType = stream.expectName();
         if (dataType == null) {
             ScriptToken current = stream.peek();
-            errors.add(new CompileError("Expected data type after 'gameData.'", current.fileName(), current.line(), current.charStart(), current.charEnd()));
+            errors.add(new CompileError("Expected data type after 'gameData.'", new SourceRange(current)));
             return null;
         }
         if (stream.expect(ScriptTokenType.PARENTHESIS_OPEN) == null) {
             ScriptToken current = stream.peek();
-            errors.add(new CompileError("Expected '(' after data type in gameData reference", current.fileName(), current.line(), current.charStart(), current.charEnd()));
+            errors.add(new CompileError("Expected '(' after data type in gameData reference", new SourceRange(current)));
             return null;
         }
         ASTNode id = parseExpression(stream, 0, errors);
         if (id == null) return null;
         if (stream.expect(ScriptTokenType.PARENTHESIS_CLOSE) == null) {
-            errors.add(new CompileError("Expected ')' in gameData reference", token.fileName(), token.line(), token.charStart(), stream.current().charEnd()));
+            errors.add(new CompileError("Expected ')' in gameData reference", new SourceRange(token, stream.current())));
             return null;
         }
-        return new ASTGameDataRef(dataType, id, new SourceRange(token.charStart(), stream.current().charEnd(), token.fileName()));
+        return new ASTGameDataRef(dataType, id, new SourceRange(token, stream.current()));
     }
 
     private ASTNode parseContextRef(ScriptToken token, TokenStream stream, List<CompileError> errors) {
         if (stream.expect(ScriptTokenType.DOT) == null) {
-            errors.add(new CompileError("Expected '.' after 'context'", token.fileName(), token.line(), token.charStart(), token.charEnd()));
+            errors.add(new CompileError("Expected '.' after 'context'", new SourceRange(token)));
             return null;
         }
         String name = stream.expectName();
         if (name == null) {
             ScriptToken current = stream.peek();
-            errors.add(new CompileError("Expected name after 'context.'", current.fileName(), current.line(), current.charStart(), current.charEnd()));
+            errors.add(new CompileError("Expected name after 'context.'", new SourceRange(current)));
             return null;
         }
-        return new ASTContextRef(name, new SourceRange(token.charStart(), stream.current().charEnd(), token.fileName()));
+        return new ASTContextRef(name, new SourceRange(token, stream.current()));
     }
 
     private ASTNode parseCollectionConstructor(ASTCollection.Type type, ScriptTokenType openToken, ScriptTokenType closeToken, ScriptToken token, TokenStream stream, List<CompileError> errors) {
         if (stream.expect(openToken) == null) {
-            errors.add(new CompileError("Expected opening bracket in collection", token.fileName(), token.line(), token.charStart(), token.charEnd()));
+            errors.add(new CompileError("Expected opening bracket in collection", new SourceRange(token)));
             return null;
         }
         List<ASTNode> elements = new ArrayList<>();
@@ -655,7 +648,7 @@ public class ScriptASTParser {
             if (!elements.isEmpty()) {
                 if (stream.expect(ScriptTokenType.COMMA) == null) {
                     ScriptToken current = stream.peek();
-                    errors.add(new CompileError("Expected ',' or closing bracket in collection", current.fileName(), current.line(), current.charStart(), current.charEnd()));
+                    errors.add(new CompileError("Expected ',' or closing bracket in collection", new SourceRange(current)));
                     return null;
                 }
             }
@@ -664,10 +657,10 @@ public class ScriptASTParser {
             elements.add(element);
         }
         if (stream.expect(closeToken) == null) {
-            errors.add(new CompileError("Collection is missing closing bracket", token.fileName(), token.line(), token.charStart(), stream.current().charEnd()));
+            errors.add(new CompileError("Collection is missing closing bracket", new SourceRange(token, stream.current())));
             return null;
         }
-        return new ASTCollection(type, elements, new SourceRange(token.charStart(), stream.current().charEnd(), token.fileName()));
+        return new ASTCollection(type, elements, new SourceRange(token, stream.current()));
     }
 
     private ASTNode parseBinaryOp(ASTBinaryOp.Operator operator, ASTNode left, ScriptToken token, TokenStream stream, List<CompileError> errors) {
@@ -675,7 +668,7 @@ public class ScriptASTParser {
         boolean isRightAssociative = binaryOpIsRightAssociative(operator);
         ASTNode right = parseExpression(stream, isRightAssociative ? precedence - 1 : precedence, errors);
         if (right == null) return null;
-        return new ASTBinaryOp(operator, left, right, new SourceRange(left.range().start(), stream.current().charEnd(), left.range().fileName()));
+        return new ASTBinaryOp(operator, left, right, new SourceRange(left, stream.current()));
     }
 
     private boolean binaryOpIsRightAssociative(ASTBinaryOp.Operator operator) {
@@ -687,18 +680,18 @@ public class ScriptASTParser {
             ASTNode nameExpression = parseExpression(stream, 0, errors);
             if (nameExpression == null) return null;
             if (stream.expect(ScriptTokenType.PARENTHESIS_CLOSE) == null) {
-                errors.add(new CompileError("Expected ')' in dynamic member access", token.fileName(), token.line(), token.charStart(), stream.current().charEnd()));
+                errors.add(new CompileError("Expected ')' in dynamic member access", new SourceRange(token, stream.current())));
                 return null;
             }
-            return new ASTMemberAccess(left, new ASTMemberNameDynamic(nameExpression), new SourceRange(left.range().start(), stream.current().charEnd(), left.range().fileName()));
+            return new ASTMemberAccess(left, new ASTMemberNameDynamic(nameExpression), new SourceRange(left, stream.current()));
         } else {
             String name = stream.expectName();
             if (name == null) {
                 ScriptToken current = stream.peek();
-                errors.add(new CompileError("Expected member name after '.'", current.fileName(), current.line(), current.charStart(), current.charEnd()));
+                errors.add(new CompileError("Expected member name after '.'", new SourceRange(current)));
                 return null;
             }
-            return new ASTMemberAccess(left, new ASTMemberNameStatic(name), new SourceRange(left.range().start(), stream.current().charEnd(), left.range().fileName()));
+            return new ASTMemberAccess(left, new ASTMemberNameStatic(name), new SourceRange(left, stream.current()));
         }
     }
 
@@ -706,22 +699,22 @@ public class ScriptASTParser {
         ASTNode index = parseExpression(stream, 0, errors);
         if (index == null) return null;
         if (stream.expect(ScriptTokenType.BRACKET_SQUARE_CLOSE) == null) {
-            errors.add(new CompileError("Expected ']'", token.fileName(), token.line(), token.charStart(), stream.current().charEnd()));
+            errors.add(new CompileError("Expected ']'", new SourceRange(token, stream.current())));
             return null;
         }
-        return new ASTListIndexRef(left, index, new SourceRange(left.range().start(), stream.current().charEnd(), left.range().fileName()));
+        return new ASTListIndexRef(left, index, new SourceRange(left, stream.current()));
     }
 
     private ASTNode parseTernary(ASTNode condition, ScriptToken token, TokenStream stream, List<CompileError> errors) {
         ASTNode trueValue = parseExpression(stream, 0, errors);
         if (trueValue == null) return null;
         if (stream.expect(ScriptTokenType.COLON) == null) {
-            errors.add(new CompileError("Expected ':' in ternary expression", token.fileName(), token.line(), token.charStart(), stream.current().charEnd()));
+            errors.add(new CompileError("Expected ':' in ternary expression", new SourceRange(token, stream.current())));
             return null;
         }
         ASTNode falseValue = parseExpression(stream, 0, errors);
         if (falseValue == null) return null;
-        return new ASTTernaryOp(condition, trueValue, falseValue, new SourceRange(condition.range().start(), stream.current().charEnd(), condition.range().fileName()));
+        return new ASTTernaryOp(condition, trueValue, falseValue, new SourceRange(condition, stream.current()));
     }
 
 }

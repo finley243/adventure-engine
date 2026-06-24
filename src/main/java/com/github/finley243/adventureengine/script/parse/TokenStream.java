@@ -62,7 +62,7 @@ public class TokenStream {
         if (!openIsPresent) {
             ScriptToken invalidToken = hasNext() ? peek() : current();
             syncTo(close);
-            return new BlockResult(null, invalidToken.charStart(), invalidToken.charEnd(), invalidToken.fileName(), invalidToken.line(), BlockError.MISSING_OPEN);
+            return new BlockResult(null, new SourceRange(invalidToken), BlockError.MISSING_OPEN);
         }
         int start = index;
         ScriptToken startToken = current();
@@ -74,17 +74,15 @@ public class TokenStream {
         }
         if (depth > 0) {
             ScriptToken fileEndToken = current();
-            return new BlockResult(null, startToken.charStart(), fileEndToken.charEnd(), startToken.fileName(), startToken.line(), BlockError.MISSING_CLOSE);
+            return new BlockResult(null, new SourceRange(startToken, fileEndToken), BlockError.MISSING_CLOSE);
         }
         TokenStream contents = new TokenStream(tokens.subList(start, index - 1));
         ScriptToken endToken = current();
-        return new BlockResult(contents, startToken.charStart(), endToken.charEnd(), startToken.fileName(), startToken.line(), BlockError.NONE);
+        return new BlockResult(contents, new SourceRange(startToken, endToken), BlockError.NONE);
     }
 
     StatementResult consumeUntil(ScriptTokenType end) {
-        String fileName = hasNext() ? peek().fileName() : tokens.getFirst().fileName();
-        int line = hasNext() ? peek().line() : tokens.getFirst().line();
-        int charStart = hasNext() ? peek().charStart() : tokens.getFirst().charStart();
+        ScriptToken startToken = hasNext() ? peek() : tokens.getFirst();
         Deque<ScriptTokenType> bracketStack = new ArrayDeque<>();
         List<ScriptToken> contentsList = new ArrayList<>();
         while (hasNext()) {
@@ -104,12 +102,12 @@ public class TokenStream {
             }
             contentsList.add(consume());
         }
-        int charEnd = current().charEnd();
+        ScriptToken endToken = current();
         if (!bracketStack.isEmpty()) {
-            return new StatementResult(null, charStart, charEnd, fileName, line, StatementError.MISSING_END);
+            return new StatementResult(null, new SourceRange(startToken, endToken), StatementError.MISSING_END);
         }
         TokenStream contents = new TokenStream(contentsList);
-        return new StatementResult(contents, charStart, charEnd, fileName, line, StatementError.NONE);
+        return new StatementResult(contents, new SourceRange(startToken, endToken), StatementError.NONE);
     }
 
     void syncTo(ScriptTokenType target) {

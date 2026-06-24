@@ -11,7 +11,6 @@ import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.item.template.*;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.script.parse.ScriptLexer;
 import org.w3c.dom.Element;
 
 import java.util.*;

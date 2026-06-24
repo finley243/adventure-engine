@@ -10,7 +10,6 @@ import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
-import com.github.finley243.adventureengine.script.parse.ScriptLexer;
 import com.github.finley243.adventureengine.world.object.template.*;
 import org.w3c.dom.Element;
 

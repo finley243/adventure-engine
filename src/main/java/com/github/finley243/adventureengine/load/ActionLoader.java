@@ -4,7 +4,6 @@ import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
-import com.github.finley243.adventureengine.script.parse.ScriptLexer;
 import org.w3c.dom.Element;
 
 import java.util.ArrayList;

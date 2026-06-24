@@ -5,7 +5,6 @@ import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
-import com.github.finley243.adventureengine.script.parse.ScriptLexer;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
 import org.w3c.dom.Element;
