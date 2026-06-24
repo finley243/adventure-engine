@@ -12,13 +12,13 @@ import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemFactory;
 import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
-import com.github.finley243.adventureengine.load.ScriptParser;
 import com.github.finley243.adventureengine.network.NetworkNode;
 import com.github.finley243.adventureengine.scene.Scene;
+import com.github.finley243.adventureengine.script.parse.ScriptFunction;
 import com.github.finley243.adventureengine.world.environment.LinkType;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectTemplate;
 import com.github.finley243.adventureengine.world.obstruction.ObstructionType;
 
-public record GameData(SensoryEventDispatcher sensoryEventDispatcher, Pathfinder pathfinder, PhraseManager phraseManager, AreaRegistry areaRegistry, Registry<Room> roomRegistry, Registry<ActorTemplate> actorTemplateRegistry, ActorRegistry actorRegistry, Registry<ObjectTemplate> objectTemplateRegistry, Registry<WorldObject> objectRegistry, ItemFactory itemFactory, Registry<ItemTemplate> itemTemplateRegistry, MutableRegistry<Item> itemMutableRegistry, Registry<LootTable> lootTableRegistry, Registry<WeaponClass> weaponClassRegistry, Registry<AttackType> attackTypeRegistry, Registry<Scene> sceneRegistry, Registry<Faction> factionRegistry, Registry<NetworkNode> networkNodeRegistry, Registry<Effect> effectRegistry, Registry<ActionTemplate> actionTemplateRegistry, Registry<LinkType> linkTypeRegistry, Registry<DamageType> damageTypeRegistry, Registry<Attribute> attributeRegistry, Registry<Skill> skillRegistry, Registry<SenseType> senseTypeRegistry, Registry<ObstructionType> obstructionTypeRegistry, Registry<ScriptParser.ScriptData> scriptRegistry) {}
+public record GameData(SensoryEventDispatcher sensoryEventDispatcher, Pathfinder pathfinder, PhraseManager phraseManager, AreaRegistry areaRegistry, Registry<Room> roomRegistry, Registry<ActorTemplate> actorTemplateRegistry, ActorRegistry actorRegistry, Registry<ObjectTemplate> objectTemplateRegistry, Registry<WorldObject> objectRegistry, ItemFactory itemFactory, Registry<ItemTemplate> itemTemplateRegistry, MutableRegistry<Item> itemMutableRegistry, Registry<LootTable> lootTableRegistry, Registry<WeaponClass> weaponClassRegistry, Registry<AttackType> attackTypeRegistry, Registry<Scene> sceneRegistry, Registry<Faction> factionRegistry, Registry<NetworkNode> networkNodeRegistry, Registry<Effect> effectRegistry, Registry<ActionTemplate> actionTemplateRegistry, Registry<LinkType> linkTypeRegistry, Registry<DamageType> damageTypeRegistry, Registry<Attribute> attributeRegistry, Registry<Skill> skillRegistry, Registry<SenseType> senseTypeRegistry, Registry<ObstructionType> obstructionTypeRegistry, Registry<ScriptFunction> scriptRegistry) {}

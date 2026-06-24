@@ -15,9 +15,9 @@ import com.github.finley243.adventureengine.gamedata.MutableRegistry;
 import com.github.finley243.adventureengine.gamedata.TimerManager;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
-import com.github.finley243.adventureengine.load.ScriptParser;
 import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.scene.Scene;
+import com.github.finley243.adventureengine.script.parse.ScriptFunction;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -103,7 +103,7 @@ public class ScriptRuntimeImpl implements ScriptRuntime {
     }
 
     @Override
-    public ScriptParser.ScriptData getScript(String id) {
+    public ScriptFunction getScript(String id) {
         return gameData().scriptRegistry().getFromID(id);
     }
 

@@ -34,6 +34,7 @@ public class AreaLoader {
     private final Pathfinder pathfinder;
     private final ScriptRuntime scriptRuntime;
     private final ScriptPipeline scriptPipeline;
+    private final Set<String> knownFunctions;
     private final SceneLoader sceneLoader;
     private final ActorLoader actorLoader;
     private final ObjectLoader objectLoader;
@@ -45,13 +46,14 @@ public class AreaLoader {
     private final Registry<Effect> effectRegistry;
     private final ItemFactory itemFactory;
 
-    public AreaLoader(ConfigHandler configHandler, UIEventBus eventBus, MenuManager menuManager, Pathfinder pathfinder, ScriptRuntime scriptRuntime, ScriptPipeline scriptPipeline, SceneLoader sceneLoader, ActorLoader actorLoader, ObjectLoader objectLoader, ItemLoader itemLoader, Registry<Faction> factionRegistry, Registry<Room> roomRegistry, Registry<ObstructionType> obstructionTypeRegistry, Registry<LinkType> linkTypeRegistry, Registry<Effect> effectRegistry, ItemFactory itemFactory) {
+    public AreaLoader(ConfigHandler configHandler, UIEventBus eventBus, MenuManager menuManager, Pathfinder pathfinder, ScriptRuntime scriptRuntime, ScriptPipeline scriptPipeline, Set<String> knownFunctions, SceneLoader sceneLoader, ActorLoader actorLoader, ObjectLoader objectLoader, ItemLoader itemLoader, Registry<Faction> factionRegistry, Registry<Room> roomRegistry, Registry<ObstructionType> obstructionTypeRegistry, Registry<LinkType> linkTypeRegistry, Registry<Effect> effectRegistry, ItemFactory itemFactory) {
         this.configHandler = configHandler;
         this.eventBus = eventBus;
         this.menuManager = menuManager;
         this.pathfinder = pathfinder;
         this.scriptRuntime = scriptRuntime;
         this.scriptPipeline = scriptPipeline;
+        this.knownFunctions = knownFunctions;
         this.sceneLoader = sceneLoader;
         this.actorLoader = actorLoader;
         this.objectLoader = objectLoader;
@@ -135,7 +137,7 @@ public class AreaLoader {
             defaultObstructionTypes.add(obstructionType);
         }
 
-        Map<String, List<Script>> areaScripts = LoadUtils.loadScriptsWithTriggers(element, scriptPipeline, "Area(" + areaID + ")");
+        Map<String, List<Script>> areaScripts = LoadUtils.loadScriptsWithTriggers(element, scriptPipeline, "Area(" + areaID + ")", knownFunctions);
 
         Map<String, WorldObject> objectMap = new HashMap<>();
         for (Element objectElement : LoadUtils.directChildrenWithName(element, "object")) {

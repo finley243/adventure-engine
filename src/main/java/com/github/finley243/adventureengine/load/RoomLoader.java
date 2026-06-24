@@ -11,6 +11,7 @@ import org.w3c.dom.Element;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class RoomLoader {
 
@@ -33,12 +34,14 @@ public class RoomLoader {
     private final SceneLoader sceneLoader;
     private final ScriptPipeline scriptPipeline;
     private final ScriptRuntime scriptRuntime;
+    private final Set<String> knownFunctions;
     private final Registry<Faction> factionRegistry;
 
-    public RoomLoader(SceneLoader sceneLoader, ScriptPipeline scriptPipeline, ScriptRuntime scriptRuntime, Registry<Faction> factionRegistry) {
+    public RoomLoader(SceneLoader sceneLoader, ScriptPipeline scriptPipeline, ScriptRuntime scriptRuntime, Set<String> knownFunctions, Registry<Faction> factionRegistry) {
         this.sceneLoader = sceneLoader;
         this.scriptPipeline = scriptPipeline;
         this.scriptRuntime = scriptRuntime;
+        this.knownFunctions = knownFunctions;
         this.factionRegistry = factionRegistry;
     }
 
@@ -68,7 +71,7 @@ public class RoomLoader {
             throw new GameDataException("Room has invalid restriction type");
         }
         boolean allowAllies = LoadUtils.attributeBool(element, NAME_ALLOW_ALLIES, DEFAULT_ALLOW_ALLIES);
-        Map<String, List<Script>> roomScripts = LoadUtils.loadScriptsWithTriggers(element, scriptPipeline, "Room(" + ID + ")");
+        Map<String, List<Script>> roomScripts = LoadUtils.loadScriptsWithTriggers(element, scriptPipeline, "Room(" + ID + ")", knownFunctions);
         return new Room(scriptRuntime, ID, name, nameType, nameIsProper, description, ownerFaction, restrictionType, allowAllies, roomScripts);
     }
 

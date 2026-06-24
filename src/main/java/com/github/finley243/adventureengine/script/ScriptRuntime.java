@@ -9,8 +9,8 @@ import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
-import com.github.finley243.adventureengine.load.ScriptParser;
 import com.github.finley243.adventureengine.scene.Scene;
+import com.github.finley243.adventureengine.script.parse.ScriptFunction;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -37,7 +37,7 @@ public interface ScriptRuntime {
 
     Actor getPlayer();
 
-    ScriptParser.ScriptData getScript(String id);
+    ScriptFunction getScript(String id);
 
     void addTimer(String id, Timer timer);
 

@@ -4,9 +4,12 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.gamedata.PhraseManager;
-import com.github.finley243.adventureengine.load.ScriptParser;
+import com.github.finley243.adventureengine.gamedata.Registry;
+import com.github.finley243.adventureengine.load.ScriptPipeline;
+import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
-import com.github.finley243.adventureengine.script.parse.ScriptLexer;
+import com.github.finley243.adventureengine.script.parse.ASTParseResult;
+import com.github.finley243.adventureengine.script.parse.ScriptFunction;
 import com.github.finley243.adventureengine.script.parse.ScriptToken;
 import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 
@@ -46,11 +49,11 @@ public class TextGen {
 		put("has", "have");
     }};
 
-	private final ScriptLexer scriptLexer;
-	private final ScriptParser scriptParser;
+	private final ScriptPipeline scriptPipeline;
+	private Registry<ScriptFunction> scriptRegistry;
 	private PhraseManager phraseManager;
 	private ScriptRuntime scriptRuntime;
-	
+
 	private TextContext lastContext;
 
 	/*
@@ -59,9 +62,8 @@ public class TextGen {
 	 * Format for conditionals: ([condition]phrase|[other condition]other phrase|default phrase)
 	 */
 
-	public TextGen(ScriptLexer scriptLexer, ScriptParser scriptParser) {
-		this.scriptLexer = scriptLexer;
-		this.scriptParser = scriptParser;
+	public TextGen(ScriptPipeline scriptPipeline) {
+		this.scriptPipeline = scriptPipeline;
 	}
 
 	public String generate(String line, Context context, TextContext textContext) {
@@ -89,6 +91,16 @@ public class TextGen {
 	
 	public void clearContext() {
 		lastContext = null;
+	}
+
+	public void setScriptRegistry(Registry<ScriptFunction> scriptRegistry) {
+		if (this.scriptRegistry != null) throw new IllegalStateException("TextGen scriptRegistry has already been set");
+		this.scriptRegistry = scriptRegistry;
+	}
+
+	private Registry<ScriptFunction> getScriptRegistry() {
+		if (scriptRegistry == null) throw new IllegalStateException("TextGen scriptRegistry has not been set");
+		return scriptRegistry;
 	}
 
 	public void setPhraseManager(PhraseManager phraseManager) {
@@ -200,8 +212,11 @@ public class TextGen {
 				throw new IllegalArgumentException("Condition is missing closing bracket");
 			}
 			String conditionString = currentBranch.substring(1, conditionCloseIndex);
-			List<ScriptToken> conditionTokens = scriptLexer.parseToTokens(conditionString, "Phrase: " + originalLine);
-			Condition condition = new Condition(getScriptRuntime(), scriptParser.parseExpressionExternal(conditionTokens));
+			List<ScriptToken> conditionTokens = scriptPipeline.lexer().parseToTokens(conditionString, "Phrase: " + originalLine);
+			ASTParseResult conditionASTResult = scriptPipeline.parser().parseSingleExpression(conditionTokens);
+			scriptPipeline.validator().validateInlineExpressionOrThrow(conditionASTResult.node(), getScriptRegistry().getAllIDs());
+			Script conditionScript = scriptPipeline.converter().convertInlineExpression(conditionASTResult.node());
+			Condition condition = new Condition(getScriptRuntime(), conditionScript);
 			if (condition.isMet(context)) {
 				return currentBranch.substring(conditionCloseIndex + 1);
 			}

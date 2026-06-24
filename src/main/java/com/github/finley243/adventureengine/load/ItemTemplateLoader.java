@@ -21,15 +21,17 @@ public class ItemTemplateLoader {
 
     private final ConfigHandler configHandler;
     private final ScriptPipeline scriptPipeline;
+    private final Set<String> knownFunctions;
     private final SceneLoader sceneLoader;
     private final Registry<ActionTemplate> actionRegistry;
     private final Registry<Effect> effectRegistry;
     private final Registry<WeaponClass> weaponClassRegistry;
     private final Registry<DamageType> damageTypeRegistry;
 
-    public ItemTemplateLoader(ConfigHandler configHandler, ScriptPipeline scriptPipeline, SceneLoader sceneLoader, Registry<ActionTemplate> actionRegistry, Registry<Effect> effectRegistry, Registry<WeaponClass> weaponClassRegistry, Registry<DamageType> damageTypeRegistry) {
+    public ItemTemplateLoader(ConfigHandler configHandler, ScriptPipeline scriptPipeline, Set<String> knownFunctions, SceneLoader sceneLoader, Registry<ActionTemplate> actionRegistry, Registry<Effect> effectRegistry, Registry<WeaponClass> weaponClassRegistry, Registry<DamageType> damageTypeRegistry) {
         this.configHandler = configHandler;
         this.scriptPipeline = scriptPipeline;
+        this.knownFunctions = knownFunctions;
         this.sceneLoader = sceneLoader;
         this.actionRegistry = actionRegistry;
         this.effectRegistry = effectRegistry;
@@ -46,8 +48,8 @@ public class ItemTemplateLoader {
         String id = element.getAttribute("id");
         String name = LoadUtils.singleTag(element, "name", null);
         Scene description = sceneLoader.parseScene(LoadUtils.singleChildWithName(element, "description"));
-        Map<String, List<Script>> scripts = LoadUtils.loadScriptsWithTriggers(element, scriptPipeline, "ItemTemplate(" + id + ")");
-        List<ActionCustom.CustomActionHolder> customActions = LoadUtils.loadCustomActions(element, "action", scriptPipeline, actionRegistry, "ItemTemplate(" + id + ")");
+        Map<String, List<Script>> scripts = LoadUtils.loadScriptsWithTriggers(element, scriptPipeline, "ItemTemplate(" + id + ")", knownFunctions);
+        List<ActionCustom.CustomActionHolder> customActions = LoadUtils.loadCustomActions(element, "action", scriptPipeline, actionRegistry, "ItemTemplate(" + id + ")", knownFunctions);
         int price = LoadUtils.attributeInt(element, "price", 0);
         List<ItemComponentTemplate> components = new ArrayList<>();
         for (Element componentElement : LoadUtils.directChildrenWithName(element, "component")) {
@@ -118,7 +120,7 @@ public class ItemTemplateLoader {
                         if (effect == null) throw new GameDataException("ItemComponentTemplateEquippable has invalid equipped effect: " + effectID);
                         equippedEffects.add(effect);
                     }
-                    List<ActionCustom.CustomActionHolder> equippedActions = LoadUtils.loadCustomActions(componentElement, "equippedAction", scriptPipeline, actionRegistry, "ItemComponent(" + itemID + ")");
+                    List<ActionCustom.CustomActionHolder> equippedActions = LoadUtils.loadCustomActions(componentElement, "equippedAction", scriptPipeline, actionRegistry, "ItemComponent(" + itemID + ")", knownFunctions);
                     equipSlots.add(new EquippableItemComponentTemplate.EquippableSlotsData(slotGroup, exposedComponents, equippedEffects, equippedActions));
                 }
                 return new EquippableItemComponentTemplate(actionsRestricted, equipSlots);

@@ -19,6 +19,7 @@ public class ActorTemplateLoader {
     private static final String NAME_ACTOR_TEMPLATE = "actor";
 
     private final ScriptPipeline scriptPipeline;
+    private final Set<String> knownFunctions;
     private final LootTableLoader lootTableLoader;
     private final Registry<SenseType> senseTypeRegistry;
     private final Registry<ActionTemplate> actionRegistry;
@@ -28,8 +29,9 @@ public class ActorTemplateLoader {
     private final Registry<Scene> sceneRegistry;
     private final Registry<LootTable> lootTableRegistry;
 
-    public ActorTemplateLoader(ScriptPipeline scriptPipeline, LootTableLoader lootTableLoader, Registry<SenseType> senseTypeRegistry, Registry<ActionTemplate> actionRegistry, Registry<Effect> effectRegistry, Registry<Faction> factionRegistry, Registry<AttackType> attackTypeRegistry, Registry<Scene> sceneRegistry, Registry<LootTable> lootTableRegistry) {
+    public ActorTemplateLoader(ScriptPipeline scriptPipeline, Set<String> knownFunctions, LootTableLoader lootTableLoader, Registry<SenseType> senseTypeRegistry, Registry<ActionTemplate> actionRegistry, Registry<Effect> effectRegistry, Registry<Faction> factionRegistry, Registry<AttackType> attackTypeRegistry, Registry<Scene> sceneRegistry, Registry<LootTable> lootTableRegistry) {
         this.scriptPipeline = scriptPipeline;
+        this.knownFunctions = knownFunctions;
         this.lootTableLoader = lootTableLoader;
         this.senseTypeRegistry = senseTypeRegistry;
         this.actionRegistry = actionRegistry;
@@ -83,7 +85,7 @@ public class ActorTemplateLoader {
         Integer actionPoints = LoadUtils.attributeInt(element, "actionPoints", null);
         Integer movePoints = LoadUtils.attributeInt(element, "movePoints", null);
         Integer startingLevel = LoadUtils.attributeInt(element, "startLevel", null);
-        Script levelUpThresholdExpression = LoadUtils.loadScriptExpression(LoadUtils.singleChildWithName(element, "levelUpThreshold"), scriptPipeline, "Actor(" + id + ") - level up threshold");
+        Script levelUpThresholdExpression = LoadUtils.loadScriptExpression(LoadUtils.singleChildWithName(element, "levelUpThreshold"), scriptPipeline, "Actor(" + id + ") - level up threshold", knownFunctions);
         Integer hp = LoadUtils.attributeInt(element, "hp", null);
         Map<String, Integer> damageResistances = new HashMap<>();
         Map<String, Float> damageMults = new HashMap<>();
@@ -135,7 +137,7 @@ public class ActorTemplateLoader {
             if (unarmedAttackType == null) throw new GameDataException("ActorTemplate has invalid unarmed attack type: " + unarmedAttackTypeID);
             unarmedAttackTypes.add(unarmedAttackType);
         }
-        Map<String, List<Script>> scripts = LoadUtils.loadScriptsWithTriggers(element, scriptPipeline, "Actor(" + id + ")");
+        Map<String, List<Script>> scripts = LoadUtils.loadScriptsWithTriggers(element, scriptPipeline, "Actor(" + id + ")", knownFunctions);
         List<String> startingEffectIDs = LoadUtils.listOfTags(element, "startEffect");
         List<Effect> startingEffects = new ArrayList<>();
         for (String startingEffectID : startingEffectIDs) {
@@ -158,8 +160,8 @@ public class ActorTemplateLoader {
             barks.put(barkTrigger, new Bark(responseType, visiblePhrases, nonVisiblePhrases));
         }
 
-        List<ActionCustom.CustomActionHolder> customActions = LoadUtils.loadCustomActions(element, "action", scriptPipeline, actionRegistry, "ActorTemplate(" + id + ")");
-        List<ActionCustom.CustomActionHolder> customInventoryActions = LoadUtils.loadCustomActions(element, "itemAction", scriptPipeline, actionRegistry, "ActorTemplate(" + id + ")");
+        List<ActionCustom.CustomActionHolder> customActions = LoadUtils.loadCustomActions(element, "action", scriptPipeline, actionRegistry, "ActorTemplate(" + id + ")", knownFunctions);
+        List<ActionCustom.CustomActionHolder> customInventoryActions = LoadUtils.loadCustomActions(element, "itemAction", scriptPipeline, actionRegistry, "ActorTemplate(" + id + ")", knownFunctions);
 
         return new ActorTemplate(id, parent, name, nameIsProper, pronoun, faction, isEnforcer, actionPoints, movePoints, startingLevel, levelUpThresholdExpression, hp, damageResistances, damageMults, limbs, equipSlots, attributes, skills, senseTypes, unarmedAttackTypes, startingEffects, lootTable, dialogueStart, scripts, barks, customActions, customInventoryActions);
     }

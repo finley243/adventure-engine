@@ -21,15 +21,17 @@ public class ObjectTemplateLoader {
 
     private final ScriptPipeline scriptPipeline;
     private final ScriptRuntime scriptRuntime;
+    private final Set<String> knownFunctions;
     private final SceneLoader sceneLoader;
     private final LootTableLoader lootTableLoader;
     private final Registry<ActionTemplate> actionRegistry;
     private final Registry<LootTable> lootTableRegistry;
     private final Registry<DamageType> damageTypeRegistry;
 
-    public ObjectTemplateLoader(ScriptPipeline scriptPipeline, ScriptRuntime scriptRuntime, SceneLoader sceneLoader, LootTableLoader lootTableLoader, Registry<ActionTemplate> actionRegistry, Registry<LootTable> lootTableRegistry, Registry<DamageType> damageTypeRegistry) {
+    public ObjectTemplateLoader(ScriptPipeline scriptPipeline, ScriptRuntime scriptRuntime, Set<String> knownFunctions, SceneLoader sceneLoader, LootTableLoader lootTableLoader, Registry<ActionTemplate> actionRegistry, Registry<LootTable> lootTableRegistry, Registry<DamageType> damageTypeRegistry) {
         this.scriptPipeline = scriptPipeline;
         this.scriptRuntime = scriptRuntime;
+        this.knownFunctions = knownFunctions;
         this.sceneLoader = sceneLoader;
         this.lootTableLoader = lootTableLoader;
         this.actionRegistry = actionRegistry;
@@ -63,9 +65,9 @@ public class ObjectTemplateLoader {
                 damageMults.put(damageType, damageMult);
             }
         }
-        Map<String, List<Script>> scripts = LoadUtils.loadScriptsWithTriggers(element, scriptPipeline, "ObjectTemplate(" + ID + ")");
-        List<ActionCustom.CustomActionHolder> customActions = LoadUtils.loadCustomActions(element, "action", scriptPipeline, actionRegistry, "ObjectTemplate(" + ID + ")");
-        List<ActionCustom.CustomActionHolder> networkActions = LoadUtils.loadCustomActions(element, "networkAction", scriptPipeline, actionRegistry, "ObjectTemplate(" + ID + ")");
+        Map<String, List<Script>> scripts = LoadUtils.loadScriptsWithTriggers(element, scriptPipeline, "ObjectTemplate(" + ID + ")", knownFunctions);
+        List<ActionCustom.CustomActionHolder> customActions = LoadUtils.loadCustomActions(element, "action", scriptPipeline, actionRegistry, "ObjectTemplate(" + ID + ")", knownFunctions);
+        List<ActionCustom.CustomActionHolder> networkActions = LoadUtils.loadCustomActions(element, "networkAction", scriptPipeline, actionRegistry, "ObjectTemplate(" + ID + ")", knownFunctions);
         List<ObjectComponentTemplate> components = new ArrayList<>();
         for (Element componentElement : LoadUtils.directChildrenWithName(element, "component")) {
             ObjectComponentTemplate componentTemplate = parseObjectComponentTemplate(componentElement, ID);
@@ -93,7 +95,7 @@ public class ObjectTemplateLoader {
                 String storePhrase = LoadUtils.singleTag(element, "storePhrase", null);
                 boolean enableTake = LoadUtils.attributeBool(element, "enableTake", true);
                 boolean enableStore = LoadUtils.attributeBool(element, "enableStore", true);
-                List<ActionCustom.CustomActionHolder> perItemActions = LoadUtils.loadCustomActions(element, "itemAction", scriptPipeline, actionRegistry, "ObjectComponentInventory(" + objectID + ")");
+                List<ActionCustom.CustomActionHolder> perItemActions = LoadUtils.loadCustomActions(element, "itemAction", scriptPipeline, actionRegistry, "ObjectComponentInventory(" + objectID + ")", knownFunctions);
                 return new InventoryObjectComponentTemplate(startEnabled, actionsRestricted, lootTable, takePrompt, takePhrase, storePrompt, storePhrase, enableTake, enableStore, perItemActions);
             }
             case "network" -> {
@@ -106,7 +108,7 @@ public class ObjectTemplateLoader {
                     String moveActionID = LoadUtils.attribute(linkDataElement, "moveAction", null);
                     ActionTemplate moveAction = actionRegistry.getFromID(moveActionID);
                     if (moveAction == null) throw new GameDataException("ObjectComponentTemplate has invalid move action reference: " + moveActionID);
-                    Condition conditionVisible = LoadUtils.loadCondition(LoadUtils.singleChildWithName(linkDataElement, "conditionVisible"), scriptPipeline, "ObjectComponentLink(" + objectID + ") - link visible condition", scriptRuntime);
+                    Condition conditionVisible = LoadUtils.loadCondition(LoadUtils.singleChildWithName(linkDataElement, "conditionVisible"), scriptPipeline, "ObjectComponentLink(" + objectID + ") - link visible condition", scriptRuntime, knownFunctions);
                     boolean isVisible = LoadUtils.attributeBool(linkDataElement, "visible", false);
                     linkData.put(linkID, new LinkObjectComponentTemplate.ObjectLinkData(moveAction, conditionVisible, isVisible));
                 }
@@ -128,7 +130,7 @@ public class ObjectTemplateLoader {
                     boolean userCanPerformParentActions = LoadUtils.attributeBool(slotElement, "parentActions", true);
                     boolean shouldRemoveUserOnDeath = LoadUtils.attributeBool(slotElement, "removeUserOnDeath", false);
                     Set<String> componentsExposed = LoadUtils.setOfTags(slotElement, "exposedComponent");
-                    List<ActionCustom.CustomActionHolder> usingActions = LoadUtils.loadCustomActions(slotElement, "usingAction", scriptPipeline, actionRegistry, "ObjectComponentUsable(" + objectID + ")");
+                    List<ActionCustom.CustomActionHolder> usingActions = LoadUtils.loadCustomActions(slotElement, "usingAction", scriptPipeline, actionRegistry, "ObjectComponentUsable(" + objectID + ")", knownFunctions);
                     usableSlotData.put(slotID, new UsableObjectComponentTemplate.UsableSlotData(startPhrase, endPhrase, endDeathPhrase, startPrompt, endPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas, userCanPerformLocalActions, userCanPerformParentActions, shouldRemoveUserOnDeath, componentsExposed, usingActions));
                 }
                 return new UsableObjectComponentTemplate(startEnabled, actionsRestricted, usableSlotData);

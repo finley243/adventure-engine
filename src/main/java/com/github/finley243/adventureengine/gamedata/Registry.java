@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.gamedata;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class Registry<T> {
 
@@ -18,6 +19,10 @@ public class Registry<T> {
 
     public Collection<T> getAll() {
         return entries.values();
+    }
+
+    public Set<String> getAllIDs() {
+        return entries.keySet();
     }
 
 }

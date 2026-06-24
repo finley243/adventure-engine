@@ -39,6 +39,12 @@ public class ScriptASTParser {
         return new ASTParseResult(expression, errors);
     }
 
+    public ASTParseResult parseLiteralExpression(List<ScriptToken> tokens) {
+        if (tokens.size() != 1) return null;
+        ASTNode expression = parseLiteral(tokens.getFirst());
+        return new ASTParseResult(expression, new ArrayList<>());
+    }
+
     private ASTNode parseFile(TokenStream stream, List<CompileError> errors) {
         ScriptToken startToken = stream.peek();
         List<ASTFunction> functions = new ArrayList<>();

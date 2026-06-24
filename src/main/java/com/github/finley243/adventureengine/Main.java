@@ -8,14 +8,14 @@ import com.github.finley243.adventureengine.event.UIEventBusImpl;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.gamedata.*;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.load.ConfigLoader;
-import com.github.finley243.adventureengine.load.GameDataException;
-import com.github.finley243.adventureengine.load.GameDataLoader;
-import com.github.finley243.adventureengine.load.ScriptParser;
+import com.github.finley243.adventureengine.load.*;
 import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.quest.QuestManager;
 import com.github.finley243.adventureengine.script.ScriptRuntimeImpl;
+import com.github.finley243.adventureengine.script.parse.ScriptASTParser;
+import com.github.finley243.adventureengine.script.parse.ScriptConverter;
 import com.github.finley243.adventureengine.script.parse.ScriptLexer;
+import com.github.finley243.adventureengine.script.parse.ScriptValidator;
 import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.ui.ConsoleInterface;
 import com.github.finley243.adventureengine.ui.ConsoleParserInterface;
@@ -40,8 +40,11 @@ public class Main {
 		ConfigHandler configHandler = new ConfigHandler(configData);
 
 		ScriptLexer scriptLexer = new ScriptLexer();
-		ScriptParser scriptParser = new ScriptParser();
-		TextGen textGen = new TextGen(scriptLexer, scriptParser);
+		ScriptASTParser scriptParser = new ScriptASTParser();
+		ScriptValidator scriptValidator = new ScriptValidator();
+		ScriptConverter scriptConverter = new ScriptConverter();
+		ScriptPipeline scriptPipeline = new ScriptPipeline(scriptLexer, scriptParser, scriptValidator, scriptConverter);
+		TextGen textGen = new TextGen(scriptPipeline);
 		UIEventBus eventBus = new UIEventBusImpl(textGen);
 		MenuManager menuManager = new MenuManager(eventBus);
 		eventBus.register(menuManager);
@@ -63,11 +66,12 @@ public class Main {
 
 		MutableRegistry<Item> itemMutableRegistry = new MutableRegistry<>(Map.of());
 
-		GameDataLoader gameDataLoader = new GameDataLoader(configHandler, scriptLexer, scriptParser, scriptRuntime, itemMutableRegistry, eventBus, menuManager, pathfinder, sensoryEventDispatcher);
+		GameDataLoader gameDataLoader = new GameDataLoader(configHandler, scriptPipeline, scriptRuntime, itemMutableRegistry, eventBus, menuManager, pathfinder, sensoryEventDispatcher);
 		File dataDirectory = Path.of(GAMEFILES + DATA_DIRECTORY).toFile();
 		GameData gameData = gameDataLoader.loadData(dataDirectory);
 		scriptRuntime.setGameData(gameData);
 		textGen.setPhraseManager(gameData.phraseManager());
+		textGen.setScriptRegistry(gameData.scriptRegistry());
 
 		ActionDependencies actionDependencies = new ActionDependencies(scriptRuntime, gameData.sensoryEventDispatcher(), textGen, menuManager);
 

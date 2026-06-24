@@ -3,7 +3,8 @@ package com.github.finley243.adventureengine.script;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Inventory;
-import com.github.finley243.adventureengine.load.ScriptParser;
+import com.github.finley243.adventureengine.script.parse.ScriptFunction;
+import com.github.finley243.adventureengine.script.parse.ScriptParameter;
 import com.github.finley243.adventureengine.textgen.Noun;
 
 import java.util.ArrayList;
@@ -103,44 +104,29 @@ public abstract class Script {
 	public static class FunctionBuilder {
 
 		private final String name;
-		private boolean hasReturn;
-		private Expression.DataType returnType;
-		private final List<ScriptParser.ScriptParameter> parameters;
+		private final List<ScriptParameter> parameters;
 		private final Function<ScriptTraceData, Script> scriptConstructor;
 		private boolean allowExtraParameters;
 
 		private FunctionBuilder(String name, Function<ScriptTraceData, Script> scriptConstructor) {
 			this.name = name;
-			this.hasReturn = false;
 			this.parameters = new ArrayList<>();
 			this.scriptConstructor = scriptConstructor;
 			this.allowExtraParameters = false;
 		}
 
-		public FunctionBuilder allowAnyReturn() {
-			this.hasReturn = true;
-			this.returnType = null;
-			return this;
-		}
-
-		public FunctionBuilder returnType(Expression.DataType type) {
-			this.hasReturn = true;
-			this.returnType = type;
-			return this;
-		}
-
 		public FunctionBuilder parameter(String name) {
-			parameters.add(new ScriptParser.ScriptParameter(name, true, null));
+			parameters.add(new ScriptParameter(name, true, null));
 			return this;
 		}
 
 		public FunctionBuilder optionalParameter(String name) {
-			parameters.add(new ScriptParser.ScriptParameter(name, false, null));
+			parameters.add(new ScriptParameter(name, false, null));
 			return this;
 		}
 
 		public FunctionBuilder optionalParameter(String name, Expression defaultValue) {
-			parameters.add(new ScriptParser.ScriptParameter(name, false, defaultValue));
+			parameters.add(new ScriptParameter(name, false, defaultValue));
 			return this;
 		}
 
@@ -149,8 +135,8 @@ public abstract class Script {
 			return this;
 		}
 
-		public ScriptParser.ScriptData build() {
-			return new ScriptParser.ScriptData(name, hasReturn, returnType, parameters, allowExtraParameters, scriptConstructor.apply(generateTrace()));
+		public ScriptFunction build() {
+			return new ScriptFunction(name, parameters, allowExtraParameters, scriptConstructor.apply(generateTrace()));
 		}
 
 		private Script.ScriptTraceData generateTrace() {

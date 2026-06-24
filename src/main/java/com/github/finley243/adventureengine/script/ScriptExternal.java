@@ -1,7 +1,8 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.load.ScriptParser;
+import com.github.finley243.adventureengine.script.parse.ScriptFunction;
+import com.github.finley243.adventureengine.script.parse.ScriptParameter;
 
 import java.util.HashSet;
 import java.util.List;
@@ -21,10 +22,10 @@ public class ScriptExternal extends Script {
     @Override
     ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Context innerContext = Context.from(context).clearVariables().build();
-        ScriptParser.ScriptData script = scriptRuntime.getScript(scriptID);
+        ScriptFunction script = scriptRuntime.getScript(scriptID);
         if (script == null) return new ScriptReturnData(null, null, new ScriptErrorData("Function does not exist", getTraceData()));
         Set<String> definitionParameterNames = new HashSet<>();
-        for (ScriptParser.ScriptParameter definitionParameter : script.parameters()) {
+        for (ScriptParameter definitionParameter : script.parameters()) {
             definitionParameterNames.add(definitionParameter.name());
         }
         Set<String> providedParameterNames = new HashSet<>();
@@ -62,7 +63,7 @@ public class ScriptExternal extends Script {
             }
         }
         // Set default values for parameters that are not provided, and throw error if required parameter is not provided
-        for (ScriptParser.ScriptParameter definitionParameter : script.parameters()) {
+        for (ScriptParameter definitionParameter : script.parameters()) {
             if (!providedParameterNames.contains(definitionParameter.name())) {
                 if (definitionParameter.isRequired()) {
                     return new ScriptReturnData(null, null, new ScriptErrorData("Function call " + scriptID + " is missing required parameter: " + definitionParameter.name(), getTraceData()));
@@ -75,16 +76,10 @@ public class ScriptExternal extends Script {
             return new ScriptReturnData(null, null, new ScriptErrorData(scriptResult.error().message() + "\n - (" + scriptResult.error().traceData().fileName() + ":" + scriptResult.error().traceData().line() + ") " + scriptID + "()", getTraceData()));
         } else if (scriptResult.flowStatement() != null && scriptResult.flowStatement() != FlowStatementType.RETURN) {
             return new ScriptReturnData(null, null, new ScriptErrorData("Function contains unhandled flow statement", getTraceData()));
-        } else if (scriptResult.flowStatement() != FlowStatementType.RETURN && script.hasReturn()) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Function has return type but is missing return statement", getTraceData()));
         } else if (scriptResult.value() == null) {
             return new ScriptReturnData(null, null, null);
-        } else if (!script.hasReturn()) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Function has no return but is returning an unexpected value", getTraceData()));
-        } else if (script.returnType() == null || scriptResult.value().getDataType() == script.returnType()) {
-            return new ScriptReturnData(scriptResult.value(), null, null);
         } else {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Function return value does not match return type in function definition", getTraceData()));
+            return new ScriptReturnData(scriptResult.value(), null, null);
         }
     }
 

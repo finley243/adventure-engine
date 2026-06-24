@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.script.parse;
 
+import com.github.finley243.adventureengine.load.GameDataException;
 import com.github.finley243.adventureengine.script.parse.nodes.*;
 
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class ScriptValidator {
             for (CompileError error : errors) {
                 sb.append(" [").append(error.range().fileName()).append(":").append(error.range().line()).append("] ").append(error.message()).append("\n");
             }
-            throw new RuntimeException(sb.toString());
+            throw new GameDataException(sb.toString());
         }
     }
 

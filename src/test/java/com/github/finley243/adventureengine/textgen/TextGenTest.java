@@ -1,8 +1,7 @@
 package com.github.finley243.adventureengine.textgen;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.load.ScriptParser;
-import com.github.finley243.adventureengine.script.parse.ScriptLexer;
+import com.github.finley243.adventureengine.load.ScriptPipeline;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -13,9 +12,8 @@ public class TextGenTest {
 
     @Test
     void testTextGen() {
-        ScriptLexer scriptLexer = new ScriptLexer();
-        ScriptParser scriptParser = new ScriptParser();
-        TextGen textGen = new TextGen(scriptLexer, scriptParser);
+        ScriptPipeline scriptPipeline = new ScriptPipeline(null, null, null, null);
+        TextGen textGen = new TextGen(scriptPipeline);
         Noun nounCat = createNoun("cat", true, false, 1, TextContext.Pronoun.IT);
         Noun nounBag = createNoun("bag", false, false, 1, TextContext.Pronoun.IT);
         String phraseTemplate = "$nounCat $is in $nounBag.";

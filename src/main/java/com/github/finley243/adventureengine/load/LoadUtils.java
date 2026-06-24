@@ -7,7 +7,11 @@ import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
+import com.github.finley243.adventureengine.script.parse.ASTParseResult;
+import com.github.finley243.adventureengine.script.parse.CompileError;
 import com.github.finley243.adventureengine.script.parse.ScriptToken;
+import com.github.finley243.adventureengine.script.parse.nodes.ASTCompound;
+import com.github.finley243.adventureengine.script.parse.nodes.ASTLiteral;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -173,31 +177,49 @@ public class LoadUtils {
 		return value.equalsIgnoreCase("t") || value.equalsIgnoreCase("f") || value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false");
 	}
 
-	public static Condition loadCondition(Element element, ScriptPipeline scriptPipeline, String sourceName, ScriptRuntime scriptRuntime) {
+	public static Condition loadCondition(Element element, ScriptPipeline scriptPipeline, String sourceName, ScriptRuntime scriptRuntime, Set<String> knownFunctions) {
 		if (element == null) return null;
-		Script conditionScript = loadScriptExpression(element, scriptPipeline, sourceName);
+		Script conditionScript = loadScriptExpression(element, scriptPipeline, sourceName, knownFunctions);
 		return new Condition(scriptRuntime, conditionScript);
 	}
 
-	public static Script loadScript(Element element, ScriptPipeline scriptPipeline, String sourceName) {
+	public static Script loadScript(Element element, ScriptPipeline scriptPipeline, String sourceName, Set<String> knownFunctions) {
 		if (element == null) return null;
 		String scriptText = element.getTextContent().trim();
-		List< ScriptToken> scriptTokens = scriptPipeline.lexer().parseToTokens(scriptText, sourceName);
-		return scriptPipeline.parser().parseScriptExternal(scriptTokens);
+		List<ScriptToken> scriptTokens = scriptPipeline.lexer().parseToTokens(scriptText, sourceName);
+		ASTParseResult parseResult = scriptPipeline.parser().parseInlineScript(scriptTokens);
+		if (!parseResult.errors().isEmpty()) {
+			StringBuilder sb = new StringBuilder("Script parsing failed:\n");
+			for (CompileError error : parseResult.errors()) {
+				sb.append(" [").append(error.range().fileName()).append(":").append(error.range().line()).append("] ").append(error.message()).append("\n");
+			}
+			throw new GameDataException(sb.toString());
+		}
+		scriptPipeline.validator().validateInlineBlockOrThrow((ASTCompound) parseResult.node(), knownFunctions);
+		return scriptPipeline.converter().convertInlineBlock((ASTCompound) parseResult.node());
 	}
 
-	public static Script loadScriptExpression(Element element, ScriptPipeline scriptPipeline, String sourceName) {
+	public static Script loadScriptExpression(Element element, ScriptPipeline scriptPipeline, String sourceName, Set<String> knownFunctions) {
 		if (element == null) return null;
 		String scriptText = element.getTextContent().trim();
-		List< ScriptToken> scriptTokens = scriptPipeline.lexer().parseToTokens(scriptText, sourceName);
-		return scriptPipeline.parser().parseExpressionExternal(scriptTokens);
+		List<ScriptToken> scriptTokens = scriptPipeline.lexer().parseToTokens(scriptText, sourceName);
+		ASTParseResult parseResult = scriptPipeline.parser().parseSingleExpression(scriptTokens);
+		if (!parseResult.errors().isEmpty()) {
+			StringBuilder sb = new StringBuilder("Script parsing failed:\n");
+			for (CompileError error : parseResult.errors()) {
+				sb.append(" [").append(error.range().fileName()).append(":").append(error.range().line()).append("] ").append(error.message()).append("\n");
+			}
+			throw new GameDataException(sb.toString());
+		}
+		scriptPipeline.validator().validateInlineExpression(parseResult.node(), knownFunctions);
+		return scriptPipeline.converter().convertInlineExpression(parseResult.node());
 	}
 
-	public static Map<String, List<Script>> loadScriptsWithTriggers(Element parentElement, ScriptPipeline scriptPipeline, String sourceName) {
+	public static Map<String, List<Script>> loadScriptsWithTriggers(Element parentElement, ScriptPipeline scriptPipeline, String sourceName, Set<String> knownFunctions) {
 		Map<String, List<Script>> scripts = new HashMap<>();
 		for (Element scriptElement : directChildrenWithName(parentElement, "script")) {
 			String trigger = scriptElement.getAttribute("trigger");
-			Script script = loadScript(scriptElement, scriptPipeline, sourceName + " - script trigger: " + trigger);
+			Script script = loadScript(scriptElement, scriptPipeline, sourceName + " - script trigger: " + trigger, knownFunctions);
 			scripts.computeIfAbsent(trigger, _ -> new ArrayList<>()).add(script);
 		}
 		return scripts;
@@ -206,11 +228,12 @@ public class LoadUtils {
 	public static Expression loadScriptLiteral(Element parentElement, ScriptPipeline scriptPipeline, String traceString) {
 		if (parentElement == null) return null;
 		String expressionText = parentElement.getTextContent().trim();
-		List< ScriptToken> scriptTokens = scriptPipeline.lexer().parseToTokens(expressionText, traceString);
-		return scriptPipeline.parser().parseLiteralExternal(scriptTokens);
+		List<ScriptToken> scriptTokens = scriptPipeline.lexer().parseToTokens(expressionText, traceString);
+		ASTParseResult parseResult = scriptPipeline.parser().parseLiteralExpression(scriptTokens);
+		return scriptPipeline.converter().convertInlineLiteral((ASTLiteral) parseResult.node());
 	}
 
-	public static List<ActionCustom.CustomActionHolder> loadCustomActions(Element parentElement, String name, ScriptPipeline scriptPipeline, Registry<ActionTemplate> actionRegistry, String traceString) {
+	public static List<ActionCustom.CustomActionHolder> loadCustomActions(Element parentElement, String name, ScriptPipeline scriptPipeline, Registry<ActionTemplate> actionRegistry, String traceString, Set<String> knownFunctions) {
 		List<ActionCustom.CustomActionHolder> customActions = new ArrayList<>();
 		if (parentElement != null) {
 			for (Element actionElement : LoadUtils.directChildrenWithName(parentElement, name)) {
@@ -220,7 +243,7 @@ public class LoadUtils {
 				Map<String, Script> parameters = new HashMap<>();
 				for (Element variableElement : LoadUtils.directChildrenWithName(actionElement, "parameter")) {
 					String parameterName = LoadUtils.attribute(variableElement, "name", null);
-					Script parameterValue = loadScriptExpression(variableElement, scriptPipeline, traceString + " - custom action parameter: " + parameterName);
+					Script parameterValue = loadScriptExpression(variableElement, scriptPipeline, traceString + " - custom action parameter: " + parameterName, knownFunctions);
 					parameters.put(parameterName, parameterValue);
 				}
 				customActions.add(new ActionCustom.CustomActionHolder(action, parameters));
