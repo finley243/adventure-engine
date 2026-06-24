@@ -78,6 +78,8 @@ public class ScriptLexer {
             put("global", ScriptTokenType.GLOBAL);
             put("set", ScriptTokenType.SET);
             put("list", ScriptTokenType.LIST);
+            put("gameData", ScriptTokenType.GAME_DATA);
+            put("context", ScriptTokenType.CONTEXT);
         }
     };
 

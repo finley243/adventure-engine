@@ -6,12 +6,11 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class ScriptASTParser {
 
     private static final Set<ScriptTokenType> LITERAL_TYPES = EnumSet.of(ScriptTokenType.BOOLEAN_FALSE, ScriptTokenType.BOOLEAN_TRUE, ScriptTokenType.INTEGER, ScriptTokenType.FLOAT, ScriptTokenType.STRING, ScriptTokenType.NULL);
+    private static final Set<ScriptTokenType> ASSIGNMENT_TYPES = EnumSet.of(ScriptTokenType.ASSIGNMENT, ScriptTokenType.MODIFIER_PLUS, ScriptTokenType.MODIFIER_MINUS, ScriptTokenType.MODIFIER_MULTIPLY, ScriptTokenType.MODIFIER_DIVIDE, ScriptTokenType.MODIFIER_MODULO);
 
     public ASTParseResult parse(List<ScriptToken> tokens) {
         if (tokens.isEmpty()) return null;
@@ -280,10 +279,6 @@ public class ScriptASTParser {
             return parseError(stream, statementResult, errors);
         } else if (stream.expect(ScriptTokenType.LOG) != null) {
             return parseLog(stream, statementResult, errors);
-        } else if (stream.expect(ScriptTokenType.STAT) != null) {
-            return parseStatAssignment(stream, statementResult, errors);
-        } else if (stream.expect(ScriptTokenType.GLOBAL) != null) {
-            return parseGlobalAssignment(stream, statementResult, errors);
         } else { // Statements that begin with a NAME token, or invalid statements beginning with other tokens
             return parseAssignmentOrCall(stream, statementResult, errors);
         }
@@ -369,17 +364,49 @@ public class ScriptASTParser {
         return new ASTLog(messageExpression, new SourceRange(statementResult.charStart(), statementResult.charEnd(), statementResult.fileName()));
     }
 
-    private ASTStatAssignment parseStatAssignment(TokenStream stream, StatementResult statementResult, List<CompileError> errors) {
-        return null;
-    }
-
-    private ASTGlobalAssignment parseGlobalAssignment(TokenStream stream, StatementResult statementResult, List<CompileError> errors) {
-
-        return null;
-    }
-
     private ASTNode parseAssignmentOrCall(TokenStream stream, StatementResult statementResult, List<CompileError> errors) {
-        return null;
+        ASTNode left = parseExpression(stream, errors);
+        if (left == null) return null;
+
+        ScriptToken assignmentOperator = stream.expectOneOf(ASSIGNMENT_TYPES);
+        if (assignmentOperator == null) {
+            if (!(left instanceof ASTFunctionCall)) {
+                errors.add(new CompileError("Expression is not a valid statement", statementResult.fileName(), statementResult.line(), statementResult.charStart(), statementResult.charEnd()));
+                return null;
+            }
+            return left;
+        }
+
+        ASTNode right = parseExpression(stream, errors);
+        if (right == null) return null;
+
+        SourceRange range = new SourceRange(statementResult.charStart(), statementResult.charEnd(), statementResult.fileName());
+        ASTNode value = createValueFromAssignmentOperator(right, left, assignmentOperator.type(), range);
+
+        if (left instanceof ASTVar v) {
+            return new ASTVarAssignment(v, value, range);
+        } else if (left instanceof ASTMemberAccess a) {
+            return new ASTMemberAssignment(a, value, range);
+        } else if (left instanceof ASTGlobalRef g) {
+            return new ASTGlobalAssignment(g, value, range);
+        } else if (left instanceof ASTListIndexRef l) {
+            return new ASTListIndexAssignment(l, value, range);
+        } else {
+            errors.add(new CompileError("Invalid assignment target", statementResult.fileName(), statementResult.line(), statementResult.charStart(), statementResult.charEnd()));
+            return null;
+        }
+    }
+
+    private ASTNode createValueFromAssignmentOperator(ASTNode baseValue, ASTNode assignedReference, ScriptTokenType operator, SourceRange range) {
+        return switch (operator) {
+            case ASSIGNMENT -> baseValue;
+            case MODIFIER_PLUS -> new ASTBinaryOp(ASTBinaryOp.Operator.ADD, assignedReference, baseValue, range);
+            case MODIFIER_MINUS -> new ASTBinaryOp(ASTBinaryOp.Operator.SUBTRACT, assignedReference, baseValue, range);
+            case MODIFIER_MULTIPLY -> new ASTBinaryOp(ASTBinaryOp.Operator.MULTIPLY, assignedReference, baseValue, range);
+            case MODIFIER_DIVIDE -> new ASTBinaryOp(ASTBinaryOp.Operator.DIVIDE, assignedReference, baseValue, range);
+            case MODIFIER_MODULO -> new ASTBinaryOp(ASTBinaryOp.Operator.MODULO, assignedReference, baseValue, range);
+            default -> throw new IllegalArgumentException("Operator is not a valid assignment operator");
+        };
     }
 
     private ASTNode parseExpression(TokenStream stream, List<CompileError> errors) {
