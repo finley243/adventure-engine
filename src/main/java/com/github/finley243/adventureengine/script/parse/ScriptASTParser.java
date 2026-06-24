@@ -9,6 +9,8 @@ import java.util.Set;
 
 public class ScriptASTParser {
 
+    private static final int UNARY_OP_MIN_PRECEDENCE = 8;
+
     private static final Set<ScriptTokenType> LITERAL_TYPES = EnumSet.of(ScriptTokenType.BOOLEAN_FALSE, ScriptTokenType.BOOLEAN_TRUE, ScriptTokenType.INTEGER, ScriptTokenType.FLOAT, ScriptTokenType.STRING, ScriptTokenType.NULL);
     private static final Set<ScriptTokenType> ASSIGNMENT_TYPES = EnumSet.of(ScriptTokenType.ASSIGNMENT, ScriptTokenType.MODIFIER_PLUS, ScriptTokenType.MODIFIER_MINUS, ScriptTokenType.MODIFIER_MULTIPLY, ScriptTokenType.MODIFIER_DIVIDE, ScriptTokenType.MODIFIER_MODULO);
 
@@ -554,7 +556,7 @@ public class ScriptASTParser {
     }
 
     private ASTNode parseUnaryOp(ASTUnaryOp.Operator operator, ScriptToken token, TokenStream stream, List<CompileError> errors) {
-        ASTNode operand = parseExpression(stream, 9, errors);
+        ASTNode operand = parseExpression(stream, UNARY_OP_MIN_PRECEDENCE, errors);
         if (operand == null) return null;
         return new ASTUnaryOp(operator, operand, new SourceRange(token.charStart(), stream.current().charEnd(), token.fileName()));
     }
