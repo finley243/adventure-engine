@@ -446,4 +446,61 @@ public class ScriptParserTest {
         Assertions.assertTrue(validatorErrors.isEmpty(), validatorErrors.toString());
     }
 
+    @Test
+    public void testChainedFunctionCall() {
+        ScriptASTParser parser = new ScriptASTParser();
+        // x::myFunc(5)
+        // Should parse as myFunc(x, 5)
+        List<ScriptToken> tokens = List.of(
+                new ScriptToken(ScriptTokenType.NAME, "x", 1, null, 1, 1),
+                new ScriptToken(ScriptTokenType.DOUBLE_COLON, null, 1, null, 1, 1),
+                new ScriptToken(ScriptTokenType.NAME, "myFunc", 1, null, 1, 1),
+                new ScriptToken(ScriptTokenType.PARENTHESIS_OPEN, null, 1, null, 1, 1),
+                new ScriptToken(ScriptTokenType.INTEGER, "5", 1, null, 1, 1),
+                new ScriptToken(ScriptTokenType.PARENTHESIS_CLOSE, null, 1, null, 1, 1)
+        );
+        ASTParseResult result = parser.parseSingleExpression(tokens);
+        Assertions.assertTrue(result.errors().isEmpty());
+        Assertions.assertInstanceOf(ASTFunctionCall.class, result.node());
+        ASTFunctionCall call = (ASTFunctionCall) result.node();
+        Assertions.assertEquals("myFunc", call.name());
+        Assertions.assertEquals(2, call.parameters().size());
+        ASTParameter first = (ASTParameter) call.parameters().get(0);
+        ASTParameter second = (ASTParameter) call.parameters().get(1);
+        Assertions.assertNull(first.name());
+        Assertions.assertNull(second.name());
+        Assertions.assertInstanceOf(ASTVar.class, first.value());
+        Assertions.assertEquals("x", ((ASTVar) first.value()).name());
+        Assertions.assertInstanceOf(ASTLiteral.class, second.value());
+        Assertions.assertEquals("5", ((ASTLiteral) second.value()).value());
+    }
+
+    @Test
+    public void testChainedFunctionCallWithMemberAccess() {
+        ScriptASTParser parser = new ScriptASTParser();
+        // a.b::myFunc()
+        // Should parse as myFunc(a.b)
+        List<ScriptToken> tokens = List.of(
+                new ScriptToken(ScriptTokenType.NAME, "a", 1, null, 1, 1),
+                new ScriptToken(ScriptTokenType.DOT, null, 1, null, 1, 1),
+                new ScriptToken(ScriptTokenType.NAME, "b", 1, null, 1, 1),
+                new ScriptToken(ScriptTokenType.DOUBLE_COLON, null, 1, null, 1, 1),
+                new ScriptToken(ScriptTokenType.NAME, "myFunc", 1, null, 1, 1),
+                new ScriptToken(ScriptTokenType.PARENTHESIS_OPEN, null, 1, null, 1, 1),
+                new ScriptToken(ScriptTokenType.PARENTHESIS_CLOSE, null, 1, null, 1, 1)
+        );
+        ASTParseResult result = parser.parseSingleExpression(tokens);
+        Assertions.assertTrue(result.errors().isEmpty());
+        Assertions.assertInstanceOf(ASTFunctionCall.class, result.node());
+        ASTFunctionCall call = (ASTFunctionCall) result.node();
+        Assertions.assertEquals("myFunc", call.name());
+        Assertions.assertEquals(1, call.parameters().size());
+        ASTParameter first = (ASTParameter) call.parameters().get(0);
+        Assertions.assertInstanceOf(ASTMemberAccess.class, first.value());
+        ASTMemberAccess memberAccess = (ASTMemberAccess) first.value();
+        Assertions.assertInstanceOf(ASTVar.class, memberAccess.object());
+        Assertions.assertEquals("a", ((ASTVar) memberAccess.object()).name());
+        Assertions.assertEquals("b", ((ASTMemberNameStatic) memberAccess.name()).name());
+    }
+
 }

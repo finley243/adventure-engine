@@ -16,7 +16,7 @@ public class ScriptLexer {
                     "|(?<FLOAT>([0-9]*\\.[0-9]+|[0-9]+\\.?[0-9]*)f)" +
                     "|(?<INTEGER>[0-9]+)" +
                     "|(?<NAME>_?[a-zA-Z][a-zA-Z0-9_]*)" +
-                    "|(?<SYMBOL>\\+=|-=|\\*=|/=|%=|\\?\\?|==|!=|<=|>=|&&|\\|\\||[;=,.+\\-/*%^:?!<>(){}\\[\\]])" +
+                    "|(?<SYMBOL>\\+=|-=|\\*=|/=|%=|\\?\\?|==|!=|<=|>=|&&|\\|\\||::|[;=,.+\\-/*%^:?!<>(){}\\[\\]])" +
                     "|(?<UNKNOWN>\\S+)"
     );
     private static final Map<String, ScriptTokenType> SYMBOL_MAP = new HashMap<>() {
@@ -36,6 +36,7 @@ public class ScriptLexer {
             put("*", ScriptTokenType.MULTIPLY);
             put("%", ScriptTokenType.MODULO);
             put("^", ScriptTokenType.POWER);
+            put("::", ScriptTokenType.DOUBLE_COLON);
             put(":", ScriptTokenType.COLON);
             put("?", ScriptTokenType.TERNARY_IF);
             put("??", ScriptTokenType.NULL_COALESCING);

@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.script.nodes.*;
 
+import javax.print.attribute.standard.MediaSize;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -477,6 +478,7 @@ public class ScriptASTParser {
             case DOT -> parseMemberAccess(left, token, stream, errors);
             case BRACKET_SQUARE_OPEN -> parseListIndex(left, token, stream, errors);
             case TERNARY_IF -> parseTernary(left, token, stream, errors);
+            case DOUBLE_COLON -> parseChainedFunctionCall(left, token, stream, errors);
             default -> {
                 errors.add(new CompileError("Unexpected token in expression", new SourceRange(token)));
                 yield null;
@@ -496,7 +498,7 @@ public class ScriptASTParser {
             case MULTIPLY, DIVIDE -> 8;
             case MODULO -> 9;
             case POWER -> 10;
-            case DOT, BRACKET_SQUARE_OPEN -> 11;
+            case DOT, DOUBLE_COLON, BRACKET_SQUARE_OPEN -> 11;
             default -> 0;
         };
     }
@@ -520,7 +522,7 @@ public class ScriptASTParser {
         return new ASTVar(token.value(), new SourceRange(token));
     }
 
-    private ASTNode parseFunctionCall(ScriptToken nameToken, TokenStream stream, List<CompileError> errors) {
+    private ASTFunctionCall parseFunctionCall(ScriptToken nameToken, TokenStream stream, List<CompileError> errors) {
         List<ASTNode> arguments = new ArrayList<>();
         boolean hasNamedParameter = false;
         while (stream.hasNext() && stream.peek().type() != ScriptTokenType.PARENTHESIS_CLOSE) {
@@ -728,6 +730,24 @@ public class ScriptASTParser {
         ASTNode falseValue = parseExpression(stream, 0, errors);
         if (falseValue == null) return null;
         return new ASTTernaryOp(condition, trueValue, falseValue, new SourceRange(condition, stream.current()));
+    }
+
+    private ASTNode parseChainedFunctionCall(ASTNode left, ScriptToken token, TokenStream stream, List<CompileError> errors) {
+        ScriptToken nameToken = stream.consume();
+        if (nameToken == null || nameToken.type() != ScriptTokenType.NAME) {
+            errors.add(new CompileError("Expected function name after '::'", new SourceRange(token)));
+            return null;
+        }
+        if (stream.expect(ScriptTokenType.PARENTHESIS_OPEN) == null) {
+            errors.add(new CompileError("Expected '(' after function name in chained call", new SourceRange(nameToken)));
+            return null;
+        }
+        ASTFunctionCall call = parseFunctionCall(nameToken, stream, errors);
+        if (call == null) return null;
+        List<ASTNode> parameters = new ArrayList<>();
+        parameters.add(new ASTParameter(null, left, new SourceRange(left, token)));
+        parameters.addAll(call.parameters());
+        return new ASTFunctionCall(call.name(), parameters, new SourceRange(token, stream.current()));
     }
 
 }
