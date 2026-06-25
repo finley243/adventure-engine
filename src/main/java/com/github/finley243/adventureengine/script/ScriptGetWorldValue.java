@@ -3,11 +3,11 @@ package com.github.finley243.adventureengine.script;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.expression.Expression;
 
-public class ScriptGetGameValue extends Script {
+public class ScriptGetWorldValue extends Script {
 
     private final String valueName;
 
-    public ScriptGetGameValue(ScriptTraceData traceData, String valueName) {
+    public ScriptGetWorldValue(ScriptTraceData traceData, String valueName) {
         super(traceData);
         this.valueName = valueName;
     }

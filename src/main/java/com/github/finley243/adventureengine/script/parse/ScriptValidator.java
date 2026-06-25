@@ -213,6 +213,7 @@ public class ScriptValidator {
             case ASTGameDataRef ref -> validateExpression(ref.id(), ctx, errors);
             case ASTContextRef ignored -> {}
             case ASTPlayerRef ignored -> {}
+            case ASTWorldRef ignored -> {}
             case ASTCollection col -> {
                 for (ASTNode element : col.elements()) {
                     validateExpression(element, ctx, errors);

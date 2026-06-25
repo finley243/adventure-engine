@@ -73,9 +73,7 @@ public class ScriptLexer {
             put("for", ScriptTokenType.FOR);
             put("if", ScriptTokenType.IF);
             put("else", ScriptTokenType.ELSE);
-            put("stat", ScriptTokenType.STAT);
-            put("statHolder", ScriptTokenType.STAT_HOLDER);
-            put("game", ScriptTokenType.GAME);
+            put("world", ScriptTokenType.WORLD);
             put("global", ScriptTokenType.GLOBAL);
             put("set", ScriptTokenType.SET);
             put("list", ScriptTokenType.LIST);

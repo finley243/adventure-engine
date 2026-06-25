@@ -447,6 +447,7 @@ public class ScriptASTParser {
             case GLOBAL -> parseGlobalRef(token, stream, errors);
             case GAME_DATA -> parseGameDataRef(token, stream, errors);
             case CONTEXT -> parseContextRef(token, stream, errors);
+            case WORLD -> parseWorldRef(token, stream, errors);
             case SET -> parseCollectionConstructor(ASTCollection.Type.SET, ScriptTokenType.BRACKET_OPEN, ScriptTokenType.BRACKET_CLOSE, token, stream, errors);
             case LIST -> parseCollectionConstructor(ASTCollection.Type.LIST, ScriptTokenType.BRACKET_SQUARE_OPEN, ScriptTokenType.BRACKET_SQUARE_CLOSE, token, stream, errors);
             default -> {
@@ -634,6 +635,20 @@ public class ScriptASTParser {
             return null;
         }
         return new ASTContextRef(name, new SourceRange(token, stream.current()));
+    }
+
+    private ASTNode parseWorldRef(ScriptToken token, TokenStream stream, List<CompileError> errors) {
+        if (stream.expect(ScriptTokenType.DOT) == null) {
+            errors.add(new CompileError("Expected '.' after 'world'", new SourceRange(token)));
+            return null;
+        }
+        String name = stream.expectName();
+        if (name == null) {
+            ScriptToken current = stream.peek();
+            errors.add(new CompileError("Expected name after 'world.'", new SourceRange(current)));
+            return null;
+        }
+        return new ASTWorldRef(name, new SourceRange(token, stream.current()));
     }
 
     private ASTNode parseCollectionConstructor(ASTCollection.Type type, ScriptTokenType openToken, ScriptTokenType closeToken, ScriptToken token, TokenStream stream, List<CompileError> errors) {

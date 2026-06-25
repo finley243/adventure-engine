@@ -125,6 +125,7 @@ public class ScriptConverter {
             case ASTContextRef ref -> new ScriptStatHolder(trace(ref), convertToHolderRef(ref));
             case ASTGameDataRef ref -> new ScriptStatHolder(trace(ref), convertToHolderRef(ref));
             case ASTPlayerRef ref -> new ScriptStatHolder(trace(ref), convertToHolderRef(ref));
+            case ASTWorldRef ref -> new ScriptGetWorldValue(trace(ref), ref.name());
             default -> throw new IllegalArgumentException("Unknown expression node: " + node.getClass().getSimpleName());
         };
     }
