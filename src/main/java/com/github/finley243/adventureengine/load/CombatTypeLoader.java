@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.script.parse.ScriptPipeline;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 import org.w3c.dom.Element;
 
@@ -134,7 +135,7 @@ public class CombatTypeLoader {
         boolean useNonIdealRange = LoadUtils.attributeBool(element, NAME_ATTACK_TYPE_NONIDEAL_RANGE, DEFAULT_ATTACK_TYPE_NONIDEAL_RANGE);
         Set<AreaLink.DistanceCategory> rangeOverride = LoadUtils.setOfEnumTags(element, NAME_ATTACK_TYPE_RANGE, AreaLink.DistanceCategory.class);
         Integer rateOverride = LoadUtils.attributeInt(element, NAME_ATTACK_TYPE_RATE, null);
-        Script damageOverride = LoadUtils.loadScriptExpression(LoadUtils.singleChildWithName(element, NAME_ATTACK_TYPE_DAMAGE), scriptPipeline, "WeaponAttackType(" + ID + ") - damage", knownFunctions);
+        Script damageOverride = LoadUtils.loadScriptExpression(LoadUtils.singleChildWithName(element, NAME_ATTACK_TYPE_DAMAGE), scriptPipeline, "WeaponAttackType(" + ID + ") - damage", knownFunctions, Set.of());
         float damageMult = LoadUtils.attributeFloat(element, NAME_ATTACK_TYPE_DAMAGE_MULT, DEFAULT_ATTACK_TYPE_DAMAGE_MULT);
         String damageTypeOverrideID = LoadUtils.attribute(element, NAME_ATTACK_TYPE_DAMAGE_TYPE, null);
         DamageType damageTypeOverride = damageTypeRegistry.getFromID(damageTypeOverrideID);
@@ -148,8 +149,8 @@ public class CombatTypeLoader {
             targetEffects.add(effect);
         }
         boolean overrideTargetEffects = LoadUtils.attributeBool(element, NAME_ATTACK_TYPE_OVERRIDE_EFFECTS, DEFAULT_ATTACK_TYPE_OVERRIDE_EFFECTS);
-        Script hitChance = LoadUtils.loadScriptExpression(LoadUtils.singleChildWithName(element, NAME_ATTACK_TYPE_HIT_CHANCE), scriptPipeline, "WeaponAttackType(" + ID + ") - hit chance", knownFunctions);
-        Script hitChanceOverall = LoadUtils.loadScriptExpression(LoadUtils.singleChildWithName(element, NAME_ATTACK_TYPE_HIT_CHANCE_OVERALL), scriptPipeline, "WeaponAttackType(" + ID + ") - overall hit chance", knownFunctions);
+        Script hitChance = LoadUtils.loadScriptExpression(LoadUtils.singleChildWithName(element, NAME_ATTACK_TYPE_HIT_CHANCE), scriptPipeline, "WeaponAttackType(" + ID + ") - hit chance", knownFunctions, Set.of());
+        Script hitChanceOverall = LoadUtils.loadScriptExpression(LoadUtils.singleChildWithName(element, NAME_ATTACK_TYPE_HIT_CHANCE_OVERALL), scriptPipeline, "WeaponAttackType(" + ID + ") - overall hit chance", knownFunctions, Set.of());
         float hitChanceMult = LoadUtils.attributeFloat(element, NAME_ATTACK_TYPE_HIT_CHANCE_MULT, DEFAULT_ATTACK_TYPE_HIT_CHANCE_MULT);
         Boolean isLoudOverride = LoadUtils.attributeBool(element, NAME_ATTACK_TYPE_IS_LOUD_OVERRIDE, null);
         return new AttackType(pathfinder, ID, category, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, useNonIdealRange, rangeOverride, rateOverride, damageOverride, damageMult, damageTypeOverride, armorMultOverride, targetEffects, overrideTargetEffects, hitChance, hitChanceOverall, hitChanceMult, isLoudOverride);

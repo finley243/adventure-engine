@@ -9,6 +9,7 @@ import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.script.parse.ScriptPipeline;
 import com.github.finley243.adventureengine.textgen.TextContext;
 import org.w3c.dom.Element;
 
@@ -85,7 +86,7 @@ public class ActorTemplateLoader {
         Integer actionPoints = LoadUtils.attributeInt(element, "actionPoints", null);
         Integer movePoints = LoadUtils.attributeInt(element, "movePoints", null);
         Integer startingLevel = LoadUtils.attributeInt(element, "startLevel", null);
-        Script levelUpThresholdExpression = LoadUtils.loadScriptExpression(LoadUtils.singleChildWithName(element, "levelUpThreshold"), scriptPipeline, "Actor(" + id + ") - level up threshold", knownFunctions);
+        Script levelUpThresholdExpression = LoadUtils.loadScriptExpression(LoadUtils.singleChildWithName(element, "levelUpThreshold"), scriptPipeline, "Actor(" + id + ") - level up threshold", knownFunctions, Set.of());
         Integer hp = LoadUtils.attributeInt(element, "hp", null);
         Map<String, Integer> damageResistances = new HashMap<>();
         Map<String, Float> damageMults = new HashMap<>();
@@ -160,8 +161,8 @@ public class ActorTemplateLoader {
             barks.put(barkTrigger, new Bark(responseType, visiblePhrases, nonVisiblePhrases));
         }
 
-        List<ActionCustom.CustomActionHolder> customActions = LoadUtils.loadCustomActions(element, "action", scriptPipeline, actionRegistry, "ActorTemplate(" + id + ")", knownFunctions);
-        List<ActionCustom.CustomActionHolder> customInventoryActions = LoadUtils.loadCustomActions(element, "itemAction", scriptPipeline, actionRegistry, "ActorTemplate(" + id + ")", knownFunctions);
+        List<ActionCustom.CustomActionHolder> customActions = LoadUtils.loadCustomActions(element, "action", scriptPipeline, actionRegistry, "ActorTemplate(" + id + ")", knownFunctions, Set.of());
+        List<ActionCustom.CustomActionHolder> customInventoryActions = LoadUtils.loadCustomActions(element, "itemAction", scriptPipeline, actionRegistry, "ActorTemplate(" + id + ")", knownFunctions, Set.of());
 
         return new ActorTemplate(id, parent, name, nameIsProper, pronoun, faction, isEnforcer, actionPoints, movePoints, startingLevel, levelUpThresholdExpression, hp, damageResistances, damageMults, limbs, equipSlots, attributes, skills, senseTypes, unarmedAttackTypes, startingEffects, lootTable, dialogueStart, scripts, barks, customActions, customInventoryActions);
     }

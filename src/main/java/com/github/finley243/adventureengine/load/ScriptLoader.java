@@ -2,11 +2,8 @@ package com.github.finley243.adventureengine.load;
 
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.script.*;
-import com.github.finley243.adventureengine.script.parse.ASTParseResult;
-import com.github.finley243.adventureengine.script.parse.CompileError;
 import com.github.finley243.adventureengine.script.parse.ScriptFunction;
-import com.github.finley243.adventureengine.script.parse.ScriptToken;
-import com.github.finley243.adventureengine.script.parse.nodes.ASTFile;
+import com.github.finley243.adventureengine.script.parse.ScriptPipeline;
 import com.google.common.base.Functions;
 
 import java.io.File;
@@ -30,7 +27,7 @@ public class ScriptLoader {
         if (!dir.isDirectory()) throw new IllegalArgumentException("Script path must be a directory: " + dir.getAbsolutePath());
         File[] files = dir.listFiles();
         Objects.requireNonNull(files);
-        List<ASTFile> fileASTs = new ArrayList<>();
+        Map<String, String> fileStrings = new HashMap<>();
         for (File file : files) {
             String fileExtension = file.getName().substring(file.getName().lastIndexOf(".") + 1);
             if (fileExtension.equalsIgnoreCase(SCRIPT_FILE_EXTENSION)) {
@@ -40,25 +37,10 @@ public class ScriptLoader {
                 } catch (IOException e) {
                     throw new GameDataException("Failed to read script file: " + file.getAbsolutePath());
                 }
-                try {
-                    List<ScriptToken> tokenList = scriptPipeline.lexer().parseToTokens(fileContents, file.getName());
-                    ASTParseResult parseResult = scriptPipeline.parser().parse(tokenList);
-                    if (!parseResult.errors().isEmpty()) {
-                        StringBuilder sb = new StringBuilder("Script parsing failed:\n");
-                        for (CompileError error : parseResult.errors()) {
-                            sb.append(" [").append(error.range().fileName()).append(":").append(error.range().line()).append("] ").append(error.message()).append("\n");
-                        }
-                        throw new GameDataException(sb.toString());
-                    }
-                    ASTFile fileAST = (ASTFile) parseResult.node();
-                    fileASTs.add(fileAST);
-                } catch (ScriptCompileException e) {
-                    throw new GameDataException("Script parsing failure:\n" + e.getFileName() + ":" + e.getLineNumber() + " - " + e.getMessage());
-                }
+                fileStrings.put(file.getName(), fileContents);
             }
         }
-        scriptPipeline.validator().validateOrThrow(fileASTs, reservedFunctionNames);
-        List<ScriptFunction> scriptFunctionList = scriptPipeline.converter().convert(fileASTs);
+        List<ScriptFunction> scriptFunctionList = scriptPipeline.compileFiles(fileStrings, reservedFunctionNames);
         return scriptFunctionList.stream().collect(Collectors.toMap(ScriptFunction::name, Functions.identity()));
     }
 

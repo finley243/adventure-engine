@@ -11,6 +11,7 @@ import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.item.template.*;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.script.parse.ScriptPipeline;
 import org.w3c.dom.Element;
 
 import java.util.*;
@@ -49,7 +50,7 @@ public class ItemTemplateLoader {
         String name = LoadUtils.singleTag(element, "name", null);
         Scene description = sceneLoader.parseScene(LoadUtils.singleChildWithName(element, "description"));
         Map<String, List<Script>> scripts = LoadUtils.loadScriptsWithTriggers(element, scriptPipeline, "ItemTemplate(" + id + ")", knownFunctions, Set.of());
-        List<ActionCustom.CustomActionHolder> customActions = LoadUtils.loadCustomActions(element, "action", scriptPipeline, actionRegistry, "ItemTemplate(" + id + ")", knownFunctions);
+        List<ActionCustom.CustomActionHolder> customActions = LoadUtils.loadCustomActions(element, "action", scriptPipeline, actionRegistry, "ItemTemplate(" + id + ")", knownFunctions, Set.of());
         int price = LoadUtils.attributeInt(element, "price", 0);
         List<ItemComponentTemplate> components = new ArrayList<>();
         for (Element componentElement : LoadUtils.directChildrenWithName(element, "component")) {
@@ -120,7 +121,7 @@ public class ItemTemplateLoader {
                         if (effect == null) throw new GameDataException("ItemComponentTemplateEquippable has invalid equipped effect: " + effectID);
                         equippedEffects.add(effect);
                     }
-                    List<ActionCustom.CustomActionHolder> equippedActions = LoadUtils.loadCustomActions(componentElement, "equippedAction", scriptPipeline, actionRegistry, "ItemComponent(" + itemID + ")", knownFunctions);
+                    List<ActionCustom.CustomActionHolder> equippedActions = LoadUtils.loadCustomActions(componentElement, "equippedAction", scriptPipeline, actionRegistry, "ItemComponent(" + itemID + ")", knownFunctions, Set.of());
                     equipSlots.add(new EquippableItemComponentTemplate.EquippableSlotsData(slotGroup, exposedComponents, equippedEffects, equippedActions));
                 }
                 return new EquippableItemComponentTemplate(actionsRestricted, equipSlots);

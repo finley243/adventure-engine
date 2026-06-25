@@ -5,12 +5,10 @@ import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.gamedata.PhraseManager;
 import com.github.finley243.adventureengine.gamedata.Registry;
-import com.github.finley243.adventureengine.load.ScriptPipeline;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
-import com.github.finley243.adventureengine.script.parse.ASTParseResult;
 import com.github.finley243.adventureengine.script.parse.ScriptFunction;
-import com.github.finley243.adventureengine.script.parse.ScriptToken;
+import com.github.finley243.adventureengine.script.parse.ScriptPipeline;
 import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 
 import java.util.*;
@@ -212,10 +210,7 @@ public class TextGen {
 				throw new IllegalArgumentException("Condition is missing closing bracket");
 			}
 			String conditionString = currentBranch.substring(1, conditionCloseIndex);
-			List<ScriptToken> conditionTokens = scriptPipeline.lexer().parseToTokens(conditionString, "Phrase: " + originalLine);
-			ASTParseResult conditionASTResult = scriptPipeline.parser().parseSingleExpression(conditionTokens);
-			scriptPipeline.validator().validateInlineExpressionOrThrow(conditionASTResult.node(), getScriptRegistry().getAllIDs(), context.getLocalVariables().keySet());
-			Script conditionScript = scriptPipeline.converter().convertInlineExpression(conditionASTResult.node());
+			Script conditionScript = scriptPipeline.compileExpression(conditionString, "Phrase: " + originalLine, getScriptRegistry().getAllIDs(), context.getLocalVariables().keySet());
 			Condition condition = new Condition(getScriptRuntime(), conditionScript);
 			if (condition.isMet(context)) {
 				return currentBranch.substring(conditionCloseIndex + 1);

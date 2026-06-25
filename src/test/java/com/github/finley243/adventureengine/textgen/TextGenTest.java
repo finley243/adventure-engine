@@ -1,7 +1,7 @@
 package com.github.finley243.adventureengine.textgen;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.load.ScriptPipeline;
+import com.github.finley243.adventureengine.script.parse.ScriptPipeline;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;

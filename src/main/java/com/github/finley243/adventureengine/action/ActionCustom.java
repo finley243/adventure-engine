@@ -142,13 +142,13 @@ public class ActionCustom extends Action {
 
     private Context getContextWithParameters(Actor subject) {
         Context context = Context.builder().subject(subject).target(actor).parentObject(object).parentItem(item).parentArea(area).parentAction(this).build();
-        for (Map.Entry<String, Script> templateParameter : getTemplate().getParameters().entrySet()) {
-            Expression parameterValue = templateParameter.getValue().run(scriptRuntime, context);
-            context.setLocalVariable(templateParameter.getKey(), parameterValue);
-        }
         for (Map.Entry<String, Script> instanceParameter : parameters.entrySet()) {
             Expression parameterValue = instanceParameter.getValue().run(scriptRuntime, context);
             context.setLocalVariable(instanceParameter.getKey(), parameterValue);
+        }
+        for (Map.Entry<String, Script> templateParameter : getTemplate().getParameters().entrySet()) {
+            Expression parameterValue = templateParameter.getValue().run(scriptRuntime, context);
+            context.setLocalVariable(templateParameter.getKey(), parameterValue);
         }
         return context;
     }

@@ -10,6 +10,7 @@ import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
+import com.github.finley243.adventureengine.script.parse.ScriptPipeline;
 import com.github.finley243.adventureengine.world.object.template.*;
 import org.w3c.dom.Element;
 
@@ -66,8 +67,8 @@ public class ObjectTemplateLoader {
             }
         }
         Map<String, List<Script>> scripts = LoadUtils.loadScriptsWithTriggers(element, scriptPipeline, "ObjectTemplate(" + ID + ")", knownFunctions, Set.of());
-        List<ActionCustom.CustomActionHolder> customActions = LoadUtils.loadCustomActions(element, "action", scriptPipeline, actionRegistry, "ObjectTemplate(" + ID + ")", knownFunctions);
-        List<ActionCustom.CustomActionHolder> networkActions = LoadUtils.loadCustomActions(element, "networkAction", scriptPipeline, actionRegistry, "ObjectTemplate(" + ID + ")", knownFunctions);
+        List<ActionCustom.CustomActionHolder> customActions = LoadUtils.loadCustomActions(element, "action", scriptPipeline, actionRegistry, "ObjectTemplate(" + ID + ")", knownFunctions, Set.of());
+        List<ActionCustom.CustomActionHolder> networkActions = LoadUtils.loadCustomActions(element, "networkAction", scriptPipeline, actionRegistry, "ObjectTemplate(" + ID + ")", knownFunctions, Set.of());
         List<ObjectComponentTemplate> components = new ArrayList<>();
         for (Element componentElement : LoadUtils.directChildrenWithName(element, "component")) {
             ObjectComponentTemplate componentTemplate = parseObjectComponentTemplate(componentElement, ID);
@@ -95,7 +96,7 @@ public class ObjectTemplateLoader {
                 String storePhrase = LoadUtils.singleTag(element, "storePhrase", null);
                 boolean enableTake = LoadUtils.attributeBool(element, "enableTake", true);
                 boolean enableStore = LoadUtils.attributeBool(element, "enableStore", true);
-                List<ActionCustom.CustomActionHolder> perItemActions = LoadUtils.loadCustomActions(element, "itemAction", scriptPipeline, actionRegistry, "ObjectComponentInventory(" + objectID + ")", knownFunctions);
+                List<ActionCustom.CustomActionHolder> perItemActions = LoadUtils.loadCustomActions(element, "itemAction", scriptPipeline, actionRegistry, "ObjectComponentInventory(" + objectID + ")", knownFunctions, Set.of());
                 return new InventoryObjectComponentTemplate(startEnabled, actionsRestricted, lootTable, takePrompt, takePhrase, storePrompt, storePhrase, enableTake, enableStore, perItemActions);
             }
             case "network" -> {
@@ -108,7 +109,7 @@ public class ObjectTemplateLoader {
                     String moveActionID = LoadUtils.attribute(linkDataElement, "moveAction", null);
                     ActionTemplate moveAction = actionRegistry.getFromID(moveActionID);
                     if (moveAction == null) throw new GameDataException("ObjectComponentTemplate has invalid move action reference: " + moveActionID);
-                    Condition conditionVisible = LoadUtils.loadCondition(LoadUtils.singleChildWithName(linkDataElement, "conditionVisible"), scriptPipeline, "ObjectComponentLink(" + objectID + ") - link visible condition", scriptRuntime, knownFunctions);
+                    Condition conditionVisible = LoadUtils.loadCondition(LoadUtils.singleChildWithName(linkDataElement, "conditionVisible"), scriptPipeline, "ObjectComponentLink(" + objectID + ") - link visible condition", scriptRuntime, knownFunctions, Set.of());
                     boolean isVisible = LoadUtils.attributeBool(linkDataElement, "visible", false);
                     linkData.put(linkID, new LinkObjectComponentTemplate.ObjectLinkData(moveAction, conditionVisible, isVisible));
                 }
@@ -130,7 +131,7 @@ public class ObjectTemplateLoader {
                     boolean userCanPerformParentActions = LoadUtils.attributeBool(slotElement, "parentActions", true);
                     boolean shouldRemoveUserOnDeath = LoadUtils.attributeBool(slotElement, "removeUserOnDeath", false);
                     Set<String> componentsExposed = LoadUtils.setOfTags(slotElement, "exposedComponent");
-                    List<ActionCustom.CustomActionHolder> usingActions = LoadUtils.loadCustomActions(slotElement, "usingAction", scriptPipeline, actionRegistry, "ObjectComponentUsable(" + objectID + ")", knownFunctions);
+                    List<ActionCustom.CustomActionHolder> usingActions = LoadUtils.loadCustomActions(slotElement, "usingAction", scriptPipeline, actionRegistry, "ObjectComponentUsable(" + objectID + ")", knownFunctions, Set.of());
                     usableSlotData.put(slotID, new UsableObjectComponentTemplate.UsableSlotData(startPhrase, endPhrase, endDeathPhrase, startPrompt, endPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas, userCanPerformLocalActions, userCanPerformParentActions, shouldRemoveUserOnDeath, componentsExposed, usingActions));
                 }
                 return new UsableObjectComponentTemplate(startEnabled, actionsRestricted, usableSlotData);

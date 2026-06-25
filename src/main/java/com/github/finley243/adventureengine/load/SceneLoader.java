@@ -6,6 +6,7 @@ import com.github.finley243.adventureengine.scene.SceneChoice;
 import com.github.finley243.adventureengine.scene.SceneLine;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
+import com.github.finley243.adventureengine.script.parse.ScriptPipeline;
 import org.w3c.dom.Element;
 
 import java.util.ArrayList;
@@ -65,7 +66,7 @@ public class SceneLoader {
         } catch (IllegalArgumentException e) {
             throw new GameDataException("Scene has invalid type");
         }
-        Condition condition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, NAME_CONDITION), scriptPipeline, "Scene(" + sceneID + ") - condition", scriptRuntime, knownFunctions);
+        Condition condition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, NAME_CONDITION), scriptPipeline, "Scene(" + sceneID + ") - condition", scriptRuntime, knownFunctions, Set.of());
         boolean once = LoadUtils.attributeBool(element, NAME_ONCE, DEFAULT_ONCE);
         List<Element> lineElements = LoadUtils.directChildrenWithName(element, NAME_LINE);
         List<SceneLine> lines = new ArrayList<>();
@@ -97,7 +98,7 @@ public class SceneLoader {
             } catch (IllegalArgumentException e) {
                 throw new GameDataException("SceneLine has invalid type");
             }
-            Condition condition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, NAME_LINE_CONDITION), scriptPipeline, "Scene(" + sceneID + ") - line condition", scriptRuntime, knownFunctions);
+            Condition condition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, NAME_LINE_CONDITION), scriptPipeline, "Scene(" + sceneID + ") - line condition", scriptRuntime, knownFunctions, Set.of());
             Script scriptPre = LoadUtils.loadScript(LoadUtils.singleChildWithName(element, NAME_LINE_SCRIPT_PRE), scriptPipeline, "Scene(" + sceneID + ") - line pre-script", knownFunctions, Set.of());
             Script scriptPost = LoadUtils.loadScript(LoadUtils.singleChildWithName(element, NAME_LINE_SCRIPT_POST), scriptPipeline, "Scene(" + sceneID + ") - line post-script", knownFunctions, Set.of());
             List<SceneLine> subLines = new ArrayList<>();
