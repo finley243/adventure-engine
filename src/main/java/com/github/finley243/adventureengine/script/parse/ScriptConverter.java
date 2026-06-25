@@ -53,7 +53,7 @@ public class ScriptConverter {
             case ASTVarAssignment assign ->
                     new ScriptSetVariable(trace(assign), assign.variable().name(), convertExpression(assign.value()), false);
             case ASTMemberAssignment assign -> {
-                ScriptValueHolderReference holder = convertToHolderRef(assign.holder().object());
+                Script holder = convertExpression(assign.holder().object());
                 Script statName = convertMemberName(assign.holder().name());
                 yield new ScriptSetStat(trace(assign), holder, statName, convertExpression(assign.value()));
             }
@@ -113,7 +113,7 @@ public class ScriptConverter {
             case ASTTernaryOp op ->
                     new ScriptTernary(trace(op), convertExpression(op.left()), convertExpression(op.center()), convertExpression(op.right()));
             case ASTMemberAccess access -> {
-                ScriptValueHolderReference holder = convertToHolderRef(access.object());
+                Script holder = convertExpression(access.object());
                 Script statName = convertMemberName(access.name());
                 yield new ScriptGetStat(trace(access), holder, statName);
             }
@@ -122,9 +122,9 @@ public class ScriptConverter {
             case ASTGlobalRef ref -> new ScriptGetGlobal(trace(ref), convertExpression(ref.name()));
             case ASTFunctionCall call -> convertFunctionCall(call);
             case ASTCollection col -> convertCollection(col);
-            case ASTContextRef ref -> new ScriptStatHolder(trace(ref), convertToHolderRef(ref));
-            case ASTGameDataRef ref -> new ScriptStatHolder(trace(ref), convertToHolderRef(ref));
-            case ASTPlayerRef ref -> new ScriptStatHolder(trace(ref), convertToHolderRef(ref));
+            case ASTContextRef ref -> new ScriptContextHolder(trace(ref), ref.name());
+            case ASTGameDataRef ref -> new ScriptGameDataHolder(trace(ref), ref.type(), convertExpression(ref.id()));
+            case ASTPlayerRef ref -> new ScriptPlayerHolder(trace(ref));
             case ASTWorldRef ref -> new ScriptGetWorldValue(trace(ref), ref.name());
             default -> throw new IllegalArgumentException("Unknown expression node: " + node.getClass().getSimpleName());
         };
@@ -170,28 +170,6 @@ public class ScriptConverter {
         return switch (col.type()) {
             case SET -> new ScriptBuildSet(trace(col), elements);
             case LIST -> new ScriptBuildList(trace(col), elements);
-        };
-    }
-
-    private ScriptValueHolderReference convertToHolderRef(ASTNode node) {
-        return switch (node) {
-            case ASTPlayerRef ignored ->
-                    new ScriptValueHolderReference("player", null, null, null);
-            case ASTContextRef ref ->
-                    new ScriptValueHolderReference(ref.name(), null, null, null);
-            case ASTGameDataRef ref ->
-                    new ScriptValueHolderReference(ref.type(), convertExpression(ref.id()), null, null);
-            case ASTVar var ->
-                    new ScriptValueHolderReference(null, null, null, new ScriptGetVariable(trace(var), var.name()));
-            case ASTMemberAccess access -> {
-                if (access.name() instanceof ASTMemberNameStatic(String name)) {
-                    yield new ScriptValueHolderReference(name, null, convertToHolderRef(access.object()), null);
-                } else {
-                    // Dynamic sub-holder traversal: resolve as expression, wrap in holderExpression path
-                    yield new ScriptValueHolderReference(null, null, null, convertExpression(access));
-                }
-            }
-            default -> throw new IllegalArgumentException("Cannot convert to holder reference: " + node.getClass().getSimpleName());
         };
     }
 
