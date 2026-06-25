@@ -159,11 +159,6 @@ public class Room extends GameInstanced implements Noun, ScriptValueHolder {
 		return false;
 	}
 
-	@Override
-	public ScriptValueHolder getSubHolder(String name, String ID) {
-		return null;
-	}
-
 	public void triggerScript(String entryPoint, Context context) {
 		if (scripts.containsKey(entryPoint)) {
 			for (Script currentScript : scripts.get(entryPoint)) {

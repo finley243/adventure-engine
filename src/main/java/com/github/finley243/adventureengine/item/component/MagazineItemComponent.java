@@ -127,6 +127,7 @@ public class MagazineItemComponent extends ItemComponent {
             case "magazine_size" -> Expression.integer(getMagazineSize());
             case "reload_action_points" -> Expression.integer(getReloadActionPoints(context));
             case "ammo_count" -> Expression.integer(ammoCount);
+            case "ammo_type" -> Expression.valueHolder(ammoType);
             default -> super.getScriptValue(name, context);
         };
     }
@@ -142,14 +143,6 @@ public class MagazineItemComponent extends ItemComponent {
         } else {
             super.onStatChange(name);
         }
-    }
-
-    @Override
-    public ScriptValueHolder getSubHolder(String name, String ID) {
-        if ("ammo_type".equals(name)) {
-            return ammoType;
-        }
-        return super.getSubHolder(name, ID);
     }
 
 }

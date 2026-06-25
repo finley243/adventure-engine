@@ -67,11 +67,6 @@ public abstract class NetworkNode extends GameInstanced implements ScriptValueHo
     }
 
     @Override
-    public ScriptValueHolder getSubHolder(String name, String ID) {
-        return null;
-    }
-
-    @Override
     public boolean equals(Object o) {
         return o instanceof NetworkNode && ((NetworkNode) o).getID().equals(this.getID());
     }

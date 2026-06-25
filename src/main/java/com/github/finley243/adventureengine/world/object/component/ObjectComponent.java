@@ -62,7 +62,9 @@ public abstract class ObjectComponent implements ScriptValueHolder {
 
     @Override
     public Expression getScriptValue(String name, Context context) {
-        if ((getStatName() + "_enabled").equals(name)) {
+        if ("object".equals(name)) {
+            return Expression.valueHolder(getObject());
+        } else if ((getStatName() + "_enabled").equals(name)) {
             return Expression.bool(isEnabled());
         }
         return null;
@@ -74,14 +76,6 @@ public abstract class ObjectComponent implements ScriptValueHolder {
             setEnabled(value.getValueBoolean());
         }
         return false;
-    }
-
-    @Override
-    public ScriptValueHolder getSubHolder(String name, String ID) {
-        if ("object".equals(name)) {
-            return object;
-        }
-        return null;
     }
 
     @Override

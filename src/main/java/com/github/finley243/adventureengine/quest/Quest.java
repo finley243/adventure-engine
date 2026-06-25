@@ -25,6 +25,10 @@ public class Quest extends GameInstanced implements ScriptValueHolder {
 
     @Override
     public Expression getScriptValue(String name, Context context) {
+        if (name.startsWith("objective_")) {
+            String objectiveID = name.substring("objective_".length());
+            return Expression.valueHolder(objectives.get(objectiveID));
+        }
         return switch (name) {
             case "id" -> Expression.string(getID());
             case "name" -> Expression.string(name);
@@ -35,14 +39,6 @@ public class Quest extends GameInstanced implements ScriptValueHolder {
     @Override
     public boolean setScriptValue(String name, Expression value, Context context) {
         return false;
-    }
-
-    @Override
-    public ScriptValueHolder getSubHolder(String name, String ID) {
-        if ("objective".equals(name)) {
-            return objectives.get(ID);
-        }
-        return null;
     }
 
 }

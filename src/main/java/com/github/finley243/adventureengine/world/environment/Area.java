@@ -256,14 +256,6 @@ public class Area extends GameInstanced implements Noun, ScriptValueHolder, Stat
 		return itemInventory;
 	}
 
-	@Override
-	public ScriptValueHolder getSubHolder(String name, String ID) {
-		if ("room".equals(name)) {
-			return getRoom();
-		}
-		return null;
-	}
-
 	public List<Action> getItemActions(Actor subject, ActionDependencies dependencies) {
 		return itemInventory.getAreaActions(subject, dependencies, this);
 	}

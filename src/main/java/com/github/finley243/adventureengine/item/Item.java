@@ -168,6 +168,7 @@ public class Item extends GameInstanced implements Noun, ScriptValueHolder, Stat
 			case "inventory" -> Expression.inventory(currentInventory);
 			case "noun" -> Expression.noun(this);
 			case "id" -> Expression.string(getID());
+			case "template" -> Expression.valueHolder(getTemplate());
 			default -> null;
 		};
 	}
@@ -187,18 +188,6 @@ public class Item extends GameInstanced implements Noun, ScriptValueHolder, Stat
 
 	public Inventory getInventory() {
 		return currentInventory;
-	}
-
-	@Override
-	public ScriptValueHolder getSubHolder(String name, String ID) {
-		for (ItemComponent component : components.values()) {
-			ScriptValueHolder componentValue = component.getSubHolder(name, ID);
-			if (componentValue != null) return componentValue;
-		}
-		if ("template".equals(name)) {
-			return getTemplate();
-		}
-		return null;
 	}
 
 	@Override

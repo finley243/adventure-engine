@@ -19,6 +19,4 @@ public interface ScriptValueHolder {
     // TODO - Remove Context (stats don't actually need to use an external context, they can use an internal context)
     boolean setScriptValue(String name, Expression value, Context context);
 
-    ScriptValueHolder getSubHolder(String name, String ID);
-
 }

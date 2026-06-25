@@ -114,10 +114,5 @@ public class ItemTemplate extends GameInstanced implements Noun, ScriptValueHold
 	public boolean setScriptValue(String name, Expression value, Context context) {
 		return false;
 	}
-
-	@Override
-	public ScriptValueHolder getSubHolder(String name, String ID) {
-		return null;
-	}
 	
 }

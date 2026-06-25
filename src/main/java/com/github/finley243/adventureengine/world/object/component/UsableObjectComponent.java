@@ -136,7 +136,14 @@ public class UsableObjectComponent extends ObjectComponent {
 
     @Override
     public Expression getScriptValue(String name, Context context) {
-        if (name.startsWith("has_user_")) {
+        if (name.startsWith("user_")) {
+            for (String slotID : getTemplateUsable().getUsableSlotData().keySet()) {
+                if (name.equals("user_" + slotID)) {
+                    return Expression.valueHolder(getUser(slotID));
+                }
+            }
+            return null;
+        } else if (name.startsWith("has_user_")) {
             for (String slotID : getTemplateUsable().getUsableSlotData().keySet()) {
                 if (name.equals("has_user_" + slotID)) {
                     return Expression.bool(getUser(slotID) != null);
@@ -145,14 +152,6 @@ public class UsableObjectComponent extends ObjectComponent {
             return null;
         }
         return super.getScriptValue(name, context);
-    }
-
-    @Override
-    public ScriptValueHolder getSubHolder(String name, String ID) {
-        if ("user".equals(name)) {
-            return getUser(ID);
-        }
-        return super.getSubHolder(name, ID);
     }
 
     public record ObjectUserData(WorldObject object, String slot) {}

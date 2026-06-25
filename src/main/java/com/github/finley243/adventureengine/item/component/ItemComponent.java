@@ -64,11 +64,6 @@ public abstract class ItemComponent implements ScriptValueHolder, StatHolder {
     }
 
     @Override
-    public ScriptValueHolder getSubHolder(String name, String ID) {
-        return null;
-    }
-
-    @Override
     public Stat getStat(String name) {
         return null;
     }

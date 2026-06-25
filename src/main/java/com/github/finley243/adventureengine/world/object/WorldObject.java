@@ -291,8 +291,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, Script
 			case "id" -> Expression.string(getID());
 			case "name" -> Expression.string(getName());
 			case "template_id" -> Expression.string(template.getID());
-			case "area" -> Expression.string(getArea().getID());
-			case "room" -> Expression.string(getArea().getRoom() != null ? getArea().getRoom().getID() : null);
+			case "area" -> Expression.valueHolder(getArea());
 			default -> getLocalVariable(name);
 		};
 	}
@@ -321,14 +320,6 @@ public class WorldObject extends GameInstanced implements Noun, Physical, Script
 				return true;
 			}
 		}
-	}
-
-	@Override
-	public ScriptValueHolder getSubHolder(String name, String ID) {
-		return switch (name) {
-			case "area" -> getArea();
-			default -> null;
-		};
 	}
 
 }

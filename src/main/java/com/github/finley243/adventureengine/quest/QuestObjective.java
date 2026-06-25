@@ -157,9 +157,4 @@ public class QuestObjective extends GameInstanced implements ScriptValueHolder {
         return false;
     }
 
-    @Override
-    public ScriptValueHolder getSubHolder(String name, String ID) {
-        return null;
-    }
-
 }

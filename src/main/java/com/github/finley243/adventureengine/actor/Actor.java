@@ -800,6 +800,8 @@ public class Actor extends GameInstanced implements Noun, Physical, ScriptValueH
 			return resolveExpressionPrefix(name, "damage_mult_", damageMult, "damage type", Expression.decimal(0.0f), key -> Expression.decimal(getDamageMult(key, context)));
 		} else if (name.startsWith("has_equipped_")) {
 			return resolveExpressionPrefix(name, "has_equipped_", getTemplate().getEquipSlots(), "equip slot", Expression.bool(false), key -> Expression.bool(getEquipmentComponent().getEquippedItemInSlot(key) != null));
+		} else if (name.startsWith("equipped_")) {
+			return resolveExpressionPrefix(name, "equipped_", getTemplate().getEquipSlots(), "equip slot", null, key -> Expression.valueHolder(getEquipmentComponent().getEquippedItemInSlot(key)));
 		}
 		return switch (name) {
 			case "inventory" -> (getInventory() == null ? null : Expression.inventory(getInventory()));
@@ -812,9 +814,9 @@ public class Actor extends GameInstanced implements Noun, Physical, ScriptValueH
 			case "move_points" -> Expression.integer(getMovePoints());
 			case "enabled" -> Expression.bool(isEnabled);
 			case "sleeping" -> Expression.bool(isSleeping);
-			case "in_combat" -> Expression.bool(isInCombat());
-			case "using_object" -> Expression.bool(isUsingObject());
-			case "in_cover" -> Expression.bool(isInCover());
+			case "is_in_combat" -> Expression.bool(isInCombat());
+			case "is_using_object" -> Expression.bool(isUsingObject());
+			case "is_in_cover" -> Expression.bool(isInCover());
 			case "dead" -> Expression.bool(isDead);
 			case "active" -> Expression.bool(isActive());
 			case "can_perform_actions" -> Expression.bool(canPerformActions(context));
@@ -822,8 +824,8 @@ public class Actor extends GameInstanced implements Noun, Physical, ScriptValueH
 			case "can_dodge" -> Expression.bool(canDodge(context));
 			case "id" -> Expression.string(getID());
 			case "template_id" -> Expression.string(template.getID());
-			case "area" -> Expression.string(getArea().getID());
-			case "room" -> Expression.string(getArea().getRoom() != null ? getArea().getRoom().getID() : null);
+			case "area" -> Expression.valueHolder(getArea());
+			case "using_object" -> Expression.valueHolder(getUsingObject() != null ? getUsingObject().object() : null);
 			case "equipment_effects" -> Expression.set(equipmentEffects.value(new HashSet<>(), context), Expression::string);
 			case "sense_types" -> Expression.set(getSenseTypes(), e -> Expression.string(e.ID()));
 			default -> null;
@@ -874,16 +876,6 @@ public class Actor extends GameInstanced implements Noun, Physical, ScriptValueH
 			}
 		}
 		return false;
-	}
-
-	@Override
-	public ScriptValueHolder getSubHolder(String name, String ID) {
-		return switch (name) {
-			case "equipped_item" -> equipmentComponent.getEquippedItemInSlot(ID);
-			case "using_object" -> getUsingObject().object();
-			case "area" -> getArea();
-			default -> null;
-		};
 	}
 
 	public void addScript(String trigger, Script script) {
