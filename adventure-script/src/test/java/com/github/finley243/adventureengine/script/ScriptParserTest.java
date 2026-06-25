@@ -1,11 +1,12 @@
-package com.github.finley243.adventureengine.script.parse;
+package com.github.finley243.adventureengine.script;
 
-import com.github.finley243.adventureengine.script.parse.nodes.*;
+import com.github.finley243.adventureengine.script.nodes.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class ScriptParserTest {
 
@@ -441,7 +442,7 @@ public class ScriptParserTest {
         Assertions.assertTrue(parseResult.errors().isEmpty());
         List<ASTFile> fileList = new ArrayList<>();
         fileList.add((ASTFile) parseResult.node());
-        List<CompileError> validatorErrors = validator.validate(fileList);
+        List<CompileError> validatorErrors = validator.validate(fileList, Set.of());
         Assertions.assertTrue(validatorErrors.isEmpty(), validatorErrors.toString());
     }
 
