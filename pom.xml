@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>personal.finley.adventure_engine</groupId>
+    <groupId>com.github.finley243.adventureengine</groupId>
     <artifactId>adventure_engine</artifactId>
     <version>1.0</version>
-    <name>AdventureEngine2</name>
+    <name>AdventureEngine</name>
     <description>A text-based engine for simulated open-worlds.</description>
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
