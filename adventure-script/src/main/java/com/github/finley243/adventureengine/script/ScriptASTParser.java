@@ -713,8 +713,7 @@ public class ScriptASTParser {
         } else {
             ScriptToken nameToken = stream.expect(ScriptTokenType.NAME);
             if (nameToken == null) {
-                ScriptToken current = stream.peek();
-                errors.add(new CompileError("Expected member name after '.'", new SourceRange(current)));
+                errors.add(new CompileError("Expected member name after '.'", new SourceRange(token)));
                 return null;
             }
             String name = nameToken.value();
