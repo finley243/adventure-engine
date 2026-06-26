@@ -1,6 +1,19 @@
 package com.github.finley243.adventureengine.script.nodes;
 
+import com.github.finley243.adventureengine.script.HighlightData;
+import com.github.finley243.adventureengine.script.HighlightType;
 import com.github.finley243.adventureengine.script.SourceRange;
 
-public record ASTGameDataRef(String type, ASTNode id, SourceRange range) implements ASTNode {
+import java.util.ArrayList;
+import java.util.List;
+
+public record ASTGameDataRef(SourceRange keywordRange, SourceRange typeRange, String type, ASTNode id, SourceRange range) implements ASTNode {
+    @Override
+    public List<HighlightData> highlightData() {
+        List<HighlightData> highlights = new ArrayList<>();
+        highlights.add(new HighlightData(HighlightType.KEYWORD, keywordRange));
+        highlights.add(new HighlightData(HighlightType.MEMBER_NAME, typeRange));
+        if (id != null) highlights.addAll(id.highlightData());
+        return highlights;
+    }
 }
