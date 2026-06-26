@@ -14,35 +14,28 @@ public class ScriptASTParser {
     private static final Set<ScriptTokenType> LITERAL_TYPES = EnumSet.of(ScriptTokenType.BOOLEAN_FALSE, ScriptTokenType.BOOLEAN_TRUE, ScriptTokenType.INTEGER, ScriptTokenType.FLOAT, ScriptTokenType.STRING, ScriptTokenType.NULL);
     private static final Set<ScriptTokenType> ASSIGNMENT_TYPES = EnumSet.of(ScriptTokenType.ASSIGNMENT, ScriptTokenType.MODIFIER_PLUS, ScriptTokenType.MODIFIER_MINUS, ScriptTokenType.MODIFIER_MULTIPLY, ScriptTokenType.MODIFIER_DIVIDE, ScriptTokenType.MODIFIER_MODULO);
 
-    public ASTParseResult parse(List<ScriptToken> tokens) {
+    public ASTNode parse(List<ScriptToken> tokens, List<CompileError> errors) {
         if (tokens.isEmpty()) return null;
         TokenStream stream = new TokenStream(tokens);
-        List<CompileError> errors = new ArrayList<>();
-        ASTNode fileNode = parseFile(stream, errors);
-        return new ASTParseResult(fileNode, errors);
+        return parseFile(stream, errors);
     }
 
-    public ASTParseResult parseSingleExpression(List<ScriptToken> tokens) {
+    public ASTNode parseSingleExpression(List<ScriptToken> tokens, List<CompileError> errors) {
         if (tokens.isEmpty()) return null;
         TokenStream stream = new TokenStream(tokens);
-        List<CompileError> errors = new ArrayList<>();
-        ASTNode expression = parseExpression(stream, errors);
-        return new ASTParseResult(expression, errors);
+        return parseExpression(stream, errors);
     }
 
-    public ASTParseResult parseInlineScript(List<ScriptToken> tokens) {
+    public ASTNode parseInlineScript(List<ScriptToken> tokens, List<CompileError> errors) {
         if (tokens.isEmpty()) return null;
         TokenStream stream = new TokenStream(tokens);
-        List<CompileError> errors = new ArrayList<>();
         BlockResult placeholderBlockResult = new BlockResult(stream, new SourceRange(tokens.getFirst(), tokens.getLast()), BlockError.NONE);
-        ASTNode expression = parseCompound(stream, placeholderBlockResult, errors);
-        return new ASTParseResult(expression, errors);
+        return parseCompound(stream, placeholderBlockResult, errors);
     }
 
-    public ASTParseResult parseLiteralExpression(List<ScriptToken> tokens) {
+    public ASTNode parseLiteralExpression(List<ScriptToken> tokens) {
         if (tokens.size() != 1) return null;
-        ASTNode expression = parseLiteral(tokens.getFirst());
-        return new ASTParseResult(expression, new ArrayList<>());
+        return parseLiteral(tokens.getFirst());
     }
 
     private ASTNode parseFile(TokenStream stream, List<CompileError> errors) {

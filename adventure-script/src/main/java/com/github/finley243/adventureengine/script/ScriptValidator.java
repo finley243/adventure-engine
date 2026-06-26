@@ -2,15 +2,13 @@ package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.script.nodes.*;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class ScriptValidator {
 
-    public List<CompileError> validate(List<ASTFile> files, Set<String> nativeFunctions) {
-        List<CompileError> errors = new ArrayList<>();
+    public void validate(List<ASTFile> files, List<CompileError> errors, Set<String> nativeFunctions) {
         Set<String> knownFunctions = collectFunctionNames(files);
         knownFunctions.addAll(nativeFunctions);
         for (ASTFile file : files) {
@@ -18,34 +16,16 @@ public class ScriptValidator {
                 validateFunction(function, knownFunctions, errors);
             }
         }
-        return errors;
     }
 
-    public void validateOrThrow(List<ASTFile> files, Set<String> nativeFunctions) {
-        List<CompileError> errors = validate(files, nativeFunctions);
-        throwIfErrors(errors);
-    }
-
-    public List<CompileError> validateInlineExpression(ASTNode expression, Set<String> knownFunctions, Set<String> externalVariables) {
-        List<CompileError> errors = new ArrayList<>();
+    public void validateInlineExpression(ASTNode expression, List<CompileError> errors, Set<String> knownFunctions, Set<String> externalVariables) {
         ValidationContext ctx = new ValidationContext(false, new HashSet<>(externalVariables), knownFunctions);
         validateExpression(expression, ctx, errors);
-        return errors;
     }
 
-    public void validateInlineExpressionOrThrow(ASTNode expression, Set<String> knownFunctions, Set<String> externalVariables) {
-        throwIfErrors(validateInlineExpression(expression, knownFunctions, externalVariables));
-    }
-
-    public List<CompileError> validateInlineBlock(ASTCompound block, Set<String> knownFunctions, Set<String> externalVariables) {
-        List<CompileError> errors = new ArrayList<>();
+    public void validateInlineBlock(ASTCompound block, List<CompileError> errors, Set<String> knownFunctions, Set<String> externalVariables) {
         ValidationContext ctx = new ValidationContext(false, new HashSet<>(externalVariables), knownFunctions);
         validateCompound(block, ctx, errors);
-        return errors;
-    }
-
-    public void validateInlineBlockOrThrow(ASTCompound block, Set<String> knownFunctions, Set<String> externalVariables) {
-        throwIfErrors(validateInlineBlock(block, knownFunctions, externalVariables));
     }
 
     private Set<String> collectFunctionNames(List<ASTFile> files) {
@@ -56,12 +36,6 @@ public class ScriptValidator {
             }
         }
         return names;
-    }
-
-    private void throwIfErrors(List<CompileError> errors) {
-        if (!errors.isEmpty()) {
-            throw new ScriptCompileException(errors);
-        }
     }
 
     private void validateFunction(ASTFunction function, Set<String> knownFunctions, List<CompileError> errors) {

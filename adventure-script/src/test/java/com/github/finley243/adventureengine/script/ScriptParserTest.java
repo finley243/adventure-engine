@@ -13,12 +13,15 @@ public class ScriptParserTest {
     @Test
     public void testTokenizer() {
         ScriptLexer lexer = new ScriptLexer();
+        List<CompileError> errors = new ArrayList<>();
         String scriptText = "\"test string\"";
-        List<ScriptToken> tokens = lexer.parseToTokens(scriptText, "fileName");
+        List<ScriptToken> tokens = lexer.parseToTokens(scriptText, "fileName", errors);
+        Assertions.assertTrue(errors.isEmpty());
         Assertions.assertEquals(1, tokens.size());
         Assertions.assertEquals(ScriptTokenType.STRING, tokens.getFirst().type());
         scriptText = "1.2f + 2 == true";
-        tokens = lexer.parseToTokens(scriptText, "fileName");
+        tokens = lexer.parseToTokens(scriptText, "fileName", errors);
+        Assertions.assertTrue(errors.isEmpty());
         Assertions.assertEquals(5, tokens.size());
         Assertions.assertEquals(ScriptTokenType.FLOAT, tokens.get(0).type());
         Assertions.assertEquals(ScriptTokenType.PLUS, tokens.get(1).type());
@@ -45,21 +48,22 @@ public class ScriptParserTest {
                 new ScriptToken(ScriptTokenType.PARENTHESIS_CLOSE, null, 1, null, 1, 1),
                 new ScriptToken(ScriptTokenType.BRACKET_OPEN, null, 1, null, 1, 1),
                 new ScriptToken(ScriptTokenType.BRACKET_CLOSE, null, 1, null, 1, 1));
-        ASTParseResult parseResult = parser.parse(tokens);
-        Assertions.assertTrue(parseResult.errors().isEmpty());
-        Assertions.assertInstanceOf(ASTFile.class, parseResult.node());
-        ASTFile file = (ASTFile) parseResult.node();
+        List<CompileError> errors = new ArrayList<>();
+        ASTNode node = parser.parse(tokens, errors);
+        Assertions.assertTrue(errors.isEmpty());
+        Assertions.assertInstanceOf(ASTFile.class, node);
+        ASTFile file = (ASTFile) node;
         Assertions.assertEquals(2, file.functions().size());
         Assertions.assertInstanceOf(ASTFunction.class, file.functions().get(0));
         Assertions.assertInstanceOf(ASTFunction.class, file.functions().get(1));
-        ASTFunction functionOne = (ASTFunction) file.functions().get(0);
-        ASTFunction functionTwo = (ASTFunction) file.functions().get(1);
+        ASTFunction functionOne = file.functions().get(0);
+        ASTFunction functionTwo = file.functions().get(1);
         Assertions.assertEquals("doStuff", functionOne.name());
         Assertions.assertEquals(0, functionOne.parameters().size());
         Assertions.assertEquals("isConditionMet", functionTwo.name());
         Assertions.assertEquals(1, functionTwo.parameters().size());
-        Assertions.assertInstanceOf(ASTParameterDefinition.class, functionTwo.parameters().get(0));
-        ASTParameterDefinition parameterCondition = (ASTParameterDefinition) functionTwo.parameters().get(0);
+        Assertions.assertInstanceOf(ASTParameterDefinition.class, functionTwo.parameters().getFirst());
+        ASTParameterDefinition parameterCondition = (ASTParameterDefinition) functionTwo.parameters().getFirst();
         Assertions.assertEquals("condition", parameterCondition.name());
         Assertions.assertNull(parameterCondition.defaultValue());
     }
@@ -71,10 +75,11 @@ public class ScriptParserTest {
         List<ScriptToken> tokens = List.of(
                 new ScriptToken(ScriptTokenType.INTEGER, "5", 1, null, 1, 1)
         );
-        ASTParseResult result = parser.parseSingleExpression(tokens);
-        Assertions.assertTrue(result.errors().isEmpty());
-        Assertions.assertInstanceOf(ASTLiteral.class, result.node());
-        ASTLiteral literal = (ASTLiteral) result.node();
+        List<CompileError> errors = new ArrayList<>();
+        ASTNode node = parser.parseSingleExpression(tokens, errors);
+        Assertions.assertTrue(errors.isEmpty());
+        Assertions.assertInstanceOf(ASTLiteral.class, node);
+        ASTLiteral literal = (ASTLiteral) node;
         Assertions.assertEquals(ASTLiteral.Type.INTEGER, literal.type());
         Assertions.assertEquals("5", literal.value());
     }
@@ -91,10 +96,11 @@ public class ScriptParserTest {
                 new ScriptToken(ScriptTokenType.MULTIPLY, null, 1, null, 1, 1),
                 new ScriptToken(ScriptTokenType.INTEGER, "3", 1, null, 1, 1)
         );
-        ASTParseResult result = parser.parseSingleExpression(tokens);
-        Assertions.assertTrue(result.errors().isEmpty());
-        Assertions.assertInstanceOf(ASTBinaryOp.class, result.node());
-        ASTBinaryOp add = (ASTBinaryOp) result.node();
+        List<CompileError> errors = new ArrayList<>();
+        ASTNode node = parser.parseSingleExpression(tokens, errors);
+        Assertions.assertTrue(errors.isEmpty());
+        Assertions.assertInstanceOf(ASTBinaryOp.class, node);
+        ASTBinaryOp add = (ASTBinaryOp) node;
         Assertions.assertEquals(ASTBinaryOp.Operator.ADD, add.operator());
         Assertions.assertInstanceOf(ASTLiteral.class, add.left());
         Assertions.assertInstanceOf(ASTBinaryOp.class, add.right());
@@ -110,10 +116,11 @@ public class ScriptParserTest {
                 new ScriptToken(ScriptTokenType.MINUS, null, 1, null, 1, 1),
                 new ScriptToken(ScriptTokenType.NAME, "x", 1, null, 1, 1)
         );
-        ASTParseResult result = parser.parseSingleExpression(tokens);
-        Assertions.assertTrue(result.errors().isEmpty());
-        Assertions.assertInstanceOf(ASTUnaryOp.class, result.node());
-        ASTUnaryOp negate = (ASTUnaryOp) result.node();
+        List<CompileError> errors = new ArrayList<>();
+        ASTNode node = parser.parseSingleExpression(tokens, errors);
+        Assertions.assertTrue(errors.isEmpty());
+        Assertions.assertInstanceOf(ASTUnaryOp.class, node);
+        ASTUnaryOp negate = (ASTUnaryOp) node;
         Assertions.assertEquals(ASTUnaryOp.Operator.NEGATE, negate.operator());
         Assertions.assertInstanceOf(ASTVar.class, negate.operand());
     }
@@ -127,10 +134,11 @@ public class ScriptParserTest {
                 new ScriptToken(ScriptTokenType.DOT, null, 1, null, 1, 1),
                 new ScriptToken(ScriptTokenType.NAME, "health", 1, null, 1, 1)
         );
-        ASTParseResult result = parser.parseSingleExpression(tokens);
-        Assertions.assertTrue(result.errors().isEmpty());
-        Assertions.assertInstanceOf(ASTMemberAccess.class, result.node());
-        ASTMemberAccess access = (ASTMemberAccess) result.node();
+        List<CompileError> errors = new ArrayList<>();
+        ASTNode node = parser.parseSingleExpression(tokens, errors);
+        Assertions.assertTrue(errors.isEmpty());
+        Assertions.assertInstanceOf(ASTMemberAccess.class, node);
+        ASTMemberAccess access = (ASTMemberAccess) node;
         Assertions.assertInstanceOf(ASTVar.class, access.object());
         Assertions.assertInstanceOf(ASTMemberNameStatic.class, access.name());
         ASTMemberNameStatic memberName = (ASTMemberNameStatic) access.name();
@@ -154,11 +162,12 @@ public class ScriptParserTest {
                 new ScriptToken(ScriptTokenType.DOT, null, 1, null, 1, 1),
                 new ScriptToken(ScriptTokenType.NAME, "stat3", 1, null, 1, 1)
         );
-        ASTParseResult result = parser.parseSingleExpression(tokens);
-        Assertions.assertTrue(result.errors().isEmpty());
+        List<CompileError> errors = new ArrayList<>();
+        ASTNode node = parser.parseSingleExpression(tokens, errors);
+        Assertions.assertTrue(errors.isEmpty());
         // (...).stat3
-        Assertions.assertInstanceOf(ASTMemberAccess.class, result.node());
-        ASTMemberAccess level4 = (ASTMemberAccess) result.node();
+        Assertions.assertInstanceOf(ASTMemberAccess.class, node);
+        ASTMemberAccess level4 = (ASTMemberAccess) node;
         Assertions.assertInstanceOf(ASTMemberNameStatic.class, level4.name());
         Assertions.assertEquals("stat3", ((ASTMemberNameStatic) level4.name()).name());
         // (...).stat2
@@ -194,10 +203,11 @@ public class ScriptParserTest {
                 new ScriptToken(ScriptTokenType.NAME, "x", 1, null, 1, 1),
                 new ScriptToken(ScriptTokenType.PARENTHESIS_CLOSE, null, 1, null, 1, 1)
         );
-        ASTParseResult result = parser.parseSingleExpression(tokens);
-        Assertions.assertTrue(result.errors().isEmpty());
-        Assertions.assertInstanceOf(ASTFunctionCall.class, result.node());
-        ASTFunctionCall call = (ASTFunctionCall) result.node();
+        List<CompileError> errors = new ArrayList<>();
+        ASTNode node = parser.parseSingleExpression(tokens, errors);
+        Assertions.assertTrue(errors.isEmpty());
+        Assertions.assertInstanceOf(ASTFunctionCall.class, node);
+        ASTFunctionCall call = (ASTFunctionCall) node;
         Assertions.assertEquals("myFunc", call.name());
         Assertions.assertEquals(2, call.parameters().size());
         Assertions.assertInstanceOf(ASTParameter.class, call.parameters().get(0));
@@ -222,12 +232,13 @@ public class ScriptParserTest {
                 new ScriptToken(ScriptTokenType.INTEGER, "5", 1, null, 1, 1),
                 new ScriptToken(ScriptTokenType.PARENTHESIS_CLOSE, null, 1, null, 1, 1)
         );
-        ASTParseResult result = parser.parseSingleExpression(tokens);
-        Assertions.assertTrue(result.errors().isEmpty());
-        Assertions.assertInstanceOf(ASTFunctionCall.class, result.node());
-        ASTFunctionCall call = (ASTFunctionCall) result.node();
+        List<CompileError> errors = new ArrayList<>();
+        ASTNode node = parser.parseSingleExpression(tokens, errors);
+        Assertions.assertTrue(errors.isEmpty());
+        Assertions.assertInstanceOf(ASTFunctionCall.class, node);
+        ASTFunctionCall call = (ASTFunctionCall) node;
         Assertions.assertEquals(1, call.parameters().size());
-        ASTParameter param = (ASTParameter) call.parameters().get(0);
+        ASTParameter param = (ASTParameter) call.parameters().getFirst();
         Assertions.assertEquals("param", param.name());
         Assertions.assertInstanceOf(ASTLiteral.class, param.value());
     }
@@ -242,10 +253,11 @@ public class ScriptParserTest {
                 new ScriptToken(ScriptTokenType.STRING, "myVar", 1, null, 1, 1),
                 new ScriptToken(ScriptTokenType.BRACKET_SQUARE_CLOSE, null, 1, null, 1, 1)
         );
-        ASTParseResult result = parser.parseSingleExpression(tokens);
-        Assertions.assertTrue(result.errors().isEmpty());
-        Assertions.assertInstanceOf(ASTGlobalRef.class, result.node());
-        ASTGlobalRef globalRef = (ASTGlobalRef) result.node();
+        List<CompileError> errors = new ArrayList<>();
+        ASTNode node = parser.parseSingleExpression(tokens, errors);
+        Assertions.assertTrue(errors.isEmpty());
+        Assertions.assertInstanceOf(ASTGlobalRef.class, node);
+        ASTGlobalRef globalRef = (ASTGlobalRef) node;
         Assertions.assertInstanceOf(ASTLiteral.class, globalRef.name());
     }
 
@@ -260,10 +272,11 @@ public class ScriptParserTest {
                 new ScriptToken(ScriptTokenType.COLON, null, 1, null, 1, 1),
                 new ScriptToken(ScriptTokenType.NAME, "c", 1, null, 1, 1)
         );
-        ASTParseResult result = parser.parseSingleExpression(tokens);
-        Assertions.assertTrue(result.errors().isEmpty());
-        Assertions.assertInstanceOf(ASTTernaryOp.class, result.node());
-        ASTTernaryOp conditional = (ASTTernaryOp) result.node();
+        List<CompileError> errors = new ArrayList<>();
+        ASTNode node = parser.parseSingleExpression(tokens, errors);
+        Assertions.assertTrue(errors.isEmpty());
+        Assertions.assertInstanceOf(ASTTernaryOp.class, node);
+        ASTTernaryOp conditional = (ASTTernaryOp) node;
         Assertions.assertInstanceOf(ASTVar.class, conditional.left());
         Assertions.assertInstanceOf(ASTVar.class, conditional.center());
         Assertions.assertInstanceOf(ASTVar.class, conditional.right());
@@ -281,10 +294,11 @@ public class ScriptParserTest {
                 new ScriptToken(ScriptTokenType.POWER, null, 1, null, 1, 1),
                 new ScriptToken(ScriptTokenType.NAME, "c", 1, null, 1, 1)
         );
-        ASTParseResult result = parser.parseSingleExpression(tokens);
-        Assertions.assertTrue(result.errors().isEmpty());
-        Assertions.assertInstanceOf(ASTBinaryOp.class, result.node());
-        ASTBinaryOp outer = (ASTBinaryOp) result.node();
+        List<CompileError> errors = new ArrayList<>();
+        ASTNode node = parser.parseSingleExpression(tokens, errors);
+        Assertions.assertTrue(errors.isEmpty());
+        Assertions.assertInstanceOf(ASTBinaryOp.class, node);
+        ASTBinaryOp outer = (ASTBinaryOp) node;
         Assertions.assertEquals(ASTBinaryOp.Operator.POWER, outer.operator());
         Assertions.assertInstanceOf(ASTVar.class, outer.left());
         Assertions.assertEquals("a", ((ASTVar) outer.left()).name());
@@ -308,10 +322,11 @@ public class ScriptParserTest {
                 new ScriptToken(ScriptTokenType.POWER, null, 1, null, 1, 1),
                 new ScriptToken(ScriptTokenType.NAME, "b", 1, null, 1, 1)
         );
-        ASTParseResult result = parser.parseSingleExpression(tokens);
-        Assertions.assertTrue(result.errors().isEmpty());
-        Assertions.assertInstanceOf(ASTUnaryOp.class, result.node());
-        ASTUnaryOp negate = (ASTUnaryOp) result.node();
+        List<CompileError> errors = new ArrayList<>();
+        ASTNode node = parser.parseSingleExpression(tokens, errors);
+        Assertions.assertTrue(errors.isEmpty());
+        Assertions.assertInstanceOf(ASTUnaryOp.class, node);
+        ASTUnaryOp negate = (ASTUnaryOp) node;
         Assertions.assertEquals(ASTUnaryOp.Operator.NEGATE, negate.operator());
         Assertions.assertInstanceOf(ASTBinaryOp.class, negate.operand());
         ASTBinaryOp power = (ASTBinaryOp) negate.operand();
@@ -337,8 +352,9 @@ public class ScriptParserTest {
                 new ScriptToken(ScriptTokenType.INTEGER, "10", 1, null, 1, 1),
                 new ScriptToken(ScriptTokenType.PARENTHESIS_CLOSE, null, 1, null, 1, 1)
         );
-        ASTParseResult result = parser.parseSingleExpression(tokens);
-        Assertions.assertFalse(result.errors().isEmpty());
+        List<CompileError> errors = new ArrayList<>();
+        parser.parseSingleExpression(tokens, errors);
+        Assertions.assertFalse(errors.isEmpty());
     }
 
     @Test
@@ -393,11 +409,12 @@ public class ScriptParserTest {
                 new ScriptToken(ScriptTokenType.BRACKET_CLOSE, null, 1, null, 1, 1),
                 new ScriptToken(ScriptTokenType.BRACKET_CLOSE, null, 1, null, 1, 1)
         );
-        ASTParseResult result = parser.parse(tokens);
-        Assertions.assertTrue(result.errors().isEmpty());
-        ASTFile file = (ASTFile) result.node();
+        List<CompileError> errors = new ArrayList<>();
+        ASTNode node = parser.parse(tokens, errors);
+        Assertions.assertTrue(errors.isEmpty());
+        ASTFile file = (ASTFile) node;
         Assertions.assertEquals(1, file.functions().size());
-        ASTFunction function = (ASTFunction) file.functions().getFirst();
+        ASTFunction function = file.functions().getFirst();
         Assertions.assertEquals("myFunc", function.name());
         Assertions.assertEquals(1, function.parameters().size());
         ASTCompound body = (ASTCompound) function.body();
@@ -437,13 +454,15 @@ public class ScriptParserTest {
                 "\nvar sum = value + 8;" +
                 "\nreturn sum;" +
                 "\n}";
-        List<ScriptToken> tokens = lexer.parseToTokens(scriptSource, "testFile");
-        ASTParseResult parseResult = parser.parse(tokens);
-        Assertions.assertTrue(parseResult.errors().isEmpty());
+        List<CompileError> errors = new ArrayList<>();
+        List<ScriptToken> tokens = lexer.parseToTokens(scriptSource, "testFile", errors);
+        ASTNode node = parser.parse(tokens, errors);
+        Assertions.assertTrue(errors.isEmpty());
         List<ASTFile> fileList = new ArrayList<>();
-        fileList.add((ASTFile) parseResult.node());
-        List<CompileError> validatorErrors = validator.validate(fileList, Set.of());
-        Assertions.assertTrue(validatorErrors.isEmpty(), validatorErrors.toString());
+        Assertions.assertInstanceOf(ASTFile.class, node);
+        fileList.add((ASTFile) node);
+        validator.validate(fileList, errors, Set.of());
+        Assertions.assertTrue(errors.isEmpty());
     }
 
     @Test
@@ -459,10 +478,11 @@ public class ScriptParserTest {
                 new ScriptToken(ScriptTokenType.INTEGER, "5", 1, null, 1, 1),
                 new ScriptToken(ScriptTokenType.PARENTHESIS_CLOSE, null, 1, null, 1, 1)
         );
-        ASTParseResult result = parser.parseSingleExpression(tokens);
-        Assertions.assertTrue(result.errors().isEmpty());
-        Assertions.assertInstanceOf(ASTFunctionCall.class, result.node());
-        ASTFunctionCall call = (ASTFunctionCall) result.node();
+        List<CompileError> errors = new ArrayList<>();
+        ASTNode node = parser.parseSingleExpression(tokens, errors);
+        Assertions.assertTrue(errors.isEmpty());
+        Assertions.assertInstanceOf(ASTFunctionCall.class, node);
+        ASTFunctionCall call = (ASTFunctionCall) node;
         Assertions.assertEquals("myFunc", call.name());
         Assertions.assertEquals(2, call.parameters().size());
         ASTParameter first = (ASTParameter) call.parameters().get(0);
@@ -489,13 +509,14 @@ public class ScriptParserTest {
                 new ScriptToken(ScriptTokenType.PARENTHESIS_OPEN, null, 1, null, 1, 1),
                 new ScriptToken(ScriptTokenType.PARENTHESIS_CLOSE, null, 1, null, 1, 1)
         );
-        ASTParseResult result = parser.parseSingleExpression(tokens);
-        Assertions.assertTrue(result.errors().isEmpty());
-        Assertions.assertInstanceOf(ASTFunctionCall.class, result.node());
-        ASTFunctionCall call = (ASTFunctionCall) result.node();
+        List<CompileError> errors = new ArrayList<>();
+        ASTNode node = parser.parseSingleExpression(tokens, errors);
+        Assertions.assertTrue(errors.isEmpty());
+        Assertions.assertInstanceOf(ASTFunctionCall.class, node);
+        ASTFunctionCall call = (ASTFunctionCall) node;
         Assertions.assertEquals("myFunc", call.name());
         Assertions.assertEquals(1, call.parameters().size());
-        ASTParameter first = (ASTParameter) call.parameters().get(0);
+        ASTParameter first = (ASTParameter) call.parameters().getFirst();
         Assertions.assertInstanceOf(ASTMemberAccess.class, first.value());
         ASTMemberAccess memberAccess = (ASTMemberAccess) first.value();
         Assertions.assertInstanceOf(ASTVar.class, memberAccess.object());

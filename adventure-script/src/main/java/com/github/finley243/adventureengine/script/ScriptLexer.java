@@ -17,7 +17,11 @@ public class ScriptLexer {
                     "|(?<INTEGER>[0-9]+)" +
                     "|(?<NAME>_?[a-zA-Z][a-zA-Z0-9_]*)" +
                     "|(?<SYMBOL>\\+=|-=|\\*=|/=|%=|\\?\\?|==|!=|<=|>=|&&|\\|\\||::|[;=,.+\\-/*%^:?!<>(){}\\[\\]])" +
+                    "|(?<BLOCKCOMMENTOPEN>/\\*[\\s\\S]*)" +
                     "|(?<UNKNOWN>\\S+)"
+    );
+    private static final Pattern COMMENT_PATTERN = Pattern.compile(
+            "(?<LINECOMMENT>//[^\n]*)|(?<BLOCKCOMMENT>/\\*(?:.|\\R)*?(?:\\*/|$))"
     );
     private static final Map<String, ScriptTokenType> SYMBOL_MAP = new HashMap<>() {
         {
@@ -82,7 +86,7 @@ public class ScriptLexer {
         }
     };
 
-    public List<ScriptToken> parseToTokens(String scriptText, String fileName) {
+    public List<ScriptToken> parseToTokens(String scriptText, String fileName, List<CompileError> errors) {
         List<ScriptToken> tokens = new ArrayList<>();
         Matcher matcher = TOKEN_PATTERN.matcher(scriptText);
         int lastEnd = 0;
@@ -111,13 +115,37 @@ public class ScriptLexer {
                 tokens.add(new ScriptToken(nameType, tokenText, currentLine, fileName, charStart, charEnd));
             } else if (matcher.group("SYMBOL") != null) {
                 ScriptTokenType symbolType = SYMBOL_MAP.get(matcher.group());
-                if (symbolType == null) throw new IllegalArgumentException("Script token pattern matched a symbol that does not have a definition");
+                if (symbolType == null)
+                    throw new IllegalArgumentException("Script token pattern matched a symbol that does not have a definition");
                 tokens.add(new ScriptToken(symbolType, null, currentLine, fileName, charStart, charEnd));
+            } else if (matcher.group("BLOCKCOMMENTOPEN") != null) {
+                errors.add(new CompileError("Block comment is not closed", new SourceRange(charStart, charEnd, fileName, currentLine)));
             } else if (matcher.group("UNKNOWN") != null) {
-                throw new ScriptCompileException(List.of(new CompileError("Unknown token found: " + matcher.group(), new SourceRange(charStart, charEnd, fileName, currentLine))));
+                errors.add(new CompileError("Unknown token found: " + matcher.group(), new SourceRange(charStart, charEnd, fileName, currentLine)));
+                tokens.add(new ScriptToken(ScriptTokenType.UNKNOWN, null, currentLine, fileName, charStart, charEnd));
             }
         }
         return tokens;
+    }
+
+    public List<HighlightData> getCommentHighlightData(String scriptText, String fileName) {
+        List<HighlightData> highlights = new ArrayList<>();
+        Matcher matcher = COMMENT_PATTERN.matcher(scriptText);
+        int lastEnd = 0;
+        int currentLine = 1;
+        while (matcher.find()) {
+            for (int i = lastEnd; i < matcher.start(); i++) {
+                if (scriptText.charAt(i) == '\n') currentLine++;
+            }
+            lastEnd = matcher.end();
+            if (matcher.group("BLOCKCOMMENT") != null || matcher.group("LINECOMMENT") != null) {
+                int charStart = matcher.start();
+                int charEnd = matcher.end();
+                SourceRange range = new SourceRange(charStart, charEnd, fileName, currentLine);
+                highlights.add(new HighlightData(HighlightType.COMMENT, range));
+            }
+        }
+        return highlights;
     }
 
     private String stringLiteralToValue(String token) {
