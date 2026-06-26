@@ -11,7 +11,7 @@ public record ASTReturn(SourceRange keywordRange, ASTNode value, SourceRange ran
     @Override
     public List<HighlightData> highlightData() {
         List<HighlightData> highlights = new ArrayList<>();
-        highlights.add(new HighlightData(HighlightType.KEYWORD, range));
+        highlights.add(new HighlightData(HighlightType.KEYWORD, keywordRange));
         if (value != null) highlights.addAll(value.highlightData());
         return highlights;
     }

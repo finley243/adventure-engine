@@ -99,7 +99,7 @@ public class ScriptASTParser {
         }
         ASTNode bodyNode = parseCompound(bodyResult.contents(), bodyResult, errors);
 
-        return new ASTFunction(functionName, new SourceRange(nameToken), parameterNodes, bodyNode, new SourceRange(startToken, stream.current()));
+        return new ASTFunction(new SourceRange(startToken), functionName, new SourceRange(nameToken), parameterNodes, bodyNode, new SourceRange(startToken, stream.current()));
     }
 
     private List<ASTNode> parseParameterDefs(TokenStream stream, List<CompileError> errors) {
@@ -646,13 +646,14 @@ public class ScriptASTParser {
             errors.add(new CompileError("Expected '.' after 'context'", new SourceRange(token)));
             return null;
         }
-        String name = stream.expectName();
-        if (name == null) {
+        ScriptToken nameToken = stream.expect(ScriptTokenType.NAME);
+        if (nameToken == null) {
             ScriptToken current = stream.peek();
             errors.add(new CompileError("Expected name after 'context.'", new SourceRange(current)));
             return null;
         }
-        return new ASTContextRef(new SourceRange(token), name, new SourceRange(token, stream.current()));
+        String name = nameToken.value();
+        return new ASTContextRef(new SourceRange(token), new SourceRange(nameToken), name, new SourceRange(token, stream.current()));
     }
 
     private ASTNode parseWorldRef(ScriptToken token, TokenStream stream, List<CompileError> errors) {

@@ -7,11 +7,12 @@ import com.github.finley243.adventureengine.script.SourceRange;
 import java.util.ArrayList;
 import java.util.List;
 
-public record ASTContextRef(SourceRange keywordRange, String name, SourceRange range) implements ASTNode {
+public record ASTContextRef(SourceRange keywordRange, SourceRange nameRange, String name, SourceRange range) implements ASTNode {
     @Override
     public List<HighlightData> highlightData() {
         List<HighlightData> highlights = new ArrayList<>();
         highlights.add(new HighlightData(HighlightType.KEYWORD, keywordRange));
+        if (nameRange != null) highlights.add(new HighlightData(HighlightType.MEMBER_NAME, nameRange));
         return highlights;
     }
 }

@@ -7,10 +7,11 @@ import com.github.finley243.adventureengine.script.SourceRange;
 import java.util.ArrayList;
 import java.util.List;
 
-public record ASTFunction(String name, SourceRange nameRange, List<ASTNode> parameters, ASTNode body, SourceRange range) implements ASTNode {
+public record ASTFunction(SourceRange keywordRange, String name, SourceRange nameRange, List<ASTNode> parameters, ASTNode body, SourceRange range) implements ASTNode {
     @Override
     public List<HighlightData> highlightData() {
         List<HighlightData> highlights = new ArrayList<>();
+        highlights.add(new HighlightData(HighlightType.KEYWORD, keywordRange));
         highlights.add(new HighlightData(HighlightType.FUNCTION_DEFINITION_NAME, nameRange));
         if (parameters != null) {
             for (ASTNode parameterNode : parameters) {
