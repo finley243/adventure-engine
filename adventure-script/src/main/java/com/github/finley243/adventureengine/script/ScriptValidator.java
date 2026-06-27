@@ -194,7 +194,7 @@ public class ScriptValidator {
 
     private void validateFunctionCall(ASTFunctionCall call, ValidationContext ctx, List<CompileError> errors) {
         if (!ctx.knownFunctions().contains(call.name())) {
-            errors.add(new CompileError("Unknown function: " + call.name(), call.range()));
+            errors.add(new CompileError("Unknown function: " + call.name(), call.nameRange()));
         }
         for (ASTNode param : call.parameters()) {
             if (param instanceof ASTParameter p) {
