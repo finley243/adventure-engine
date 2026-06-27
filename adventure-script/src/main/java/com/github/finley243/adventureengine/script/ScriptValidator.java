@@ -65,7 +65,7 @@ public class ScriptValidator {
             }
             case ASTVarAssignment assign -> {
                 if (!ctx.variables().contains(assign.variable().name())) {
-                    errors.add(new CompileError("Undefined variable: " + assign.variable().name(), assign.range()));
+                    errors.add(new CompileError("Undefined variable: " + assign.variable().name(), assign.variable().range()));
                 }
                 validateExpression(assign.value(), ctx, errors);
                 yield ctx;
@@ -158,6 +158,7 @@ public class ScriptValidator {
     }
 
     private void validateExpression(ASTNode node, ValidationContext ctx, List<CompileError> errors) {
+        if (node == null) return;
         switch (node) {
             case ASTLiteral ignored -> {}
             case ASTVar var -> {
