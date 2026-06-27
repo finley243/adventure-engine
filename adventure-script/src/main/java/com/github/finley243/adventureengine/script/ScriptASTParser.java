@@ -319,7 +319,7 @@ public class ScriptASTParser {
         ScriptToken keywordToken = stream.current();
         ScriptToken variableNameToken = stream.expect(ScriptTokenType.NAME);
         if (variableNameToken == null) {
-            ScriptToken current = stream.peek();
+            ScriptToken current = stream.hasNext() ? stream.peek() : stream.current();
             errors.add(new CompileError("Expected variable name", new SourceRange(current)));
             return null;
         }
@@ -330,7 +330,7 @@ public class ScriptASTParser {
         if (stream.hasNext()) {
             operatorToken = stream.expect(ScriptTokenType.ASSIGNMENT);
             if (operatorToken == null) {
-                ScriptToken current = stream.peek();
+                ScriptToken current = stream.hasNext() ? stream.peek() : stream.current();
                 errors.add(new CompileError("Expected '='", new SourceRange(current)));
                 return null;
             }
@@ -545,7 +545,7 @@ public class ScriptASTParser {
             if (isNamed) {
                 hasNamedParameter = true;
             } else if (hasNamedParameter) {
-                ScriptToken current = stream.peek();
+                ScriptToken current = stream.hasNext() ? stream.peek() : stream.current();
                 errors.add(new CompileError("Positional parameter cannot follow named parameter", new SourceRange(current)));
                 return null;
             }
@@ -615,13 +615,13 @@ public class ScriptASTParser {
         }
         ScriptToken dataTypeToken = stream.expect(ScriptTokenType.NAME);
         if (dataTypeToken == null) {
-            ScriptToken current = stream.peek();
+            ScriptToken current = stream.hasNext() ? stream.peek() : stream.current();
             errors.add(new CompileError("Expected data type after 'gameData.'", new SourceRange(current)));
             return null;
         }
         String dataType = dataTypeToken.value();
         if (stream.expect(ScriptTokenType.PARENTHESIS_OPEN) == null) {
-            ScriptToken current = stream.peek();
+            ScriptToken current = stream.hasNext() ? stream.peek() : stream.current();
             errors.add(new CompileError("Expected '(' after data type in gameData reference", new SourceRange(current)));
             return null;
         }
@@ -641,7 +641,7 @@ public class ScriptASTParser {
         }
         ScriptToken nameToken = stream.expect(ScriptTokenType.NAME);
         if (nameToken == null) {
-            ScriptToken current = stream.peek();
+            ScriptToken current = stream.hasNext() ? stream.peek() : stream.current();
             errors.add(new CompileError("Expected name after 'context.'", new SourceRange(current)));
             return null;
         }
@@ -656,7 +656,7 @@ public class ScriptASTParser {
         }
         ScriptToken nameToken = stream.expect(ScriptTokenType.NAME);
         if (nameToken == null) {
-            ScriptToken current = stream.peek();
+            ScriptToken current = stream.hasNext() ? stream.peek() : stream.current();
             errors.add(new CompileError("Expected name after 'world.'", new SourceRange(current)));
             return null;
         }
@@ -673,7 +673,7 @@ public class ScriptASTParser {
         while (stream.hasNext() && stream.peek().type() != closeToken) {
             if (!elements.isEmpty()) {
                 if (stream.expect(ScriptTokenType.COMMA) == null) {
-                    ScriptToken current = stream.peek();
+                    ScriptToken current = stream.hasNext() ? stream.peek() : stream.current();
                     errors.add(new CompileError("Expected ',' or closing bracket in collection", new SourceRange(current)));
                     return null;
                 }

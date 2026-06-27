@@ -12,6 +12,7 @@ public class ScriptValidator {
         Set<String> knownFunctions = collectFunctionNames(files);
         knownFunctions.addAll(nativeFunctions);
         for (ASTFile file : files) {
+            if (file == null) continue;
             for (ASTFunction function : file.functions()) {
                 validateFunction(function, knownFunctions, errors);
             }
@@ -19,11 +20,13 @@ public class ScriptValidator {
     }
 
     public void validateInlineExpression(ASTNode expression, List<CompileError> errors, Set<String> knownFunctions, Set<String> externalVariables) {
+        if (expression == null) return;
         ValidationContext ctx = new ValidationContext(false, new HashSet<>(externalVariables), knownFunctions);
         validateExpression(expression, ctx, errors);
     }
 
     public void validateInlineBlock(ASTCompound block, List<CompileError> errors, Set<String> knownFunctions, Set<String> externalVariables) {
+        if (block == null) return;
         ValidationContext ctx = new ValidationContext(false, new HashSet<>(externalVariables), knownFunctions);
         validateCompound(block, ctx, errors);
     }
