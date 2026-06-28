@@ -1,0 +1,29 @@
+package com.github.finley243.adventureengine.script;
+
+import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.expression.Expression;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+
+public class ScriptListConcat extends Script {
+
+    public ScriptListConcat(ScriptTraceData traceData) {
+        super(traceData);
+    }
+
+    @Override
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
+        Expression listOneExpression = context.getLocalVariables().get("listOne").getExpression();
+        Expression listTwoExpression = context.getLocalVariables().get("listTwo").getExpression();
+        if (listOneExpression.getDataType() != Expression.DataType.LIST) return new ScriptReturnData(null, null, new ScriptErrorData("List one parameter is not a list", getTraceData()));
+        if (listTwoExpression.getDataType() != Expression.DataType.LIST) return new ScriptReturnData(null, null, new ScriptErrorData("List two parameter is not a list", getTraceData()));
+        List<Expression> listOne = listOneExpression.getValueList();
+        List<Expression> listTwo = listTwoExpression.getValueList();
+        List<Expression> listCombined = new ArrayList<>(listOne);
+        listCombined.addAll(listTwo);
+        return new ScriptReturnData(Expression.list(listCombined, Function.identity()), FlowStatementType.RETURN, null);
+    }
+
+}

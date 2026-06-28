@@ -1,0 +1,87 @@
+package com.github.finley243.adventureengine.stat;
+
+import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+public class StringSetStat extends Stat {
+
+    private final List<StatStringSetMod> mods;
+
+    public StringSetStat(String name, StatHolder target, ScriptRuntime scriptRuntime) {
+        super(name, target, scriptRuntime);
+        this.mods = new ArrayList<>();
+    }
+
+    public Set<String> value(Set<String> base, Context context) {
+        Set<String> outputSet = new HashSet<>(base);
+        for (StatStringSetMod mod : mods) {
+            if (shouldApplyMod(mod.condition(), context)) {
+                outputSet.addAll(mod.addition);
+                outputSet.removeAll(mod.cancellation);
+            }
+        }
+        return outputSet;
+    }
+
+    public <T extends Enum<T>> Set<String> valueFromEnum(Set<T> base, Context context) {
+        Set<String> enumStrings = new HashSet<>();
+        for (T enumValue : base) {
+            enumStrings.add(enumValue.toString().toLowerCase());
+        }
+        return value(enumStrings, context);
+    }
+
+    public <T extends Enum<T>> Set<T> valueEnum(Set<T> base, Class<T> enumClass, Context context) {
+        Set<T> outputSet = new HashSet<>(base);
+        Set<T> additionalEnum = new HashSet<>();
+        Set<T> cancellationEnum = new HashSet<>();
+        Set<String> additional = new HashSet<>();
+        Set<String> cancellation = new HashSet<>();
+        for (StatStringSetMod mod : mods) {
+            if (shouldApplyMod(mod.condition(), context)) {
+                additional.addAll(mod.addition);
+                cancellation.addAll(mod.cancellation);
+            }
+        }
+        for (String additionalString : additional) {
+            additionalEnum.add(enumValue(additionalString, enumClass));
+        }
+        for (String cancellationString : cancellation) {
+            cancellationEnum.add(enumValue(cancellationString, enumClass));
+        }
+        outputSet.addAll(additionalEnum);
+        outputSet.removeAll(cancellationEnum);
+        return outputSet;
+    }
+
+    public void addMod(StatStringSetMod mod) {
+        mods.add(mod);
+        getTarget().onStatChange(getName());
+    }
+
+    public void removeMod(StatStringSetMod mod) {
+        mods.remove(mod);
+        getTarget().onStatChange(getName());
+    }
+
+    private <T extends Enum<T>> T enumValue(String string, Class<T> enumClass) {
+        try {
+            return Enum.valueOf(enumClass, string.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    public List<StatStringSetMod> getMods() {
+        return mods;
+    }
+
+    public record StatStringSetMod(Condition condition, Set<String> addition, Set<String> cancellation) {}
+
+}

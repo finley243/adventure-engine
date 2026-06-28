@@ -1,0 +1,20 @@
+package com.github.finley243.adventureengine.script;
+
+import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.expression.Expression;
+
+public class ScriptTimerActive extends Script {
+
+    public ScriptTimerActive(ScriptTraceData traceData) {
+        super(traceData);
+    }
+
+    @Override
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
+        Expression timerID = context.getLocalVariables().get("timer").getExpression();
+        if (timerID.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("Timer parameter is not a string", getTraceData()));
+        boolean timerIsActive = scriptRuntime.isTimerActive(timerID.getValueString());
+        return new ScriptReturnData(Expression.bool(timerIsActive), FlowStatementType.RETURN, null);
+    }
+
+}

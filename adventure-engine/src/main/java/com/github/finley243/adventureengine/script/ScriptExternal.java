@@ -1,0 +1,88 @@
+package com.github.finley243.adventureengine.script;
+
+import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.script.parse.ScriptFunction;
+import com.github.finley243.adventureengine.script.parse.ScriptParameter;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+public class ScriptExternal extends Script {
+
+    private final String scriptID;
+    private final List<ParameterContainer> parameters;
+
+    public ScriptExternal(ScriptTraceData traceData, String scriptID, List<ParameterContainer> parameters) {
+        super(traceData);
+        this.scriptID = scriptID;
+        this.parameters = parameters;
+    }
+
+    @Override
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
+        Context innerContext = Context.from(context).clearVariables().build();
+        ScriptFunction script = scriptRuntime.getScript(scriptID);
+        if (script == null) return new ScriptReturnData(null, null, new ScriptErrorData("Function does not exist", getTraceData()));
+        Set<String> definitionParameterNames = new HashSet<>();
+        for (ScriptParameter definitionParameter : script.parameters()) {
+            definitionParameterNames.add(definitionParameter.name());
+        }
+        Set<String> providedParameterNames = new HashSet<>();
+        boolean hasUsedNamedParameter = false;
+        for (int i = 0; i < parameters.size(); i++) {
+            ParameterContainer providedParameter = parameters.get(i);
+            if (providedParameter.name() == null) {
+                if (i < script.parameters().size() && !script.parameters().get(i).isRequired()) {
+                    return new ScriptReturnData(null, null, new ScriptErrorData("Function call " + scriptID + " has positional parameter that does not exist in function definition", getTraceData()));
+                }
+                if (hasUsedNamedParameter) {
+                    return new ScriptReturnData(null, null, new ScriptErrorData("Function call " + scriptID + " has positional parameter after named parameter", getTraceData()));
+                }
+                ScriptReturnData parameterValueResult = providedParameter.value().execute(scriptRuntime, context);
+                if (parameterValueResult.error() != null) {
+                    return parameterValueResult;
+                } else if (parameterValueResult.flowStatement() != null) {
+                    return new ScriptReturnData(null, null, new ScriptErrorData("Function parameter in " + scriptID + " call contains unexpected flow statement", getTraceData()));
+                }
+                innerContext.setLocalVariable(script.parameters().get(i).name(), parameterValueResult.value());
+                providedParameterNames.add(script.parameters().get(i).name());
+            } else {
+                if (!script.allowExtraParameters() && !definitionParameterNames.contains(providedParameter.name())) {
+                    return new ScriptReturnData(null, null, new ScriptErrorData("Function call " + scriptID + " has named parameter that does not exist in function definition", getTraceData()));
+                }
+                ScriptReturnData parameterValueResult = providedParameter.value().execute(scriptRuntime, context);
+                if (parameterValueResult.error() != null) {
+                    return parameterValueResult;
+                } else if (parameterValueResult.flowStatement() != null) {
+                    return new ScriptReturnData(null, null, new ScriptErrorData("Function parameter in " + scriptID + " call contains unexpected flow statement", getTraceData()));
+                }
+                innerContext.setLocalVariable(providedParameter.name(), parameterValueResult.value());
+                hasUsedNamedParameter = true;
+                providedParameterNames.add(providedParameter.name());
+            }
+        }
+        // Set default values for parameters that are not provided, and throw error if required parameter is not provided
+        for (ScriptParameter definitionParameter : script.parameters()) {
+            if (!providedParameterNames.contains(definitionParameter.name())) {
+                if (definitionParameter.isRequired()) {
+                    return new ScriptReturnData(null, null, new ScriptErrorData("Function call " + scriptID + " is missing required parameter: " + definitionParameter.name(), getTraceData()));
+                }
+                innerContext.setLocalVariable(definitionParameter.name(), definitionParameter.defaultValue());
+            }
+        }
+        ScriptReturnData scriptResult = script.script().execute(scriptRuntime, innerContext);
+        if (scriptResult.error() != null) {
+            return new ScriptReturnData(null, null, new ScriptErrorData(scriptResult.error().message() + "\n - (" + scriptResult.error().traceData().fileName() + ":" + scriptResult.error().traceData().line() + ") " + scriptID + "()", getTraceData()));
+        } else if (scriptResult.flowStatement() != null && scriptResult.flowStatement() != FlowStatementType.RETURN) {
+            return new ScriptReturnData(null, null, new ScriptErrorData("Function contains unhandled flow statement", getTraceData()));
+        } else if (scriptResult.value() == null) {
+            return new ScriptReturnData(null, null, null);
+        } else {
+            return new ScriptReturnData(scriptResult.value(), null, null);
+        }
+    }
+
+    public record ParameterContainer(String name, Script value) {}
+
+}

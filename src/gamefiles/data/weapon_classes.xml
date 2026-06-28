@@ -1,4 +1,4 @@
-<data>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/weapon_classes.xsd">
     <weaponClass id="pistol" isRanged="true" isLoud="true" skill="handguns">
         <name>pistol</name>
         <range>CLOSE</range>

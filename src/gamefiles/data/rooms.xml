@@ -1,0 +1,53 @@
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/rooms.xsd">
+    <room id="street_corner_fifth_sinclair">
+        <name proper="false" type="in">intersection</name>
+    </room>
+    <room id="street_corner_fifth_archer">
+        <name proper="false" type="in">intersection</name>
+    </room>
+    <room id="street_corner_sixth_sinclair">
+        <name proper="false" type="in">intersection</name>
+    </room>
+    <room id="street_corner_sixth_archer">
+        <name proper="false" type="in">intersection</name>
+    </room>
+    <room id="street_sinclair_fifth_sixth">
+        <name proper="true" type="on">Sinclair Street</name>
+    </room>
+    <room id="street_archer_fifth_sixth">
+        <name proper="true" type="on">Archer Street</name>
+    </room>
+    <room id="street_fifth_sinclair_archer">
+        <name proper="true" type="on">5th Avenue</name>
+    </room>
+    <room id="street_sixth_sinclair_archer">
+        <name proper="true" type="on">6th Avenue</name>
+    </room>
+    <room id="alley_archer_fifth_sixth">
+        <name proper="false" type="in">alley</name>
+    </room>
+    <room id="sinclair_tech_store">
+        <name proper="true">Argon Electronics</name>
+    </room>
+    <room id="wilsons_corner_store">
+        <name proper="true">Wilson's corner store</name>
+        <description>
+            <line>The store is small, with no wasted space. Near the entrance is the checkout counter. To the north are shelves stocked with various goods, with a row of coolers behind them.</line>
+        </description>
+    </room>
+    <room id="archer_burger_restaurant">
+        <name>BigBurger</name>
+    </room>
+    <room id="archer_apartments_entrance">
+        <name>apartments</name>
+    </room>
+    <room id="archer_apartments_23">
+        <name proper="true">apartment 23</name>
+    </room>
+    <room id="warehouse">
+        <name>warehouse</name>
+    </room>
+    <room id="providence_lobby">
+        <name>lobby</name>
+    </room>
+</data>

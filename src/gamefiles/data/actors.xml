@@ -1,4 +1,4 @@
-<data>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/actors.xsd">
     <actor id="default" faction="default" isEnforcer="false" actionPoints="3" movePoints="2" hp="30" startLevel="1">
         <name proper="false" pronoun="THEY">DEFAULT</name>
         <levelUpThreshold>20</levelUpThreshold>
@@ -21,7 +21,8 @@
         <skill key="lockpick" value="4"/>
         <skill key="stealth" value="4"/>
         <skill key="dodge" value="4"/>
-        <senseType>vision_basic</senseType>
+        <attackType>punch</attackType>
+        <inventory/>
         <limb id="head" hitChance="0.5" damageMult="2.0" apparelSlot="head">
             <name>head</name>
         </limb>
@@ -40,13 +41,11 @@
         <equipSlot id="legs">legs</equipSlot>
         <equipSlot id="hand_main">main hand</equipSlot>
         <equipSlot id="hand_off">off hand</equipSlot>
-        <damageResistance type="physical" value="0"/>
-        <damageResistance type="thermal" value="0"/>
-        <damageResistance type="chemical" value="0"/>
-        <damageResistance type="explosive" value="0"/>
-        <damageResistance type="electrical" value="0"/>
-        <inventory/>
-        <attackType>punch</attackType>
+        <damage type="physical" value="0"/>
+        <damage type="thermal" value="0"/>
+        <damage type="chemical" value="0"/>
+        <damage type="explosive" value="0"/>
+        <damage type="electrical" value="0"/>
     </actor>
     <actor id="player" parent="default" hp="70" faction="player">
         <name proper="true" pronoun="YOU">PLAYER</name>

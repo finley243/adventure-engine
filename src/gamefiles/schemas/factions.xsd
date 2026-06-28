@@ -1,0 +1,34 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:include schemaLocation="common.xsd"/>
+
+    <xs:element name="data">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="faction" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="relation" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="faction" type="xs:string" use="required"/>
+                                    <xs:attribute name="type" type="FactionRelation" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="id" type="xs:string" use="required"/>
+                        <xs:attribute name="default" type="FactionRelation"/>
+                    </xs:complexType>
+                    <xs:unique name="uniqueFactionId">
+                        <xs:selector xpath="relation"/>
+                        <xs:field xpath="@faction"/>
+                    </xs:unique>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+        <xs:unique name="uniqueId">
+            <xs:selector xpath="faction"/>
+            <xs:field xpath="@id"/>
+        </xs:unique>
+    </xs:element>
+
+</xs:schema>

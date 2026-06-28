@@ -1,0 +1,114 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:include schemaLocation="common.xsd"/>
+
+    <xs:element name="data">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="actor" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="name" type="ActorName" minOccurs="0"/>
+                            <xs:element name="levelUpThreshold" type="xs:string" minOccurs="0"/>
+                            <xs:element name="attribute" type="KeyValueInt" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="skill" type="KeyValueInt" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="senseType" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="attackType" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="startEffect" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="inventory" type="InlineLootTable" minOccurs="0"/>
+                            <xs:element name="limb" type="Limb" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="equipSlot" type="EquipSlot" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="damage" type="ActorDamageResistance" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="action" type="CustomAction" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="itemAction" type="CustomAction" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="bark" type="Bark" minOccurs="0" maxOccurs="unbounded"/>
+                            <xs:element name="script" type="ScriptWithTrigger" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                        <xs:attribute name="id" type="xs:string" use="required"/>
+                        <xs:attribute name="parent" type="xs:string"/>
+                        <xs:attribute name="faction" type="xs:string"/>
+                        <xs:attribute name="isEnforcer" type="xs:boolean"/>
+                        <xs:attribute name="actionPoints" type="xs:integer"/>
+                        <xs:attribute name="movePoints" type="xs:integer"/>
+                        <xs:attribute name="startLevel" type="xs:integer"/>
+                        <xs:attribute name="hp" type="xs:integer"/>
+                        <xs:attribute name="dialogueStart" type="xs:string"/>
+                    </xs:complexType>
+                    <xs:unique name="uniqueLimbID">
+                        <xs:selector xpath="limb"/>
+                        <xs:field xpath="@id"/>
+                    </xs:unique>
+                    <xs:unique name="uniqueEquipSlotID">
+                        <xs:selector xpath="equipSlot"/>
+                        <xs:field xpath="@id"/>
+                    </xs:unique>
+                    <xs:unique name="uniqueAttributeKey">
+                        <xs:selector xpath="attribute"/>
+                        <xs:field xpath="@key"/>
+                    </xs:unique>
+                    <xs:unique name="uniqueSkillKey">
+                        <xs:selector xpath="skill"/>
+                        <xs:field xpath="@key"/>
+                    </xs:unique>
+                    <xs:unique name="uniqueDamageResistanceType">
+                        <xs:selector xpath="damageResistance"/>
+                        <xs:field xpath="@type"/>
+                    </xs:unique>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+        <xs:unique name="uniqueID">
+            <xs:selector xpath="actor"/>
+            <xs:field xpath="@id"/>
+        </xs:unique>
+    </xs:element>
+
+    <xs:complexType name="ActorName">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="proper" type="xs:boolean"/>
+                <xs:attribute name="pronoun" type="Pronoun"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="KeyValueInt">
+        <xs:attribute name="key" type="xs:string" use="required"/>
+        <xs:attribute name="value" type="xs:integer" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="Limb">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="hitEffect" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="hitChance" type="xs:decimal"/>
+        <xs:attribute name="damageMult" type="xs:decimal"/>
+        <xs:attribute name="apparelSlot" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="EquipSlot">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="id" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="ActorDamageResistance">
+        <xs:attribute name="type" type="xs:string" use="required"/>
+        <xs:attribute name="value" type="xs:integer"/>
+        <xs:attribute name="mult" type="xs:decimal"/>
+    </xs:complexType>
+
+    <xs:complexType name="Bark">
+        <xs:sequence>
+            <xs:element name="visible" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="nonVisible" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="trigger" type="xs:string" use="required"/>
+        <xs:attribute name="response" type="BarkResponseType"/>
+    </xs:complexType>
+
+</xs:schema>

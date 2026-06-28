@@ -1,4 +1,4 @@
-<data>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/objects.xsd">
     <object id="door_basic">
         <name>door</name>
         <component type="link">
@@ -10,6 +10,8 @@
     </object>
     <object id="door_locked">
         <name>door</name>
+        <action template="lock_key"/>
+        <action template="lock_pick"/>
         <component type="link">
             <link id="door_link" moveAction="move_door" visible="false">
                 <conditionMovable>!stat.parentObject.locked</conditionMovable>
@@ -18,15 +20,13 @@
         <localVar name="locked">true</localVar>
         <localVar name="lock_keys">null</localVar>
         <localVar name="lock_pick_difficulty">1</localVar>
-        <action template="lock_key"/>
-        <action template="lock_pick"/>
     </object>
     <object id="chair_plastic">
         <name>plastic chair</name>
         <component type="usable">
             <slot id="seat">
-                <startPhrase>sit</startPhrase>
-                <endPhrase>getUp</endPhrase>
+                <startPhrase>@sit</startPhrase>
+                <endPhrase>@getUp</endPhrase>
                 <startPrompt>Sit</startPrompt>
                 <endPrompt>Stand</endPrompt>
             </slot>
@@ -37,19 +37,19 @@
     </object>
     <object id="gumball_machine">
         <name>gumball machine</name>
-        <localVar name="price_hacked">false</localVar>
         <action template="vending_machine">
             <parameter name="itemID">"gumball"</parameter>
         </action>
         <networkAction template="vending_machine_hack_price"/>
+        <localVar name="price_hacked">false</localVar>
     </object>
     <object id="garbage_bin">
         <name>garbage bin</name>
         <component type="inventory">
             <takePrompt>Take</takePrompt>
-            <takePhrase>takeFrom</takePhrase>
+            <takePhrase>@takeFrom</takePhrase>
             <storePrompt>Store</storePrompt>
-            <storePhrase>storeIn</storePhrase>
+            <storePhrase>@storeIn</storePhrase>
             <inventory>
                 <table countMin="0" countMax="3">junk_random</table>
             </inventory>
@@ -59,9 +59,9 @@
         <name>snacks shelf</name>
         <component type="inventory">
             <takePrompt>Take</takePrompt>
-            <takePhrase>takeFrom</takePhrase>
+            <takePhrase>@takeFrom</takePhrase>
             <storePrompt>Place</storePrompt>
-            <storePhrase>placeOn</storePhrase>
+            <storePhrase>@placeOn</storePhrase>
             <inventory>
                 <table>store_snacks</table>
             </inventory>
@@ -71,9 +71,9 @@
         <name>meal shelf</name>
         <component type="inventory">
             <takePrompt>Take</takePrompt>
-            <takePhrase>takeFrom</takePhrase>
+            <takePhrase>@takeFrom</takePhrase>
             <storePrompt>Place</storePrompt>
-            <storePhrase>placeOn</storePhrase>
+            <storePhrase>@placeOn</storePhrase>
             <inventory>
                 <table>store_snacks</table>
             </inventory>
@@ -83,9 +83,9 @@
         <name>alcohol shelf</name>
         <component type="inventory">
             <takePrompt>Take</takePrompt>
-            <takePhrase>takeFrom</takePhrase>
+            <takePhrase>@takeFrom</takePhrase>
             <storePrompt>Place</storePrompt>
-            <storePhrase>placeOn</storePhrase>
+            <storePhrase>@placeOn</storePhrase>
             <inventory>
                 <table>store_snacks</table>
             </inventory>
@@ -95,9 +95,9 @@
         <name>medicine shelf</name>
         <component type="inventory">
             <takePrompt>Take</takePrompt>
-            <takePhrase>takeFrom</takePhrase>
+            <takePhrase>@takeFrom</takePhrase>
             <storePrompt>Place</storePrompt>
-            <storePhrase>placeOn</storePhrase>
+            <storePhrase>@placeOn</storePhrase>
             <inventory>
                 <table>store_snacks</table>
             </inventory>
@@ -107,9 +107,9 @@
         <name>soft drinks cooler</name>
         <component type="inventory">
             <takePrompt>Take</takePrompt>
-            <takePhrase>takeFrom</takePhrase>
+            <takePhrase>@takeFrom</takePhrase>
             <storePrompt>Store</storePrompt>
-            <storePhrase>storeIn</storePhrase>
+            <storePhrase>@storeIn</storePhrase>
             <inventory>
                 <table>store_soft_drinks</table>
             </inventory>
@@ -119,9 +119,9 @@
         <name>alcohol cooler</name>
         <component type="inventory">
             <takePrompt>Take</takePrompt>
-            <takePhrase>takeFrom</takePhrase>
+            <takePhrase>@takeFrom</takePhrase>
             <storePrompt>Store</storePrompt>
-            <storePhrase>storeIn</storePhrase>
+            <storePhrase>@storeIn</storePhrase>
             <inventory>
                 <table>store_soft_drinks</table>
             </inventory>
@@ -129,7 +129,6 @@
     </object>
     <object id="vending_machine_nitron">
         <name>Nitron Cola vending machine</name>
-        <localVar name="price_hacked">false</localVar>
         <action template="vending_machine">
             <parameter name="itemID">"nitron_cola"</parameter>
         </action>
@@ -137,14 +136,15 @@
             <parameter name="itemID">"nitron_diet"</parameter>
         </action>
         <networkAction template="vending_machine_hack_price"/>
+        <localVar name="price_hacked">false</localVar>
     </object>
     <object id="motorcycle">
         <name>motorcycle</name>
         <component type="vehicle" restricted="true" vehicleType="motorcycle"/>
         <component type="usable">
             <slot id="seat">
-                <startPhrase>sit</startPhrase>
-                <endPhrase>getUp</endPhrase>
+                <startPhrase>@sit</startPhrase>
+                <endPhrase>@getUp</endPhrase>
                 <startPrompt>Sit</startPrompt>
                 <endPrompt>Stand</endPrompt>
                 <exposedComponent>vehicle</exposedComponent>
@@ -155,8 +155,8 @@
         <name>network port</name>
         <component type="usable">
             <slot id="port">
-                <startPhrase>jackIn</startPhrase>
-                <endPhrase>jackOut</endPhrase>
+                <startPhrase>@jackIn</startPhrase>
+                <endPhrase>@jackOut</endPhrase>
                 <startPrompt>Jack In</startPrompt>
                 <endPrompt>Jack Out</endPrompt>
                 <exposedComponent>network</exposedComponent>

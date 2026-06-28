@@ -1,10 +1,10 @@
-<data>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/scenes.xsd">
     <scene id="stratis_lobby_intro">
         <condition>
-            stat.actor("stratis_receptionist").active &amp;&amp; !stat.actor("stratis_receptionist").inCombat &amp;&amp;
-            stat.actor("stratis_guard_lobby").active &amp;&amp; !stat.actor("stratis_guard_lobby").inCombat &amp;&amp;
-            stat.actor("stratis_receptionist").area == "stratis_hotel_lobby_desk" &amp;&amp;
-            stat.actor("stratis_guard_lobby").area == "stratis_hotel_lobby_seating"
+            gameData.actor("stratis_receptionist").active &amp;&amp; !gameData.actor("stratis_receptionist").inCombat &amp;&amp;
+            gameData.actor("stratis_guard_lobby").active &amp;&amp; !gameData.actor("stratis_guard_lobby").inCombat &amp;&amp;
+            gameData.actor("stratis_receptionist").area == "stratis_hotel_lobby_desk" &amp;&amp;
+            gameData.actor("stratis_guard_lobby").area == "stratis_hotel_lobby_seating"
         </condition>
         <line>The receptionist leans on the desk and sighs. He looks up from the computer, towards the security guard standing near the seating area.</line>
         <line>"Man, could this day be any longer?"</line>
@@ -26,4 +26,159 @@
             <line>"Hey, put that away! No open carry allowed here. And that applies to ALL weapons, not just guns."</line>
         </line>
     </scene>-->
+    <scene id="wilsons_corner_store_purchase_logs">
+        <line>Purchase history corrupted.</line>
+        <line>Please load backup file to continue.</line>
+    </scene>
+    <scene id="cornerstore_shopkeeper_start">
+        <line once="true" redirect="cornerstore_shopkeeper_main">
+            <line>"Welcome, welcome! We've got everything you need here, all at a good price. What can I help you with?"</line>
+        </line>
+        <line redirect="cornerstore_shopkeeper_main">"Hello again! What can I help you with?"</line>
+    </scene>
+    <scene id="cornerstore_shopkeeper_main">
+        <choice link="cornerstore_shopkeeper_andre">I'm looking for Andre Wallace. You seen him?</choice>
+        <choice link="cornerstore_shopkeeper_andre_questions_repeat">I've got some more questions about Andre.</choice>
+        <choice link="cornerstore_shopkeeper_end">Goodbye.</choice>
+    </scene>
+    <scene id="cornerstore_shopkeeper_end">
+        <line exit="true">"'Till next time."</line>
+    </scene>
+    <scene id="cornerstore_shopkeeper_andre_questions_repeat">
+        <condition>gameData.scene("cornerstore_shopkeeper_andre_questions").triggered</condition>
+        <line redirect="cornerstore_shopkeeper_andre_questions">"Go ahead."</line>
+    </scene>
+    <scene id="cornerstore_shopkeeper_andre">
+        <condition>!gameData.scene("cornerstore_shopkeeper_andre_questions").triggered</condition>
+        <line>The shopkeeper looks down his glasses at you.</line>
+        <line>"I see a lot of people. What makes you think I know anything about this 'Andre'?"</line>
+        <choice link="cornerstore_shopkeeper_andre_truth">He lives in this building. Figured he might have dropped by once or twice.</choice>
+        <choice link="cornerstore_shopkeeper_andre_intimidate">[Intimidate] I'm growing impatient. Tell me what you know or this gets messy.</choice>
+        <choice link="cornerstore_shopkeeper_andre_bribe">[200 credits] Just a hunch. This might refresh your memory.</choice>
+        <choice link="cornerstore_shopkeeper_andre_dismiss">You know what, you probably don't know anything anyway.</choice>
+    </scene>
+    <scene id="cornerstore_shopkeeper_andre_truth">
+        <line>The shopkeeper narrows his eyes.</line>
+        <line>"He might have. Can't say I'm inclined to tell you. Information is a commodity, and commodities do not come free."</line>
+    </scene>
+    <scene id="cornerstore_shopkeeper_andre_intimidate" type="select">
+        <line redirect="cornerstore_shopkeeper_andre_questions">
+            <condition>player.skill_intimidation &gt;= 6</condition>
+            <line>The shopkeeper puts up his hands.</line>
+            <line>"Okay, okay. Fine. Ask your damn questions."</line>
+        </line>
+        <line>
+            <line>The shopkeeper shakes his head.</line>
+            <line>"If you think you can threaten me in my own store, you're wrong. There are much, much larger threats than yourself, and I'm very much prepared to defend myself and my property."</line>
+        </line>
+    </scene>
+    <scene id="cornerstore_shopkeeper_andre_bribe">
+        <condition>player.money &gt;= 200</condition>
+        <line redirect="cornerstore_shopkeeper_andre_questions">
+            <scriptPre>player.money = player.money - 200;</scriptPre>
+            <line>A smirk comes across the shopkeepers face. He straightens his glasses.</line>
+            <line>"See, I like people who know how to conduct business. You've got questions, ask away."</line>
+        </line>
+    </scene>
+    <scene id="cornerstore_shopkeeper_andre_dismiss">
+        <line>The shopkeeper sighs.</line>
+        <line>"Right, back to business then?"</line>
+    </scene>
+    <scene id="cornerstore_shopkeeper_andre_questions">
+        <choice link="cornerstore_shopkeeper_andre_lastseen">When did you last see Andre?</choice>
+        <choice link="cornerstore_shopkeeper_andre_regular">Was Andre a regular here?</choice>
+        <choice link="cornerstore_shopkeeper_andre_strange">Was Andre acting strange when you last saw him?</choice>
+        <choice link="cornerstore_shopkeeper_andre_work">Did Andre ever mention where he worked?</choice>
+        <choice link="cornerstore_shopkeeper_andre_dismiss">That's all.</choice>
+    </scene>
+    <scene id="cornerstore_shopkeeper_andre_lastseen">
+        <line redirect="cornerstore_shopkeeper_andre_questions">"A few weeks ago, at least. Very odd for him to just vanish like that. I figured he got a new job or something."</line>
+    </scene>
+    <scene id="cornerstore_shopkeeper_andre_regular">
+        <line>The shopkeeper smirks.</line>
+        <line redirect="cornerstore_shopkeeper_andre_questions">"He was here every morning, almost without fail. I think he must live in this building."</line>
+    </scene>
+    <scene id="cornerstore_shopkeeper_andre_strange">
+        <line>"Not that I could tell. If I recall, he bought a couple bags of NutriChips. Oh, and a whole case of Nitron Energy."</line>
+        <line>He shakes his head.</line>
+        <line redirect="cornerstore_shopkeeper_andre_questions">"I guess if you're going to disappear, you've gotta stock up first. Although, come to think of it, I don't think I'd ever seen him buy Nitron Energy before. He was always a Diet guy."</line>
+    </scene>
+    <scene id="cornerstore_shopkeeper_andre_work">
+        <line redirect="cornerstore_shopkeeper_andre_questions">"No, but I know a corporate man when I see one. Every move calculated, not one second wasted. Don't know if he's still working for one of them, but it's in his blood now. Seems like Andre handled it better than most though. Never lost his humanity."</line>
+    </scene>
+    <scene id="nexus_bouncer_start" type="select">
+        <line once="true">
+            <line>The bouncer glances at you and frowns.</line>
+            <line>"This club is for VIPs only. I don't know you, so you're not gettin' in."</line>
+        </line>
+        <line>The bouncer looks up at you. "Didn't I tell you to leave? VIPs only."</line>
+        <choice link="nexus_bouncer_end">I have business with your boss.</choice>
+        <choice link="nexus_bouncer_end">Sorry, my mistake.</choice>
+    </scene>
+    <scene id="nexus_bouncer_end">
+        <line exit="true">He turns away.</line>
+    </scene>
+    <scene id="stratis_receptionist_start" type="select">
+        <line redirect="stratis_receptionist_main" once="true">"Hello, welcome to the Stratis Hotel. How can I be of assistance?"</line>
+        <line redirect="stratis_receptionist_main">"Welcome back. How can I be of assistance?"</line>
+    </scene>
+    <scene id="stratis_receptionist_main_return">
+        <line redirect="stratis_receptionist_main">"Very well. Anything else I can do for you?"</line>
+    </scene>
+    <scene id="stratis_receptionist_main">
+        <choice link="stratis_receptionist_request_room">Do you have any rooms available?</choice>
+        <choice link="stratis_receptionist_info">I have some questions.</choice>
+        <choice link="stratis_receptionist_end">That will be all.</choice>
+    </scene>
+    <scene id="stratis_receptionist_request_room">
+        <condition>global["purchased_stratis_room"] != null &amp;&amp; !global["purchased_stratis_room"]</condition>
+        <line>He taps the screen in front of him and quickly scans its contents.</line>
+        <line>"Yes, it appears we have an available room on the fifth floor. King bed, thirty-inch holoscreen, and a beautiful view of the commercial district. Only 300 credits a night."</line>
+        <choice link="stratis_receptionist_purchase_room">I'll take the room.</choice>
+        <choice link="stratis_receptionist_main_return">Not right now.</choice>
+    </scene>
+    <scene id="stratis_receptionist_purchase_room">
+        <condition>player.money &gt;= 300</condition>
+        <line>
+            <line>"Certainly. The room number is 508, on the fifth floor. You can use those elevators over there. Here's your keycard."</line>
+            <line>He hands you a white keycard with the Stratis Hotel logo.</line>
+            <scriptPost>
+                transferItem(to=player.inventory, item="stratis_room_key");
+                player.money = player.money - 300;
+                global["purchased_stratis_room"] = true;
+            </scriptPost>
+        </line>
+        <line redirect="stratis_receptionist_main">"Enjoy your stay. Is there anything else I can do for you?"</line>
+    </scene>
+    <scene id="stratis_receptionist_info">
+        <line>"Of course."</line>
+        <choice link="stratis_receptionist_info_amenities">What amenities are available here?</choice>
+        <choice link="stratis_receptionist_info_guests">Get a lot of high-profile guests here?</choice>
+        <choice link="stratis_receptionist_info_rees">Is there someone staying here by the name of Abel Rees?</choice>
+        <choice link="stratis_receptionist_combat">[Attack] Any last words?</choice>
+        <choice link="stratis_receptionist_main_return">That's all.</choice>
+    </scene>
+    <scene id="stratis_receptionist_info_amenities">
+        <line>The receptionist grins slightly.</line>
+        <line redirect="stratis_receptionist_info">"Everything you could need. Five-star restaurant, rooftop pool. We also provide the fastest network access of any hotel in the area, included with every room."</line>
+    </scene>
+    <scene id="stratis_receptionist_info_guests">
+        <line redirect="stratis_receptionist_info">"Why yes, of course. The Stratis is the best, and most secure, hotel in the area."</line>
+    </scene>
+    <scene id="stratis_receptionist_info_rees">
+        <line>The receptionist narrows his eyes.</line>
+        <line redirect="stratis_receptionist_info">"We can't disclose the identity of our guests to the public. As you can imagine, that would be bad for business."</line>
+    </scene>
+    <scene id="stratis_receptionist_combat">
+        <line exit="true">
+            <line>The receptionist smirks.</line>
+            <line>"You think you're the first to try that here?"</line>
+            <scriptPost>
+                startCombat(actor=context.target, target=player);
+            </scriptPost>
+        </line>
+    </scene>
+    <scene id="stratis_receptionist_end">
+        <line exit="true">"Very well. Have a lovely day."</line>
+    </scene>
 </data>

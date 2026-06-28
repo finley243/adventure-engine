@@ -1,0 +1,283 @@
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/items.xsd">
+    <item id="ammo_pistol">
+        <name>pistol round</name>
+        <component type="ammo"/>
+    </item>
+    <item id="ammo_rifle">
+        <name>rifle round</name>
+        <component type="ammo"/>
+    </item>
+    <item id="tactical_vest" price="40">
+        <name>tactical vest</name>
+        <component type="equippable">
+            <slotGroup>
+                <slot>torso</slot>
+            </slotGroup>
+        </component>
+        <component type="armor" coversMainBody="true">
+            <damage type="physical" resistance="5"/>
+        </component>
+    </item>
+    <item id="tactical_helmet" price="30">
+        <name>tactical helmet</name>
+        <component type="equippable">
+            <slotGroup>
+                <slot>head</slot>
+            </slotGroup>
+        </component>
+        <component type="armor">
+            <coveredLimb>head</coveredLimb>
+            <damage type="physical" resistance="3"/>
+        </component>
+    </item>
+    <item id="nitron_cola" price="10">
+        <name>Nitron Cola</name>
+        <component type="consumable">
+            <consumePrompt>Drink</consumePrompt>
+            <consumePhrase>drink</consumePhrase>
+            <effect>food_basic</effect>
+        </component>
+    </item>
+    <item id="nitron_diet" price="10">
+        <name>Nitron Diet</name>
+        <component type="consumable">
+            <consumePrompt>Drink</consumePrompt>
+            <consumePhrase>drink</consumePhrase>
+            <effect>food_basic</effect>
+        </component>
+    </item>
+    <item id="burger" price="10">
+        <name>hamburger</name>
+        <component type="consumable">
+            <consumePrompt>Eat</consumePrompt>
+            <consumePhrase>eat</consumePhrase>
+            <effect>food_basic</effect>
+        </component>
+    </item>
+    <item id="burger_cheese" price="10">
+        <name>cheeseburger</name>
+        <component type="consumable">
+            <consumePrompt>Eat</consumePrompt>
+            <consumePhrase>eat</consumePhrase>
+            <effect>food_basic</effect>
+        </component>
+    </item>
+    <item id="burger_deluxe" price="10">
+        <name>deluxe hamburger</name>
+        <component type="consumable">
+            <consumePrompt>Eat</consumePrompt>
+            <consumePhrase>eat</consumePhrase>
+            <effect>food_basic</effect>
+        </component>
+    </item>
+    <item id="french_fries" price="10">
+        <name>french fries</name>
+        <component type="consumable">
+            <consumePrompt>Eat</consumePrompt>
+            <consumePhrase>eat</consumePhrase>
+            <effect>food_basic</effect>
+        </component>
+    </item>
+    <item id="nutri_chips_bacon" price="5">
+        <name>Smoky Bacon Nutri-Chips</name>
+        <component type="consumable">
+            <consumePrompt>Eat</consumePrompt>
+            <consumePhrase>eat</consumePhrase>
+            <effect>food_basic</effect>
+        </component>
+    </item>
+    <item id="nutri_chips_wasabi" price="5">
+        <name>Wasabi Ginger Nutri-Chips</name>
+        <component type="consumable">
+            <consumePrompt>Eat</consumePrompt>
+            <consumePhrase>eat</consumePhrase>
+            <effect>food_basic</effect>
+        </component>
+    </item>
+    <item id="gumball" price="1">
+        <name>gumball</name>
+        <component type="consumable">
+            <consumePrompt>Eat</consumePrompt>
+            <consumePhrase>eat</consumePhrase>
+            <effect>food_basic</effect>
+        </component>
+    </item>
+    <item id="can_soda" price="1">
+        <name>empty soda can</name>
+    </item>
+    <item id="can_aluminum" price="1">
+        <name>rusted aluminum can</name>
+    </item>
+    <item id="scrap_wires" price="1">
+        <name>scrap wires</name>
+    </item>
+    <item id="bag_plastic" price="1">
+        <name>dirty plastic bag</name>
+    </item>
+    <item id="ecig_cartridge" price="1">
+        <name>empty e-cig cartridge</name>
+    </item>
+    <item id="bottle_pill" price="1">
+        <name>empty pill bottle</name>
+    </item>
+    <item id="cup_paper" price="1">
+        <name>dirty paper cup</name>
+    </item>
+    <item id="can_spray_paint" price="1">
+        <name>empty spray-paint can</name>
+    </item>
+    <item id="stratis_room_key">
+        <name>Stratis room 508 keycard</name>
+    </item>
+    <item id="stratis_master_key">
+        <name>Stratis master keycard</name>
+    </item>
+    <item id="nexus_bouncer_key">
+        <name>Nexus bouncer key</name>
+    </item>
+    <item id="stratis_security_key">
+        <name>Stratis security key</name>
+    </item>
+    <item id="wilsons_corner_store_key">
+        <name>Wilson's corner store key</name>
+    </item>
+    <item id="coin" price="1">
+        <name>coin</name>
+    </item>
+    <item id="mag_extended_pistol">
+        <name>extended pistol magazine</name>
+        <component type="mod" modSlot="pistol_mag">
+            <effect>mag_extended_pistol_effect</effect>
+        </component>
+    </item>
+    <item id="baseball_bat" price="15">
+        <name>baseball bat</name>
+        <component type="weapon" class="club" restricted="true">
+            <damage base="10" crit="5"/>
+            <rate>2</rate>
+        </component>
+        <component type="effectable"/>
+        <component type="equippable">
+            <slotGroup>
+                <slot>hand_main</slot>
+                <slot>hand_off</slot>
+                <exposedComponent>weapon</exposedComponent>
+            </slotGroup>
+        </component>
+    </item>
+    <item id="katana" price="60">
+        <name>katana</name>
+        <description>
+            <line>A razor-sharp sword of fine craftsmanship.</line>
+        </description>
+        <component type="weapon" class="sword" restricted="true">
+            <damage base="20" crit="10"/>
+            <rate>2</rate>
+        </component>
+        <component type="effectable"/>
+        <component type="equippable">
+            <slotGroup>
+                <slot>hand_main</slot>
+                <slot>hand_off</slot>
+                <exposedComponent>weapon</exposedComponent>
+            </slotGroup>
+        </component>
+    </item>
+    <item id="pistol_light" price="30">
+        <name>light pistol</name>
+        <component type="weapon" class="pistol" restricted="true">
+            <damage base="10" crit="5"/>
+            <rate>2</rate>
+        </component>
+        <component type="magazine" restricted="true">
+            <ammoType>ammo_pistol</ammoType>
+            <size>12</size>
+            <reloadActionPoints>1</reloadActionPoints>
+        </component>
+        <component type="effectable"/>
+        <component type="moddable">
+            <modSlot name="pistol_mag"/>
+        </component>
+        <component type="equippable">
+            <slotGroup>
+                <slot>hand_main</slot>
+                <exposedComponent>weapon</exposedComponent>
+                <exposedComponent>magazine</exposedComponent>
+            </slotGroup>
+            <slotGroup>
+                <slot>hand_off</slot>
+                <exposedComponent>weapon</exposedComponent>
+                <exposedComponent>magazine</exposedComponent>
+            </slotGroup>
+        </component>
+    </item>
+    <item id="pistol_heavy" price="50">
+        <name>heavy pistol</name>
+        <component type="weapon" class="pistol" restricted="true">
+            <damage base="14" crit="6"/>
+            <rate>2</rate>
+        </component>
+        <component type="magazine" restricted="true">
+            <ammoType>ammo_pistol</ammoType>
+            <size>6</size>
+            <reloadActionPoints>1</reloadActionPoints>
+        </component>
+        <component type="effectable"/>
+        <component type="moddable">
+            <modSlot name="pistol_mag"/>
+        </component>
+        <component type="equippable">
+            <slotGroup>
+                <slot>hand_main</slot>
+                <exposedComponent>weapon</exposedComponent>
+                <exposedComponent>magazine</exposedComponent>
+            </slotGroup>
+            <slotGroup>
+                <slot>hand_off</slot>
+                <exposedComponent>weapon</exposedComponent>
+                <exposedComponent>magazine</exposedComponent>
+            </slotGroup>
+        </component>
+    </item>
+    <item id="rifle_auto" price="90">
+        <name>auto rifle</name>
+        <description>
+            <line>A full-auto assault rifle.</line>
+        </description>
+        <component type="weapon" class="assault_rifle" restricted="true">
+            <damage base="15" crit="4"/>
+            <rate>2</rate>
+        </component>
+        <component type="magazine" restricted="true">
+            <ammoType>ammo_rifle</ammoType>
+            <size>16</size>
+            <reloadActionPoints>1</reloadActionPoints>
+        </component>
+        <component type="effectable"/>
+        <component type="equippable">
+            <slotGroup>
+                <slot>hand_main</slot>
+                <slot>hand_off</slot>
+                <exposedComponent>weapon</exposedComponent>
+                <exposedComponent>magazine</exposedComponent>
+            </slotGroup>
+        </component>
+    </item>
+    <item id="grenade_frag" price="10">
+        <name>frag grenade</name>
+        <component type="weapon" class="grenade" restricted="true">
+            <damage base="20" crit="5"/>
+            <rate>1</rate>
+        </component>
+        <component type="equippable">
+            <slotGroup>
+                <slot>hand_main</slot>
+                <exposedComponent>weapon</exposedComponent>
+            </slotGroup>
+            <slotGroup>
+                <slot>hand_off</slot>
+                <exposedComponent>weapon</exposedComponent>
+            </slotGroup>
+        </component>
+    </item>
+</data>

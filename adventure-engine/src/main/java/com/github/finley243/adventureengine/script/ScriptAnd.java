@@ -1,0 +1,36 @@
+package com.github.finley243.adventureengine.script;
+
+import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.expression.Expression;
+
+import java.util.List;
+
+public class ScriptAnd extends Script {
+
+    private final List<Script> subScripts;
+
+    public ScriptAnd(ScriptTraceData traceData, List<Script> subScripts) {
+        super(traceData);
+        this.subScripts = subScripts;
+    }
+
+    @Override
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
+        for (Script subScript : subScripts) {
+            ScriptReturnData result = subScript.execute(scriptRuntime, context);
+            if (result.error() != null) {
+                return result;
+            } else if (result.flowStatement() != null) {
+                return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", getTraceData()));
+            } else if (result.value() == null) {
+                return new ScriptReturnData(null, null, new ScriptErrorData("Expression received a null value", getTraceData()));
+            } else if (result.value().getDataType() != Expression.DataType.BOOLEAN) {
+                return new ScriptReturnData(null, null, new ScriptErrorData("Expression expected a boolean value", getTraceData()));
+            } else if (!result.value().getValueBoolean()) {
+                return new ScriptReturnData(Expression.bool(false), null, null);
+            }
+        }
+        return new ScriptReturnData(Expression.bool(true), null, null);
+    }
+
+}

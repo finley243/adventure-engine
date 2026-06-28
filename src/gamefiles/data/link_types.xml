@@ -1,4 +1,4 @@
-<data>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/link_types.xsd">
     <linkType id="basic" visible="true" moveAction="move_basic">
         <moveDistance>CLOSE</moveDistance>
         <vehicleMoveAction type="motorcycle" action="drive"/>

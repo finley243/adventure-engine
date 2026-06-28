@@ -1,0 +1,142 @@
+package com.github.finley243.adventureengine.action;
+
+import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.ai.Pathfinder;
+import com.github.finley243.adventureengine.event.UIEventBus;
+import com.github.finley243.adventureengine.event.ui.RenderGeneratedTextEvent;
+import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.menu.MenuManager;
+import com.github.finley243.adventureengine.menu.action.MenuData;
+import com.github.finley243.adventureengine.menu.action.MenuDataArea;
+import com.github.finley243.adventureengine.textgen.MultiNoun;
+import com.github.finley243.adventureengine.textgen.Noun;
+import com.github.finley243.adventureengine.textgen.PluralNoun;
+import com.github.finley243.adventureengine.world.environment.Area;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+
+public class ActionInspectArea extends Action {
+
+    private final Area area;
+    private final UIEventBus eventBus;
+    private final MenuManager menuManager;
+    private final Pathfinder pathfinder;
+
+    public ActionInspectArea(Actor subject, ActionDependencies dependencies, Area area, UIEventBus eventBus, MenuManager menuManager, Pathfinder pathfinder) {
+        super(subject, dependencies);
+        this.area = area;
+        this.eventBus = eventBus;
+        this.menuManager = menuManager;
+        this.pathfinder = pathfinder;
+    }
+
+    @Override
+    public String getID() {
+        return "inspect_area";
+    }
+
+    @Override
+    public Context getContext() {
+        return Context.builder().subject(subject).parentArea(area).parentAction(this).build();
+    }
+
+    @Override
+    public void choose(int repeatActionCount) {
+        Context context = getContext();
+        Map<Area, Pathfinder.VisibleAreaData> visibleAreas = pathfinder.getVisibleAreas(area, subject);
+        List<Area> orderedAreaList = new ArrayList<>(visibleAreas.keySet());
+        orderedAreaList.sort(Comparator.comparingInt(a -> visibleAreas.get(a).path().size()));
+        textGen.clearContext();
+        for (Area currentArea : orderedAreaList) {
+            Pathfinder.VisibleAreaData areaData = visibleAreas.get(currentArea);
+            String directionName = areaData.direction() != null ? areaData.direction().name : null;
+            Area leadingArea = null;
+            if (areaData.path().size() > 2) {
+                leadingArea = areaData.path().get(areaData.path().size() - 2);
+            }
+            context.setLocalVariable("relativeName", Expression.string(currentArea.getRelativeName()));
+            context.setLocalVariable("area", Expression.noun(currentArea));
+            context.setLocalVariable("dir", Expression.string(directionName));
+            context.setLocalVariable("leadingArea", Expression.noun(leadingArea));
+            String phrase;
+            if (currentArea.equals(area)) {
+                phrase = "$actor $is $relativeName $area.";
+            } else if (leadingArea != null) {
+                phrase = "Beyond $leadingArea, there $is $area.";
+            } else if (directionName != null) {
+                phrase = "To the $dir, there $is $area.";
+            } else {
+                phrase = "There $is $area.";
+            }
+            eventBus.post(new RenderGeneratedTextEvent(phrase, context, context.generateTextContext()));
+
+            List<Noun> visibleObjects = currentArea.getObjects().stream()
+                    .map(object -> (Noun) object)
+                    .toList();
+            List<Noun> visibleActors = currentArea.getActors().stream()
+                    .filter(actor -> !actor.equals(subject)) // Exclude the subject actor
+                    .map(actor -> (Noun) actor)
+                    .toList();
+            List<Noun> visibleItems = currentArea.getInventory().getItemMap().entrySet().stream()
+                    .map(entry -> entry.getValue() == 1
+                            ? entry.getKey()
+                            : new PluralNoun(entry.getKey(), entry.getValue()))
+                    .toList();
+            List<Noun> areaContents = new ArrayList<>();
+            areaContents.addAll(visibleObjects);
+            areaContents.addAll(visibleActors);
+            areaContents.addAll(visibleItems);
+            if (!areaContents.isEmpty()) {
+                context.setLocalVariable("areaContents", Expression.noun(new MultiNoun(areaContents)));
+                String areaContentsPhrase = "$relativeName $area, there $is $areaContents.";
+                eventBus.post(new RenderGeneratedTextEvent(areaContentsPhrase, context, context.generateTextContext()));
+            }
+        }
+        if (area.getRoom() != null && area.getRoom().getDescription() != null) {
+            menuManager.sceneMenu(area.getRoom().getDescription(), Context.builder().subject(subject).build(), false);
+            area.getRoom().setKnown();
+            // TODO - Find a way to get access to all other areas in current room
+            /*for (Area roomArea : area.getRoom().getAreas()) {
+                roomArea.setKnown();
+            }*/
+        }
+        if (area.getDescription() != null) {
+            menuManager.sceneMenu(area.getDescription(), Context.builder().subject(subject).build(), false);
+            area.setKnown();
+        }
+        if (area.getRoom() != null) {
+            area.getRoom().triggerScript("on_inspect", context);
+        }
+        //TextGen.clearContext();
+        area.triggerScript("on_inspect", context);
+    }
+
+    @Override
+    public CanChooseResult canChoose() {
+        CanChooseResult resultSuper = super.canChoose();
+        if (!resultSuper.canChoose()) {
+            return resultSuper;
+        }
+        return new CanChooseResult(true, null);
+    }
+
+    @Override
+    public int actionPoints() {
+        return 0;
+    }
+
+    @Override
+    public MenuData getMenuData() {
+        return new MenuDataArea(area, true);
+    }
+
+    @Override
+    public String getPrompt() {
+        return "Look Around";
+    }
+
+}

@@ -1,0 +1,3 @@
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/obstruction_types.xsd">
+    <obstructionType id="smoke">smoke</obstructionType>
+</data>

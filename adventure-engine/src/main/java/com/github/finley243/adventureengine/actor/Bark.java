@@ -1,0 +1,36 @@
+package com.github.finley243.adventureengine.actor;
+
+import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.MathUtils;
+import com.github.finley243.adventureengine.event.SensoryEvent;
+import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
+
+import java.util.List;
+
+public class Bark {
+
+    public enum BarkResponseType {
+        NONE, HOSTILE
+    }
+
+    private final BarkResponseType responseType;
+    private final List<String> visiblePhrases;
+    private final List<String> nonVisiblePhrases;
+
+    public Bark(BarkResponseType responseType, List<String> visiblePhrases, List<String> nonVisiblePhrases) {
+        this.responseType = responseType;
+        this.visiblePhrases = visiblePhrases;
+        this.nonVisiblePhrases = nonVisiblePhrases;
+    }
+
+    public void trigger(Context context, SensoryEventDispatcher sensoryEventDispatcher) {
+        String visiblePhrase = MathUtils.selectRandomFromList(visiblePhrases);
+        String nonVisiblePhrase = MathUtils.selectRandomFromList(nonVisiblePhrases);
+        sensoryEventDispatcher.dispatch(new SensoryEvent(context.getSubject().getArea(), visiblePhrase, nonVisiblePhrase, context, true, false, null, this));
+    }
+
+    public BarkResponseType responseType() {
+        return responseType;
+    }
+
+}

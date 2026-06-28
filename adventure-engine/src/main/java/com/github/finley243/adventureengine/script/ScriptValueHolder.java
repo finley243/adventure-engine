@@ -1,0 +1,22 @@
+package com.github.finley243.adventureengine.script;
+
+import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.expression.Expression;
+
+public interface ScriptValueHolder {
+
+    // TODO - Remove Context (stats don't actually need to use an external context, they can use an internal context)
+    Expression getScriptValue(String name, Context context);
+
+    /**
+     * Sets a static stat with the given name to the given value
+     *
+     * @param name    the name of the stat
+     * @param value   an Expression representing the new value for the stat
+     * @param context the Context for evaluating the value expression
+     * @return true if the stat is set successfully, false otherwise
+     */
+    // TODO - Remove Context (stats don't actually need to use an external context, they can use an internal context)
+    boolean setScriptValue(String name, Expression value, Context context);
+
+}

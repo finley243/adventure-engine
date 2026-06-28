@@ -1,9 +1,4 @@
-<data>
-    <attribute id="body">body</attribute>
-    <attribute id="intelligence">intelligence</attribute>
-    <attribute id="charisma">charisma</attribute>
-    <attribute id="dexterity">dexterity</attribute>
-    <attribute id="agility">agility</attribute>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/skills.xsd">
     <skill id="melee">melee</skill>
     <skill id="throwing">throwing</skill>
     <skill id="intimidation">intimidation</skill>

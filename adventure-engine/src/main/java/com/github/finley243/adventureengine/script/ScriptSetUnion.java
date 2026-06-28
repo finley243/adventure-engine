@@ -1,0 +1,30 @@
+package com.github.finley243.adventureengine.script;
+
+import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.expression.Expression;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Function;
+
+public class ScriptSetUnion extends Script {
+
+    public ScriptSetUnion(ScriptTraceData traceData) {
+        super(traceData);
+    }
+
+    @Override
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
+        Expression setOneExpression = context.getLocalVariables().get("setOne").getExpression();
+        Expression setTwoExpression = context.getLocalVariables().get("setTwo").getExpression();
+        if (setOneExpression.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, new ScriptErrorData("Set one parameter is not a set", getTraceData()));
+        if (setTwoExpression.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, new ScriptErrorData("Set two parameter is not a set", getTraceData()));
+        Set<Expression> setOne = setOneExpression.getValueSet();
+        Set<Expression> setTwo = setTwoExpression.getValueSet();
+        Set<Expression> setUnion = new HashSet<>();
+        setUnion.addAll(setOne);
+        setUnion.addAll(setTwo);
+        return new ScriptReturnData(Expression.set(setUnion, Function.identity()), FlowStatementType.RETURN, null);
+    }
+
+}

@@ -1,0 +1,38 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:include schemaLocation="common.xsd"/>
+
+    <xs:element name="data">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="room" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="name">
+                                <xs:complexType>
+                                    <xs:simpleContent>
+                                        <xs:extension base="xs:string">
+                                            <xs:attribute name="proper" type="xs:boolean"/>
+                                            <xs:attribute name="type" type="AreaNameType"/>
+                                        </xs:extension>
+                                    </xs:simpleContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="description" type="SceneLine" minOccurs="0"/>
+                            <xs:element name="script" type="ScriptWithTrigger" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                        <xs:attribute name="id" type="xs:string" use="required"/>
+                        <xs:attribute name="faction" type="xs:string"/>
+                        <xs:attribute name="restriction" type="RestrictionType"/>
+                        <xs:attribute name="allowAllies" type="xs:boolean"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+        <xs:unique name="uniqueId">
+            <xs:selector xpath="room"/>
+            <xs:field xpath="@id"/>
+        </xs:unique>
+    </xs:element>
+
+</xs:schema>

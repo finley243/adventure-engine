@@ -1,0 +1,80 @@
+package com.github.finley243.adventureengine.action;
+
+import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.event.SensoryEvent;
+import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.menu.action.MenuData;
+import com.github.finley243.adventureengine.menu.action.MenuDataObject;
+import com.github.finley243.adventureengine.world.object.component.UsableObjectComponent;
+
+public class ActionObjectUseEnd extends Action {
+
+	private final UsableObjectComponent component;
+	private final String slotID;
+
+	public ActionObjectUseEnd(Actor subject, ActionDependencies dependencies, UsableObjectComponent component, String slotID) {
+        super(subject, dependencies);
+        this.component = component;
+		this.slotID = slotID;
+	}
+
+	public UsableObjectComponent getComponent() {
+		return component;
+	}
+
+	public String getSlotID() {
+		return slotID;
+	}
+
+	@Override
+	public String getID() {
+		return "object_use_end";
+	}
+
+	@Override
+	public Context getContext() {
+		Context context = Context.builder().subject(subject).parentObject(component.getObject()).parentAction(this).build();
+		context.setLocalVariable("slot", Expression.string(slotID));
+		return context;
+	}
+	
+	@Override
+	public void choose(int repeatActionCount) {
+		Context context = getContext();
+		if (component.userIsInCover(slotID)) {
+			subject.triggerScript("on_leave_cover", context);
+		}
+		component.removeUser(slotID);
+		subject.setUsingObject(null);
+		sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), component.getEndPhrase(slotID), context, true, this, null));
+	}
+
+	@Override
+	public float utility() {
+		if (component.userIsInCover(slotID)) {
+			return 0.3f;
+		}
+		return 0.0f;
+	}
+
+	@Override
+	public MenuData getMenuData() {
+		return new MenuDataObject(component.getObject());
+	}
+
+	@Override
+	public String getPrompt() {
+		return component.getEndPrompt(slotID);
+	}
+
+	@Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ActionObjectUseEnd other)) {
+            return false;
+        } else {
+			return other.component == this.component;
+        }
+    }
+
+}
